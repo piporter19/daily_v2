@@ -58,7 +58,7 @@
     @keyframes spin { to { transform: rotate(360deg); } }
 
     /* ---------- layout ---------- */
-    .shell { position: relative; z-index: 1; max-width: 1320px; margin: 0 auto; padding: 26px 20px 90px; display: flex; flex-direction: column; gap: 22px; transition: opacity .4s; }
+    .shell { position: relative; z-index: 1; max-width: 1320px; margin: 0 auto; padding: 26px 20px 170px; display: flex; flex-direction: column; gap: 22px; transition: opacity .4s; }
     .shell.is-hidden { opacity: 0; pointer-events: none; }
 
     .top { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; flex-wrap: wrap; }
@@ -308,13 +308,61 @@
     .chat-foot { align-items: flex-end; }
     .chat-foot textarea { flex: 1; resize: none; min-height: 42px; max-height: 140px; }
 
+
+    /* ---------- Pip, the progress buddy ---------- */
+    .buddy { position: fixed; right: 18px; bottom: 18px; z-index: 30; width: 270px; background: rgba(23, 26, 51, .95); border: 1px solid var(--line); border-radius: 22px; padding: 8px 14px 11px; box-shadow: 0 14px 34px rgba(0, 0, 0, .38); }
+    .buddy-track { position: relative; height: 104px; }
+    .buddy-rail { position: absolute; left: 0; right: 0; bottom: 6px; height: 6px; border-radius: 3px; background: var(--well); overflow: hidden; }
+    #buddy-fill { height: 100%; width: 0; background: var(--mari); border-radius: 3px; transition: width .9s cubic-bezier(.3, .7, .3, 1), background .4s; }
+    .buddy.bloom #buddy-fill { background: var(--teal); }
+    #buddy-mover { position: absolute; left: 0; bottom: 12px; width: 64px; height: 77px; transition: transform .9s cubic-bezier(.3, .7, .3, 1); }
+    #buddy-btn { background: none; border: 0; padding: 0; display: block; width: 64px; height: 77px; border-radius: 14px; }
+    #buddy-svg { width: 64px; height: 77px; overflow: visible; transform-origin: 50% 100%; transition: transform .9s cubic-bezier(.3, 1.4, .5, 1); display: block; }
+    .buddy.hop #buddy-btn { animation: hop .5s cubic-bezier(.3, .7, .4, 1); }
+    @keyframes hop { 40% { transform: translateY(-16px); } 70% { transform: translateY(2px); } }
+    #buddy .b-body { transform-box: view-box; transform-origin: 50px 112px; }
+    .buddy.walking .b-body { animation: waddle .32s ease-in-out infinite; }
+    @keyframes waddle { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
+    #buddy .eyes { transform-box: fill-box; transform-origin: 50% 50%; transition: transform .08s; }
+    .buddy.blink .eyes { transform: scaleY(.1); }
+    #b-pupils { transition: transform .18s ease-out; }
+    #buddy .lids { opacity: 0; transition: opacity .4s; }
+    .buddy.sleepy .lids { opacity: 1; }
+    #buddy .zz { opacity: 0; font: 700 13px var(--display); fill: var(--muted); }
+    .buddy.sleepy .zz { animation: zz 2.4s ease-in-out infinite; }
+    @keyframes zz { 0% { opacity: 0; transform: translate(0, 0); } 30% { opacity: 1; } 100% { opacity: 0; transform: translate(8px, -14px); } }
+    #buddy .leaf, #buddy .bud, #buddy .flower { transform: scale(0); transform-box: fill-box; transition: transform .7s cubic-bezier(.3, 1.6, .5, 1); }
+    #buddy .l1 { transform-origin: 100% 60%; }
+    #buddy .l2 { transform-origin: 0% 60%; }
+    #buddy .bud, #buddy .flower { transform-origin: 50% 100%; }
+    .buddy[data-stage="1"] .l1, .buddy[data-stage="2"] .l1, .buddy[data-stage="2"] .l2,
+    .buddy[data-stage="3"] .l1, .buddy[data-stage="3"] .l2, .buddy[data-stage="3"] .bud,
+    .buddy[data-stage="4"] .l1, .buddy[data-stage="4"] .l2, .buddy[data-stage="4"] .flower { transform: scale(1); }
+    #b-top { transform-box: view-box; transform-origin: 50px 44px; transition: transform .7s; }
+    .buddy.wilt #b-top { transform: rotate(20deg); }
+    .buddy.bloom #b-top { animation: sway 2.6s ease-in-out infinite; }
+    @keyframes sway { 0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(6deg); } }
+    .buddy-foot { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--muted); margin-top: 4px; }
+    .buddy-foot b { color: var(--ink); }
+    .buddy-toggle { position: absolute; top: 8px; right: 8px; width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--line); background: var(--panel2); font-size: 13px; line-height: 1; display: grid; place-items: center; padding: 0; color: var(--muted); z-index: 2; }
+    .buddy-say { position: absolute; bottom: calc(100% + 10px); right: 0; width: max-content; max-width: 250px; background: var(--ink); color: var(--bg); font-size: 13px; font-weight: 600; line-height: 1.35; padding: 9px 13px; border-radius: 14px 14px 4px 14px; opacity: 0; transform: translateY(6px); transition: opacity .25s, transform .25s; pointer-events: none; }
+    .buddy-say.show { opacity: 1; transform: none; }
+    .buddy.min { width: auto; padding: 6px 8px 4px; }
+    .buddy.min .buddy-rail, .buddy.min .buddy-foot { display: none; }
+    .buddy.min .buddy-track { width: 70px; height: 92px; }
+    .buddy.min #buddy-mover { transform: none !important; left: 3px; bottom: 2px; }
+    .buddy.min .buddy-toggle { top: -8px; right: -8px; }
+    @media (max-width: 560px) {
+      .buddy { width: 210px; right: 10px; bottom: 10px; }
+    }
+
     @media (max-width: 900px) {
       .today { grid-template-columns: 1fr auto; }
       .today .checkin { grid-column: 1 / -1; grid-row: 2; }
       .insights { grid-template-columns: 1fr; }
     }
     @media (max-width: 560px) {
-      .shell { padding: 18px 12px 80px; }
+      .shell { padding: 18px 12px 170px; }
       .tile-grid { grid-template-columns: repeat(2, 1fr); }
       .day-label .dow { font-size: 28px; }
       .ring { width: 88px; height: 88px; }
@@ -424,6 +472,62 @@
         </table>
       </div>
     </section>
+  </div>
+
+  <!-- Pip: walks along the day's progress, grows leaves, then blooms -->
+  <div id="buddy" class="buddy sleepy" data-stage="0" hidden>
+    <button class="buddy-toggle" onclick="toggleBuddy()" aria-label="Shrink or expand Pip" title="Shrink or expand">−</button>
+    <div id="buddy-say" class="buddy-say" aria-live="polite"></div>
+    <div class="buddy-track" id="buddy-track">
+      <div class="buddy-rail"><div id="buddy-fill"></div></div>
+      <div id="buddy-mover">
+        <button id="buddy-btn" onclick="buddyClick()" title="Tap to log the next habit" aria-label="Pip. Tap to log the next habit">
+          <svg id="buddy-svg" viewBox="0 0 100 120" aria-hidden="true">
+            <defs>
+              <radialGradient id="pip-body" cx="38%" cy="34%" r="72%"><stop offset="0" stop-color="#ffd684"/><stop offset="1" stop-color="#e3951f"/></radialGradient>
+            </defs>
+            <ellipse cx="50" cy="115" rx="24" ry="4" fill="rgba(0,0,0,.35)"/>
+            <g id="b-top">
+              <path d="M50 45 C50 37 51.5 30 50 21" stroke="#4fc3b0" stroke-width="3.2" fill="none" stroke-linecap="round"/>
+              <path class="leaf l1" d="M50 35 C42 26 31 27 30 33 C36 40 45 39 50 35Z" fill="#4fc3b0"/>
+              <path class="leaf l2" d="M50 29 C58 20 69 21 70 27 C64 34 55 33 50 29Z" fill="#35a594"/>
+              <ellipse class="bud" cx="50" cy="17" rx="4.5" ry="6" fill="#ef6f7f"/>
+              <g class="flower">
+                <ellipse cx="50" cy="10" rx="4" ry="6.5" fill="#ef6f7f"/>
+                <ellipse cx="50" cy="10" rx="4" ry="6.5" fill="#ef6f7f" transform="rotate(60 50 17)"/>
+                <ellipse cx="50" cy="10" rx="4" ry="6.5" fill="#ef6f7f" transform="rotate(120 50 17)"/>
+                <ellipse cx="50" cy="10" rx="4" ry="6.5" fill="#ef6f7f" transform="rotate(180 50 17)"/>
+                <ellipse cx="50" cy="10" rx="4" ry="6.5" fill="#ef6f7f" transform="rotate(240 50 17)"/>
+                <ellipse cx="50" cy="10" rx="4" ry="6.5" fill="#ef6f7f" transform="rotate(300 50 17)"/>
+                <circle cx="50" cy="17" r="4.2" fill="#f4b740"/>
+              </g>
+            </g>
+            <g class="b-body">
+              <ellipse cx="37" cy="112" rx="7.5" ry="3.8" fill="#c27a12"/>
+              <ellipse cx="63" cy="112" rx="7.5" ry="3.8" fill="#c27a12"/>
+              <path d="M50 42 C74 42 83 62 81 82 C79 102 66 111 50 111 C34 111 21 102 19 82 C17 62 26 42 50 42Z" fill="url(#pip-body)"/>
+              <path d="M28 60 C31 52 37 48 43 47" stroke="#fff3cf" stroke-width="3" fill="none" stroke-linecap="round" opacity=".6"/>
+              <ellipse cx="31" cy="85" rx="5.5" ry="3.2" fill="#ef6f7f" opacity=".45"/>
+              <ellipse cx="69" cy="85" rx="5.5" ry="3.2" fill="#ef6f7f" opacity=".45"/>
+              <g class="eyes">
+                <circle cx="40" cy="72" r="8.5" fill="#fff"/>
+                <circle cx="60" cy="72" r="8.5" fill="#fff"/>
+                <g id="b-pupils">
+                  <circle cx="40" cy="72" r="4" fill="#1a1d3a"/>
+                  <circle cx="60" cy="72" r="4" fill="#1a1d3a"/>
+                  <circle cx="41.4" cy="70.4" r="1.3" fill="#fff"/>
+                  <circle cx="61.4" cy="70.4" r="1.3" fill="#fff"/>
+                </g>
+                <path class="lids" d="M31.3 73 A8.7 8.7 0 0 1 48.7 73Z M51.3 73 A8.7 8.7 0 0 1 68.7 73Z" fill="#eea734"/>
+              </g>
+              <path id="b-mouth" d="M44 85 Q50 89 56 85" stroke="#5a2e0c" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+            <text class="zz" x="72" y="50">z</text>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div class="buddy-foot"><span id="buddy-count"></span><span id="buddy-stage"></span></div>
   </div>
 
   <div id="scrim" class="scrim" onclick="closeAll()"></div>
@@ -569,6 +673,7 @@
     window.lockApp = function () {
       closeAll();
       $('main-app').classList.add('is-hidden');
+      $('buddy').hidden = true;
       $('password-input').value = '';
       $('auth-error').hidden = true;
       $('auth-gate').style.display = 'flex';
@@ -627,7 +732,7 @@
       renderTable(true);
 
       $('loader').style.opacity = '0';
-      setTimeout(() => { $('loader').style.display = 'none'; $('main-app').classList.remove('is-hidden'); }, 350);
+      setTimeout(() => { $('loader').style.display = 'none'; $('main-app').classList.remove('is-hidden'); $('buddy').hidden = false; renderBuddy(); buddyGreet(); }, 350);
     }
 
     // ============ header / bg / modes ============
@@ -881,6 +986,7 @@
       $('day-dm').textContent = d ? d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long' }) + (selectedDate === todayStr ? ', today' : '') : '';
       $('day-today-btn').hidden = selectedDate === todayStr || !state.allDates.includes(todayStr);
       if (withCheckin) $('checkin').innerHTML = checkinHtml(selectedDate);
+      renderBuddy();
 
       const cols = allColumns(); const done = cols.filter(c => isDone(selectedDate, c)).length;
       const pct = cols.length ? done / cols.length : 0;
@@ -982,6 +1088,133 @@
         <div class="stat"><b>${avg}%</b><span>logged, last 7 days</span></div>
         <div class="stat"><b>${hrs.toFixed(1)}</b><span>hours tracked, last 7 days</span></div>`;
     }
+    // ============ Pip, the progress buddy ============
+    const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let buddyPrev = null, sayT = null, lookBackT = null, lastMouse = null;
+    const MOUTHS = {
+      sleepy: 'M46.5 86 Q50 88.5 53.5 86',
+      calm: 'M44 85 Q50 89 56 85',
+      smile: 'M41.5 83 Q50 93 58.5 83',
+      grin: 'M40 82 Q50 97 60 82 Q50 87 40 82Z',
+      wilt: 'M43 88 Q50 82.5 57 88'
+    };
+    const STAGE_NAMES = ['Seed', 'Sprout', 'Two leaves', 'Budding', 'In bloom'];
+    function buddyNumbers() {
+      const cols = allColumns();
+      const done = cols.filter(c => isDone(selectedDate, c)).length;
+      const over = cols.filter(c => progressOf(selectedDate, c).tone === 'over').length;
+      return { total: cols.length, done, over, pct: cols.length ? done / cols.length : 0 };
+    }
+    function buddyLine({ total, done, over, pct }) {
+      const left = total - done;
+      if (!total) return 'Add a habit and I will start growing.';
+      if (done === total) return over ? 'Full bloom, even with a bit too much screen time. 🌼' : 'Full bloom! Every habit logged. 🌼';
+      if (over) return `Too much screen time. I'm wilting a little. ${left} still to log.`;
+      if (!done) return 'Still asleep. Tap me to log your first habit.';
+      if (pct < .25) return `${done} down. I'm waking up.`;
+      if (pct < .5) return `A leaf! ${left} to go.`;
+      if (pct < .75) return `Two leaves now. ${left} more and I bloom.`;
+      return `I can see a bud! Just ${left} left.`;
+    }
+    function renderBuddy() {
+      const dock = $('buddy'); if (!dock || !state) return;
+      const n = buddyNumbers();
+      const stage = n.pct >= 1 ? 4 : n.pct >= .75 ? 3 : n.pct >= .5 ? 2 : n.pct >= .25 ? 1 : 0;
+      dock.dataset.stage = stage;
+      dock.classList.toggle('sleepy', n.done === 0);
+      dock.classList.toggle('wilt', n.over > 0 && n.pct < 1);
+      dock.classList.toggle('bloom', n.pct >= 1 && n.total > 0);
+      const mood = n.done === 0 ? 'sleepy' : n.pct >= 1 ? 'grin' : n.over ? 'wilt' : n.pct >= .4 ? 'smile' : 'calm';
+      const mouth = $('b-mouth');
+      mouth.setAttribute('d', MOUTHS[mood]);
+      mouth.setAttribute('fill', mood === 'grin' ? '#7a2c1c' : 'none');
+
+      const w = $('buddy-track').clientWidth;
+      $('buddy-mover').style.transform = `translateX(${(n.pct * Math.max(0, w - 64)).toFixed(1)}px)`;
+      $('buddy-svg').style.transform = `scale(${(0.8 + 0.4 * n.pct).toFixed(3)})`;
+      $('buddy-fill').style.width = (n.pct * 100) + '%';
+      $('buddy-count').innerHTML = `<b>${n.done}</b> of ${n.total} logged${selectedDate === todayStr ? ' today' : `, ${esc(niceDate(selectedDate))}`}`;
+      $('buddy-stage').textContent = STAGE_NAMES[stage];
+      $('buddy-btn').setAttribute('aria-label', `Pip: ${n.done} of ${n.total} habits logged, ${STAGE_NAMES[stage].toLowerCase()}. Tap to log the next habit.`);
+
+      const p = buddyPrev;
+      if (p && p.date === selectedDate && p.done !== n.done) {
+        buddyWalk();
+        if (n.done > p.done) buddyHop();
+        buddySay(buddyLine(n));
+      } else if (p && p.date === selectedDate && n.over > p.over) {
+        buddySay(buddyLine(n));
+      } else if (p && p.date !== selectedDate) {
+        buddyWalk();
+      }
+      buddyPrev = { date: selectedDate, done: n.done, over: n.over };
+    }
+    function buddyWalk() {
+      if (reducedMotion()) return;
+      const d = $('buddy'); d.classList.add('walking');
+      clearTimeout(buddyWalk.t); buddyWalk.t = setTimeout(() => d.classList.remove('walking'), 900);
+    }
+    function buddyHop() {
+      if (reducedMotion()) return;
+      const d = $('buddy'); d.classList.remove('hop'); void d.offsetWidth; d.classList.add('hop');
+      setTimeout(() => d.classList.remove('hop'), 520);
+    }
+    function buddySay(text, ms = 3400) {
+      const b = $('buddy-say'); b.textContent = text; b.classList.add('show');
+      clearTimeout(sayT); sayT = setTimeout(() => b.classList.remove('show'), ms);
+    }
+    function buddyGreet() {
+      const h = new Date().getHours();
+      const hi = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+      const name = state.profile?.name ? `, ${state.profile.name}` : '';
+      setTimeout(() => buddySay(`${hi}${name}! ${buddyLine(buddyNumbers())}`, 4200), 700);
+    }
+    window.buddyClick = function () {
+      buddyHop();
+      const next = allColumns().find(c => !isDone(selectedDate, c));
+      if (next) { buddySay(`Let's do ${next}.`, 1800); setTimeout(() => openSheet(R(next)), 280); }
+      else { buddySay('All done for the day. Look at me bloom!'); if (!reducedMotion()) confetti(); }
+    };
+    window.toggleBuddy = function () {
+      const d = $('buddy'); const min = !d.classList.contains('min');
+      d.classList.toggle('min', min);
+      d.querySelector('.buddy-toggle').textContent = min ? '+' : '−';
+      try { localStorage.setItem('buddy_min', min ? '1' : '0'); } catch { }
+      renderBuddy();
+    };
+    try { if (localStorage.getItem('buddy_min') === '1') { $('buddy').classList.add('min'); $('buddy').querySelector('.buddy-toggle').textContent = '+'; } } catch { }
+
+    // eyes: follow the cursor, glance up/down while you scroll, blink now and then
+    function setPupils(x, y) { $('b-pupils').style.transform = `translate(${x.toFixed(2)}px, ${y.toFixed(2)}px)`; }
+    function lookAt(x, y) {
+      const r = $('buddy-svg').getBoundingClientRect();
+      const dx = x - (r.left + r.width / 2), dy = y - (r.top + r.height * .6);
+      const dist = Math.hypot(dx, dy) || 1, m = Math.min(3.2, dist / 35);
+      // pupils move in SVG units; the svg is ~0.64px per unit, so scale up a touch
+      setPupils(dx / dist * m * 1.5, dy / dist * m * 1.5);
+    }
+    window.addEventListener('mousemove', e => { lastMouse = [e.clientX, e.clientY]; if (!lookBackT) lookAt(e.clientX, e.clientY); }, { passive: true });
+    const scrollPos = new WeakMap();
+    document.addEventListener('scroll', e => {
+      const el = e.target === document ? document.scrollingElement : e.target;
+      if (!el || typeof el.scrollTop !== 'number') return;
+      const prev = scrollPos.get(el) ?? el.scrollTop;
+      const dy = el.scrollTop - prev;
+      scrollPos.set(el, el.scrollTop);
+      if (!dy) return;
+      setPupils(0, Math.sign(dy) * 4.6);
+      clearTimeout(lookBackT);
+      lookBackT = setTimeout(() => { lookBackT = null; lastMouse ? lookAt(...lastMouse) : setPupils(0, 0); }, 650);
+    }, { capture: true, passive: true });
+    (function blinkLoop() {
+      setTimeout(() => {
+        const d = $('buddy');
+        if (!reducedMotion() && d && !d.classList.contains('sleepy')) { d.classList.add('blink'); setTimeout(() => d.classList.remove('blink'), 130); }
+        blinkLoop();
+      }, 2600 + Math.random() * 3200);
+    })();
+    window.addEventListener('resize', () => { if (state) renderBuddy(); });
+
     function renderStreak() {
       const { cur, best } = dayStreak();
       $('streak-pill').className = 'streak' + (cur ? '' : ' cold');
