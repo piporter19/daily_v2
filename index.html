@@ -115,6 +115,9 @@
     .tone-good { --fillc: var(--teal); }
     .tone-partial { --fillc: var(--mari); }
     .tone-over { --fillc: var(--rose); }
+    .tone-under { --fillc: var(--sky); }
+    .tone-over .fill { background: var(--fillbg, rgba(239,111,127,.3)); }
+    .over-tag { color: var(--rose); font-weight: 700; }
     .tile > span { position: relative; }
     .t-name { font-weight: 600; font-size: 13.5px; line-height: 1.25; color: var(--muted); }
     .t-val { font-family: var(--display); font-size: 19px; font-weight: 600; line-height: 1.15; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
@@ -266,6 +269,45 @@
     .confetti { position: fixed; top: -12px; width: 9px; height: 13px; border-radius: 2px; z-index: 400; pointer-events: none; animation: fall 1.7s cubic-bezier(.3, .6, .5, 1) forwards; }
     @keyframes fall { to { transform: translate(var(--dx), 105vh) rotate(var(--rot)); opacity: .8; } }
 
+    /* ---------- goals ---------- */
+    .goals-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+    .goals-head h2 { font-size: 21px; }
+    .goals-head p { margin: 2px 0 0; font-size: 13px; color: var(--muted); max-width: 60ch; }
+    .goal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 12px; }
+    .goal { background: var(--panel2); border: 1px solid var(--line); border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+    .goal h3 { font-size: 19px; line-height: 1.2; letter-spacing: -.01em; }
+    .goal .when { font-size: 13px; color: var(--muted); margin-top: 3px; }
+    .goal .when b { color: var(--mari); }
+    .meter { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--muted); }
+    .gbar { height: 7px; border-radius: 4px; background: var(--well); overflow: hidden; }
+    .gbar i { display: block; height: 100%; border-radius: 4px; background: var(--dim); }
+    .gbar.hours i { background: var(--teal); }
+    .gbar.hours.behind i { background: var(--rose); }
+    .chips { display: flex; flex-wrap: wrap; gap: 5px; }
+    .chips span { font-size: 11.5px; padding: 2px 9px; border-radius: 999px; background: var(--well); border: 1px solid var(--line); color: var(--muted); }
+    .goal details summary { cursor: pointer; font-weight: 600; font-size: 13px; color: var(--mari); }
+    .goal details .md { font-size: 13px; max-height: 320px; overflow: auto; margin-top: 8px; padding-right: 4px; }
+    .goal-actions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: auto; padding-top: 4px; }
+    .goal-empty { border: 1px dashed var(--line); border-radius: 18px; padding: 22px; color: var(--muted); font-size: 14px; display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
+    .form { display: flex; flex-direction: column; gap: 13px; }
+    .form label { display: flex; flex-direction: column; gap: 5px; font-size: 12.5px; color: var(--muted); }
+    .form .two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .checks { display: flex; flex-wrap: wrap; gap: 6px; }
+    .checks label { flex-direction: row; align-items: center; gap: 6px; background: var(--well); border: 1px solid var(--line); border-radius: 999px; padding: 4px 11px; font-size: 12.5px; color: var(--ink); cursor: pointer; }
+    .checks input { accent-color: var(--mari); margin: 0; }
+    input[type=date].field { color-scheme: dark; }
+
+    /* ---------- chat ---------- */
+    .chat { display: flex; flex-direction: column; gap: 12px; flex: 1; }
+    .msg { max-width: 94%; padding: 10px 14px; border-radius: 16px; font-size: 14px; line-height: 1.55; overflow-wrap: anywhere; }
+    .msg.me { align-self: flex-end; background: var(--mari); color: #2a1d02; border-bottom-right-radius: 5px; white-space: pre-wrap; font-weight: 500; }
+    .msg.ai { align-self: flex-start; background: var(--panel); border: 1px solid var(--line); border-bottom-left-radius: 5px; }
+    .msg.ai:empty::after { content: '▍'; color: var(--mari); animation: pulse 1s infinite; }
+    .chat-empty { color: var(--dim); font-size: 13.5px; line-height: 1.6; }
+    .chat-empty b { color: var(--muted); }
+    .chat-foot { align-items: flex-end; }
+    .chat-foot textarea { flex: 1; resize: none; min-height: 42px; max-height: 140px; }
+
     @media (max-width: 900px) {
       .today { grid-template-columns: 1fr auto; }
       .today .checkin { grid-column: 1 / -1; grid-row: 2; }
@@ -332,6 +374,20 @@
 
     <section id="tiles"></section>
 
+    <section class="panel" id="goals-panel">
+      <div class="goals-head">
+        <div>
+          <h2>Your goals</h2>
+          <p>Bigger things you're working towards over the next month or two. The coach builds a plan for each and checks your daily logs against it.</p>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn small" onclick="openProfileSheet()">About me</button>
+          <button class="btn small accent" onclick="openGoalSheet()">+ New goal</button>
+        </div>
+      </div>
+      <div id="goals"></div>
+    </section>
+
     <section class="insights">
       <div class="panel">
         <h2>Consistency</h2>
@@ -396,7 +452,10 @@
   <aside id="coach" class="side wide" aria-label="AI coach">
     <div class="side-head">
       <h2>✦ Coach</h2>
-      <button class="round" onclick="closeAll()" aria-label="Close">×</button>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="btn small" onclick="newChat()">New chat</button>
+        <button class="round" onclick="closeAll()" aria-label="Close">×</button>
+      </div>
     </div>
     <div class="side-body">
       <details id="ai-settings" class="settings">
@@ -410,22 +469,19 @@
         </div>
       </details>
       <div class="prompts">
-        <button class="btn small" onclick="runCoach('day')">Review this day</button>
-        <button class="btn small" onclick="runCoach('week')">Last 7 days</button>
-        <button class="btn small" onclick="runCoach('all')">Everything so far</button>
-        <button class="btn small" onclick="runCoach('plan')">Plan tomorrow's targets</button>
+        <button class="btn small" onclick="runCoach('day')">Analyze my day</button>
+        <button class="btn small" onclick="runCoach('goals')">Check my goals</button>
+        <button class="btn small" onclick="runCoach('week')">Weekly review</button>
+        <button class="btn small" onclick="runCoach('plan')">Plan tomorrow</button>
+        <button class="btn small" onclick="runCoach('all')">Whole journey</button>
       </div>
-      <div class="ask">
-        <input id="ai-q" class="field" placeholder="Ask anything, e.g. does Instagram hurt my DSA days?" onkeydown="if(event.key==='Enter')runCoach('custom')">
-        <button class="btn accent small" onclick="runCoach('custom')">Ask</button>
-      </div>
+      <div id="chat" class="chat"></div>
       <p id="ai-status" class="hint"></p>
-      <div id="ai-out" class="md ai-out"></div>
     </div>
-    <div class="side-foot">
-      <button id="ai-stop" class="btn small" onclick="stopCoach()" hidden>Stop</button>
-      <span></span>
-      <button class="btn small" onclick="copyInsight()">Copy text</button>
+    <div class="side-foot chat-foot">
+      <textarea id="ai-q" class="field" rows="1" placeholder="Ask your coach anything…" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();runCoach('custom')}" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
+      <button id="ai-send" class="btn accent" onclick="runCoach('custom')">Send</button>
+      <button id="ai-stop" class="btn" onclick="stopCoach()" hidden>Stop</button>
     </div>
   </aside>
 
@@ -468,7 +524,8 @@
       quote: '"Consistency is what transforms average into excellence."',
       bgUrl: '', logs: {}, groups: defaultGroups, columnRules: {}, allDates: defaultDates,
       isCompact: false, isEditLayout: false, viewMode: '5',
-      checkins: {}, lastInsight: null, running: null
+      checkins: {}, lastInsight: null, running: null,
+      goals: [], profile: { name: '', about: '' }, chat: []
     };
 
     let state;
@@ -549,6 +606,9 @@
           if (!state.checkins) state.checkins = {};
           if (state.lastInsight === undefined) state.lastInsight = null;
           if (state.running === undefined) state.running = null;
+          if (!state.goals) state.goals = [];
+          if (!state.profile) state.profile = { name: '', about: '' };
+          if (!state.chat) state.chat = [];
           if (!state.viewMode) state.viewMode = '5';
         } else {
           state = JSON.parse(JSON.stringify(defaultState));
@@ -563,7 +623,7 @@
 
       selectedDate = state.allDates.includes(todayStr) ? todayStr : state.allDates[state.allDates.length - 1];
       renderHeader(); renderBg(); updateViewButtons(); updateEditModeButton(); updateCompact();
-      renderDay(true); renderTiles(); renderHeatmap(); renderStreak(); renderInsightCard();
+      renderDay(true); renderTiles(); renderHeatmap(); renderStreak(); renderInsightCard(); renderGoals();
       renderTable(true);
 
       $('loader').style.opacity = '0';
@@ -736,12 +796,24 @@
       return '';
     }
     const activeTargetOf = (date, col) => getInheritedTarget(date, col);
+    // Scoring rule: explicit choice wins; media-type groups default to "less is better"
+    function ruleOf(col) {
+      const r = state.columnRules?.[col];
+      if (r) return r;
+      const g = state.groups.find(g => g.columns.includes(col));
+      return g && /media|screen|social|ott/i.test(g.name) ? 'less' : 'more';
+    }
+    // Value used for colouring: the typed actual, or logged hours if no actual was typed
+    function scoreVal(cd) {
+      if (cd.actual !== undefined && String(cd.actual).trim() !== '') return cd.actual;
+      const h = hoursOf(cd); return h > 0 ? String(h) : '';
+    }
 
     function calculateProgressStyle(target, actual, col) {
       if (!target || !actual) return '';
       const t = numOf(target), a = numOf(actual);
       if (t === null || a === null || t === 0) return '';
-      const rule = state.columnRules?.[col] || 'more';
+      const rule = ruleOf(col);
       if (rule === 'more') { const r = Math.max(0, Math.min(1, a / t)); return `rgba(79,195,176,${(r * 0.42).toFixed(2)})`; }
       if (rule === 'less') {
         if (a <= t) return 'rgba(134,183,255,0.22)';
@@ -757,12 +829,16 @@
     function progressOf(date, col) {
       if (!isDone(date, col)) return { fill: 0, tone: 'none' };
       const cd = cellOf(date, col);
-      const t = numOf(activeTargetOf(date, col)), a = numOf(cd.actual);
-      const rule = state.columnRules?.[col] || 'more';
+      const t = numOf(activeTargetOf(date, col)), a = numOf(scoreVal(cd));
+      const rule = ruleOf(col);
       if (t && a !== null) {
         if (rule === 'more') { const r = Math.max(0.06, Math.min(1, a / t)); return { fill: r, tone: r >= 1 ? 'good' : 'partial' }; }
-        if (rule === 'less') return { fill: 1, tone: a <= t ? 'good' : 'over' };
-        if (rule === 'exact') return { fill: 1, tone: a > t ? 'over' : 'good' };
+        if (rule === 'less') {
+          if (a <= t) return { fill: 1, tone: 'under' };
+          const ex = Math.min(1, (a - t) / t);   // deeper red the further over the limit
+          return { fill: 1, tone: 'over', bg: `rgba(239,111,127,${(0.18 + ex * 0.5).toFixed(2)})`, over: +(a - t).toFixed(2) };
+        }
+        if (rule === 'exact') return a > t ? { fill: 1, tone: 'over', bg: 'rgba(239,111,127,0.42)', over: +(a - t).toFixed(2) } : { fill: 1, tone: 'good' };
       }
       return { fill: 1, tone: 'good' };
     }
@@ -874,11 +950,12 @@
       const val = cd.actual && String(cd.actual).trim() ? esc(cd.actual) + (t ? `<span class="muted" style="font-size:13px;font-weight:500"> / ${esc(t)}</span>` : '')
                 : h > 0 ? `${h} h` : (t ? `Goal ${esc(t)}` : 'Tap to log');
       return `
-        <button class="tile tone-${p.tone}" style="--fill:${p.fill}" onclick="openSheet(${R(col)})">
+        <button class="tile tone-${p.tone}" style="--fill:${p.fill}${p.bg ? `;--fillbg:${p.bg}` : ''}" onclick="openSheet(${R(col)})">
           <span class="fill"></span>
           <span class="t-name">${esc(col)}</span>
           <span class="t-val">${val}</span>
           <span class="t-meta">
+            ${p.over ? `<span class="over-tag">+${p.over} over</span>` : ''}
             ${run && runSlot?.from ? `<span class="live">${minsSince(runSlot.from)} min</span>` : ''}
             ${h > 0 && cd.actual ? `<span>⏱ ${h}h</span>` : ''}
             ${cd.reaction ? `<span>${cd.reaction}</span>` : ''}
@@ -958,7 +1035,7 @@
         group.columns.forEach((col, cIdx) => {
           let tools = '';
           if (state.isEditLayout) {
-            const rule = state.columnRules?.[col] || 'more';
+            const rule = ruleOf(col);
             tools = `<div class="h-tools">
                 <select onchange="updateColumnRule(${R(col)}, this.value)" aria-label="Scoring rule for ${esc(col)}">
                   <option value="more" ${rule === 'more' ? 'selected' : ''}>📈 More the better</option>
@@ -987,7 +1064,7 @@
           if (!group.columns.length) row += `<td></td>`;
           group.columns.forEach(col => {
             const cd = cellOf(date, col);
-            const bg = calculateProgressStyle(activeTargetOf(date, col), cd.actual, col);
+            const bg = calculateProgressStyle(activeTargetOf(date, col), scoreVal(cd), col);
             row += `<td class="cell" id="td-${safeId(date)}-${safeId(col)}" style="background-color:${bg || 'transparent'}" onclick="openSheet(${R(col)}, ${di})">${getCellInnerHtml(date, col, cd)}</td>`;
           });
         });
@@ -1007,7 +1084,7 @@
     // ============ refresh orchestration ============
     let refreshT;
     function scheduleRefresh() { clearTimeout(refreshT); refreshT = setTimeout(refreshViews, 120); }
-    function refreshViews() { renderDay(false); renderTiles(); renderHeatmap(); renderStreak(); renderTable(false); }
+    function refreshViews() { renderDay(false); renderTiles(); renderHeatmap(); renderStreak(); renderTable(false); renderGoals(); }
     function refreshAll() { renderDay(true); refreshViews(); }
 
     // ============ editor (shared by sheet + drawer) ============
@@ -1153,7 +1230,7 @@
       const col = sheetCol; if (!col) return;
       const gi = state.groups.findIndex(g => g.columns.includes(col));
       const { cur, best } = habitStreak(col);
-      const rule = state.columnRules?.[col] || 'more';
+      const rule = ruleOf(col);
       $('sheet-head').innerHTML = `
         <div>
           <h2>${esc(col)}</h2>
@@ -1219,26 +1296,146 @@
     function loadAi() { try { return { ...AI_DEFAULTS, ...JSON.parse(localStorage.getItem(AI_STORE) || '{}') }; } catch { return { ...AI_DEFAULTS }; } }
     let aiCfg = loadAi();
     let aiController = null;
-    let aiText = '';
 
-    window.openCoach = function () {
-      aiCfg = loadAi();
-      $('ai-base').value = aiCfg.base; $('ai-key').value = aiCfg.key; $('ai-model').value = aiCfg.model;
-      $('ai-settings').open = !aiCfg.key;
-      if (!aiText && state.lastInsight?.text) { aiText = state.lastInsight.text; $('ai-out').innerHTML = md(aiText); $('ai-status').textContent = `Last review: ${state.lastInsight.label}, ${new Date(state.lastInsight.at).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}`; }
-      openLayer('coach');
+    // ============ goals + profile (stored per dashboard, so each password gets its own) ============
+    const uid = () => Math.random().toString(36).slice(2, 10);
+    const isoOf = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const isoLabel = iso => { const d = new Date(iso + 'T00:00:00'); return isNaN(d) ? iso : d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }); };
+
+    function goalStats(g) {
+      const start = new Date((g.start || isoOf(new Date())) + 'T00:00:00');
+      const end = g.deadline ? new Date(g.deadline + 'T00:00:00') : null;
+      const now = new Date();
+      const elapsed = Math.max(0, (now - start) / 864e5);
+      const total = end ? Math.max(1, (end - start) / 864e5) : null;
+      const left = end ? Math.ceil((end - now) / 864e5) : null;
+      let hrs = 0, days = 0;
+      state.allDates.forEach(d => {
+        const dt = parseDM(d); if (!dt || dt < start || dt > now) return;
+        let any = false;
+        (g.cols || []).forEach(c => { hrs += hoursOf(cellOf(d, c)); if (isDone(d, c)) any = true; });
+        if (any) days++;
+      });
+      const expected = g.hours ? g.hours * Math.max(1, elapsed) / 7 : null;
+      return { elapsed, total, left, hrs, days, expected, timePct: total ? Math.min(1, elapsed / total) : 0 };
+    }
+
+    function renderGoals() {
+      const el = $('goals'); if (!el || !state) return;
+      const goals = state.goals || [];
+      if (!goals.length) {
+        el.innerHTML = `<div class="goal-empty">
+          <span>No goals yet. Add something you want done in the next month or two: cracking an exam, finishing a research paper draft, swimming 1 km without stopping. Link it to the habits you already track and the coach will tell you whether you're doing enough.</span>
+          <button class="btn accent small" onclick="openGoalSheet()">+ New goal</button></div>`;
+        return;
+      }
+      el.innerHTML = `<div class="goal-grid">${goals.map(g => {
+        const s = goalStats(g);
+        const behind = s.expected !== null && s.hrs < s.expected * 0.8;
+        const hoursPct = s.expected ? Math.min(1, s.hrs / Math.max(0.1, s.expected)) : 0;
+        return `<div class="goal">
+          <div>
+            <h3>${esc(g.title)}</h3>
+            <div class="when">${g.deadline ? (s.left >= 0 ? `<b>${s.left} days left</b>, due ${isoLabel(g.deadline)}` : `Deadline passed on ${isoLabel(g.deadline)}`) : 'No deadline set'}</div>
+          </div>
+          ${g.deadline ? `<div class="meter"><span>Time used: ${Math.round(s.timePct * 100)}%</span><div class="gbar"><i style="width:${s.timePct * 100}%"></i></div></div>` : ''}
+          <div class="meter"><span>${s.hrs.toFixed(1)} h logged on ${s.days} active days${s.expected !== null ? `, about ${s.expected.toFixed(0)} h expected by now` : ''}</span>
+            ${s.expected !== null ? `<div class="gbar hours ${behind ? 'behind' : ''}"><i style="width:${hoursPct * 100}%"></i></div>` : ''}</div>
+          ${(g.cols || []).length ? `<div class="chips">${g.cols.map(c => `<span>${esc(c)}</span>`).join('')}</div>` : '<span class="hint">No habits linked yet. Edit the goal to link some.</span>'}
+          ${g.plan ? `<details><summary>The plan</summary><div class="md">${md(g.plan)}</div></details>` : ''}
+          ${g.lastCheck?.text ? `<details><summary>Last progress check, ${new Date(g.lastCheck.at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</summary><div class="md">${md(g.lastCheck.text)}</div></details>` : ''}
+          <div class="goal-actions">
+            <button class="btn small ${g.plan ? '' : 'accent'}" onclick="goalAction('${g.id}','plan')">${g.plan ? 'Rebuild plan' : 'Build plan with AI'}</button>
+            <button class="btn small ${g.plan ? 'accent' : ''}" onclick="goalAction('${g.id}','check')">Check my progress</button>
+            <button class="btn small" onclick="openGoalSheet('${g.id}')">Edit</button>
+            <button class="btn small" onclick="deleteGoal('${g.id}')" aria-label="Delete goal">Delete</button>
+          </div>
+        </div>`;
+      }).join('')}</div>`;
+    }
+
+    window.openGoalSheet = function (id) {
+      const g = id ? state.goals.find(x => x.id === id) : null;
+      sheetCol = null; openLayer('sheet');
+      $('sheet-head').innerHTML = `<div><h2>${g ? 'Edit goal' : 'New goal'}</h2><p>The more you describe, the more specific the coach can be.</p></div>
+        <button class="round" onclick="closeAll()" aria-label="Close">×</button>`;
+      const linked = new Set(g?.cols || []);
+      $('sheet-body').innerHTML = `<div class="form">
+        <label>What do you want to achieve?
+          <input id="g-title" class="field" value="${esc(g?.title || '')}" placeholder="Crack GATE DA 2027, submit my biophysics paper, swim 1 km non-stop"></label>
+        <div class="two">
+          <label>By when?<input id="g-deadline" class="field" type="date" value="${esc(g?.deadline || '')}"></label>
+          <label>Hours per week you can give<input id="g-hours" class="field" type="number" min="0" step="0.5" value="${esc(g?.hours || '')}" placeholder="Optional"></label>
+        </div>
+        <label>Details
+          <textarea id="g-details" class="field" rows="5" placeholder="Where you are now, the syllabus or scope, what success looks like, what worries you. e.g. 'Probability basics done, weak in linear algebra, need 60+ in mocks. Can only study evenings on weekdays.'">${esc(g?.details || '')}</textarea></label>
+        <div><span class="hint" style="display:block;margin-bottom:6px">Which tracked habits count towards this?</span>
+          <div class="checks">${allColumns().map(c => `<label><input type="checkbox" value="${esc(c)}" ${linked.has(c) ? 'checked' : ''}>${esc(c)}</label>`).join('')}</div></div>
+        <div class="sheet-foot">
+          <button class="btn" onclick="saveGoal(${g ? `'${g.id}'` : 'null'}, false)">Save goal</button>
+          <button class="btn accent" onclick="saveGoal(${g ? `'${g.id}'` : 'null'}, true)">Save and build plan with AI</button>
+        </div></div>`;
+      setTimeout(() => $('g-title')?.focus(), 250);
     };
-    window.saveAiSettings = function () {
-      aiCfg = { base: $('ai-base').value.trim() || AI_DEFAULTS.base, key: $('ai-key').value.trim(), model: $('ai-model').value.trim() || AI_DEFAULTS.model };
-      try { localStorage.setItem(AI_STORE, JSON.stringify(aiCfg)); toast('Connection saved on this device.'); }
-      catch { toast('Saved for this session only. This browser blocks storage.'); }
-      $('ai-settings').open = false;
+    window.saveGoal = function (id, thenPlan) {
+      const title = $('g-title').value.trim();
+      if (!title) { $('g-title').focus(); toast('Give the goal a name first.'); return; }
+      const data = {
+        title,
+        deadline: $('g-deadline').value || '',
+        hours: parseFloat($('g-hours').value) || 0,
+        details: $('g-details').value.trim(),
+        cols: [...$('sheet-body').querySelectorAll('.checks input:checked')].map(i => i.value)
+      };
+      let g = id ? state.goals.find(x => x.id === id) : null;
+      if (g) Object.assign(g, data);
+      else { g = { id: uid(), start: isoOf(new Date()), plan: '', lastCheck: null, ...data }; state.goals.push(g); }
+      saveStateToCloud(); renderGoals(); closeAll();
+      toast(id ? 'Goal updated.' : 'Goal added.');
+      if (thenPlan) setTimeout(() => goalAction(g.id, 'plan'), 50);
+    };
+    window.deleteGoal = function (id) {
+      const g = state.goals.find(x => x.id === id);
+      if (g && confirm(`Delete the goal "${g.title}" and its plan?`)) { state.goals = state.goals.filter(x => x.id !== id); saveStateToCloud(); renderGoals(); }
     };
 
+    window.openProfileSheet = function () {
+      const p = state.profile || {};
+      sheetCol = null; openLayer('sheet');
+      $('sheet-head').innerHTML = `<div><h2>About me</h2><p>The coach reads this before every answer, so it can talk to you rather than to anyone.</p></div>
+        <button class="round" onclick="closeAll()" aria-label="Close">×</button>`;
+      $('sheet-body').innerHTML = `<div class="form">
+        <label>What should the coach call you?<input id="p-name" class="field" value="${esc(p.name || '')}"></label>
+        <label>About you
+          <textarea id="p-about" class="field" rows="7" placeholder="Year and branch, where you study, your usual routine (wake, classes, gym), what you're aiming for after graduation, what usually derails you (late-night reels, OTT binges), and how you like feedback: gentle or blunt.">${esc(p.about || '')}</textarea></label>
+        <div class="sheet-foot"><span class="hint">Saved to this dashboard only.</span><button class="btn accent" onclick="saveProfile()">Save</button></div></div>`;
+    };
+    window.saveProfile = function () {
+      state.profile = { name: $('p-name').value.trim(), about: $('p-about').value.trim() };
+      saveStateToCloud(); closeAll(); toast('Saved. The coach will use this from now on.');
+    };
+
+    window.goalAction = function (id, kind) {
+      const g = state.goals.find(x => x.id === id); if (!g) return;
+      openCoach();
+      if (kind === 'plan') {
+        send(goalPlanPrompt(g), `Build a plan for "${g.title}"`, {
+          label: `Plan: ${g.title}`,
+          onDone: t => { g.plan = t; g.planAt = Date.now(); saveStateToCloud(); renderGoals(); }
+        });
+      } else {
+        send(goalCheckPrompt([g]), `How am I doing on "${g.title}"?`, {
+          label: `Progress: ${g.title}`,
+          onDone: t => { g.lastCheck = { text: t, at: Date.now() }; saveStateToCloud(); renderGoals(); }
+        });
+      }
+    };
+
+    // ============ context the coach sees ============
     function habitsText() {
       return state.groups.map(g => `${g.name}: ` + g.columns.map(c => {
         const t = activeTargetOf(selectedDate, c);
-        return `${c} [${RULE_TEXT[state.columnRules?.[c] || 'more'].toLowerCase()}${t ? `, current target ${t}` : ''}]`;
+        return `${c} [${RULE_TEXT[ruleOf(c)].toLowerCase()}${t ? `, current target ${t}` : ''}]`;
       }).join('; ')).join('\n');
     }
     function dayText(date) {
@@ -1253,106 +1450,240 @@
       allColumns().forEach(col => {
         const cd = cellOf(date, col);
         const h = hoursOf(cd);
-        if (!(cd.actual || h || cd.reaction || cd.reason)) return;
+        const sl = (cd.timeSlots || []).filter(s => s.from).map(s => `${s.from}-${s.to || 'still running'}`).join(', ');
+        if (!(cd.actual || h || sl || cd.reaction || cd.reason)) return;
         const t = activeTargetOf(date, col);
         const bits = [`actual ${cd.actual || '—'}`];
         if (t) bits.push(`target ${t}`);
-        if (h) bits.push(`${h}h`);
+        if (h || sl) bits.push(`${h ? h + 'h' : ''}${sl ? ` at ${sl}` : ''}`.trim());
         if (cd.reaction) bits.push(`felt ${cd.reaction}`);
         if (cd.reason) bits.push(`note: "${cd.reason}"`);
         lines.push(`  - ${col}: ${bits.join(', ')}`);
       });
       return `${niceDate(date)} (${date})${parts.length ? ' | ' + parts.join(', ') : ''}\n${lines.length ? lines.join('\n') : '  (nothing logged)'}`;
     }
-    function datesFor(kind) {
-      const sIdx = state.allDates.indexOf(selectedDate);
-      if (kind === 'day') return [selectedDate];
-      if (kind === 'week' || kind === 'plan') return state.allDates.slice(Math.max(0, sIdx - 6), sIdx + 1);
-      if (kind === 'custom') return state.allDates.slice(Math.max(0, sIdx - 13), sIdx + 1);
-      const tIdx = anchorIdx();
-      const first = state.allDates.findIndex(d => dayScore(d) > 0 || hasCheckin(d));
-      return first < 0 ? [] : state.allDates.slice(first, tIdx + 1);
+    function goalText(g) {
+      const s = goalStats(g);
+      return `- "${g.title}" | started ${g.start}${g.deadline ? `, deadline ${g.deadline} (${s.left} days left, ${Math.round(s.timePct * 100)}% of time used)` : ', no deadline'}${g.hours ? `, committed ${g.hours} h/week` : ''}
+  Details: ${g.details || 'none given'}
+  Linked habits: ${(g.cols || []).join(', ') || 'none'}; logged ${s.hrs.toFixed(1)} h across ${s.days} active days since start${s.expected !== null ? ` (pace needs about ${s.expected.toFixed(1)} h by now)` : ''}
+  Plan: ${g.plan ? g.plan.slice(0, 1800) : 'not built yet'}`;
+    }
+    function recentDates(n) {
+      const i = state.allDates.indexOf(selectedDate);
+      return state.allDates.slice(Math.max(0, i - n + 1), i + 1);
+    }
+    function buildSystem() {
+      const p = state.profile || {};
+      return `You are ${p.name ? p.name + "'s" : "the user's"} personal coach inside their daily habit tracker. You know them through their profile, goals and daily logs below. Think like a thoughtful mentor who has read every entry: connect causes to effects across days, use exact times and numbers from the logs, and say plainly where they're falling short. Use your general knowledge of what goals like theirs require (syllabus coverage, study hours, training progressions), and label estimates as estimates. Never invent log data; if something needed for a conclusion wasn't logged, say what to log. No generic productivity advice, no filler, no motivational clichés. Write in short markdown with ### headings and bullets. Keep answers under about 300 words unless asked for a plan.
+
+Today is ${niceDate(todayStr)} (${todayStr}). The day open in the app is ${niceDate(selectedDate)} (${selectedDate}). Times are 24-hour.
+
+## About the user
+${p.about ? p.about : 'No profile written yet. You may suggest they fill in "About me" once, briefly.'}
+
+## Goals
+${(state.goals || []).length ? state.goals.map(goalText).join('\n') : 'No goals set yet.'}
+
+## Habits tracked and scoring rules
+${habitsText()}
+
+## Log, last 14 days up to the open day
+${recentDates(14).map(dayText).join('\n')}`;
     }
 
-    const SYSTEM = `You are a sharp, warm accountability coach for a university student who tracks daily habits: academics, lifestyle (sleep, food, exercise, calls) and media use. Use only the data given; never invent numbers. Be concise and specific, cite actual habits and dates. Media columns like Instagram, JioHotstar and Youtube are usually "less is better". No generic productivity advice. Format in short markdown: a one-line verdict, then "### What went well" (2-3 bullets), "### What slipped" (2-3 bullets), "### Pattern I notice" (1-2 bullets linking habits, e.g. media vs study, sleep vs output, mood vs activity), "### One thing for tomorrow" (a single concrete action). Keep it under 230 words.`;
+    // ============ prompts ============
+    function reflectPrompt(date) {
+      const i = state.allDates.indexOf(date);
+      const prev = state.allDates.slice(Math.max(0, i - 2), i).map(niceDate).join(' and ');
+      return `Analyze my day, ${niceDate(date)} (${date}), as a real reflection, not a summary.
 
-    window.runCoach = async function (kind) {
+### What actually happened
+Two or three sentences on how the day went against my targets.
+
+### Why it went that way
+Trace the cause-and-effect chain across ${prev || 'the previous days'} into this day, using the exact times in the logs: when I slept and woke (see the sleep column and time slots), late-night media (Instagram, OTT, YouTube slots near bedtime), meals, exercise, calls, mood and energy, and how each knocked on into study output and missed targets. Write it as a chain, for example: "Instagram 23:40–00:50 → slept 01:30 → woke late → skipped the run → low energy → DSA 1 of 3". If a link isn't supported by the data, say what I should log to know.
+
+### Effect on my goals
+Did this day move my goals forward? Name the goal and roughly how far behind or ahead this leaves me.
+
+### Tomorrow
+Two or three concrete actions with times, aimed at breaking the chain above.`;
+    }
+    const WEEK_PROMPT = `Review my last 7 days as a week. Cover: the overall verdict in one line; the habits I was consistent on and the ones I kept skipping (with counts); recurring cause-and-effect patterns across days (sleep timing, late media, meals, exercise versus study output and mood); how the week moved each goal, and whether my pace is enough; and the single change that would matter most next week.`;
+    const PLAN_PROMPT = `Plan tomorrow for me. Based on my goals, their plans, and my recent actual numbers, set a realistic target for each habit that has data (a bulleted "Habit: target, why in under 10 words"), then give a rough time-blocked schedule for the day including sleep and wake time, and name the one thing I must protect.`;
+    function goalPlanPrompt(g) {
+      return `Build a practical, personalised plan for my goal "${g.title}"${g.deadline ? `, due ${g.deadline}` : ''}. Use my details, my profile and what my logs show about my current routine and pace. Use general knowledge of what this goal really requires.
+
+### Reality check
+Is the timeline realistic? Estimate the total hours or sessions it needs versus what my recent logs suggest I can give.
+### Weekly structure
+Hours per week and how to split them across my tracked habits and topics.
+### What to cover
+A checklist of the topics, skills or components this goal needs, ordered by priority, including ones I haven't mentioned.
+### Milestones
+Dated checkpoints from now to the deadline.
+### Tracking
+Which of my current habits map to this, any habit or column I should add, and suggested daily targets.
+
+This is the one answer that can run longer, up to about 550 words.`;
+    }
+    function goalCheckPrompt(goals) {
+      return `Check my progress on ${goals.length > 1 ? 'each of my goals' : `"${goals[0].title}"`} against the plan and everything logged since it started.
+For each goal: am I on track or behind (compare logged hours and active days with the pace needed, with numbers); which parts of the plan or syllabus are not showing up in my notes and entries at all; what's quietly eating the time (media, late nights, anything the logs show); whether what I'm doing is enough; and exactly what to focus on for the next 7 days. Be honest, including if the deadline needs to move.${goals.length > 1 ? ' Finish with which goal needs attention most.' : ''}`;
+    }
+
+    // ============ chat engine ============
+    window.openCoach = function () {
       aiCfg = loadAi();
-      if (!aiCfg.key) { $('ai-settings').open = true; $('ai-key').focus(); $('ai-status').textContent = 'Add your API key under Connection first, then save it.'; return; }
-      const dates = datesFor(kind);
-      if (!dates.length) { $('ai-status').textContent = 'There is nothing logged yet. Log a few habits first, then ask again.'; return; }
-      let label, ask;
-      if (kind === 'day') { label = `Review of ${niceDate(selectedDate)}`; ask = `Review this single day.`; }
-      else if (kind === 'week') { label = 'Last 7 days'; ask = `Review these 7 days as a week. Mention consistency and trends.`; }
-      else if (kind === 'all') { label = 'Everything so far'; ask = `Review the whole journey so far. Call out long-term trends, the most and least consistent habits, and how the recent week compares with earlier.`; }
-      else if (kind === 'plan') { label = "Tomorrow's targets"; ask = `Instead of the usual format, propose realistic targets for the next day for each habit that has data, based on recent actuals and targets. Output a short bulleted list "Habit: target (why, in under 10 words)", then one line on what to protect time for.`; }
-      else {
+      $('ai-base').value = aiCfg.base; $('ai-key').value = aiCfg.key; $('ai-model').value = aiCfg.model;
+      $('ai-settings').open = !aiCfg.key;
+      renderChat();
+      if (openPanel !== 'coach') openLayer('coach');
+    };
+    window.saveAiSettings = function () {
+      aiCfg = { base: $('ai-base').value.trim() || AI_DEFAULTS.base, key: $('ai-key').value.trim(), model: $('ai-model').value.trim() || AI_DEFAULTS.model };
+      try { localStorage.setItem(AI_STORE, JSON.stringify(aiCfg)); toast('Connection saved on this device.'); }
+      catch { toast('Saved for this session only. This browser blocks storage.'); }
+      $('ai-settings').open = false;
+    };
+    window.newChat = function () {
+      if (aiController) aiController.abort();
+      state.chat = []; saveStateToCloud(); renderChat(); $('ai-status').textContent = '';
+    };
+
+    function renderChat() {
+      const box = $('chat'); const chat = state.chat || [];
+      if (!chat.length) {
+        const n = state.profile?.name;
+        box.innerHTML = `<div class="chat-empty">
+          <p>${n ? `Hi ${esc(n)}. ` : ''}Pick one of the buttons above or ask anything. I can see your last 14 days of logs, your check-ins, your goals and their plans.</p>
+          <p><b>Analyze my day</b> traces why the day went the way it did, e.g. how last night's screen time led to a late wake-up and a missed workout.<br>
+          <b>Check my goals</b> compares your pace with what each goal needs and points out what's being neglected.</p>
+          ${!(state.profile?.about) ? `<p>Tip: fill in <b>About me</b> in the goals section so answers fit your routine.</p>` : ''}</div>`;
+        return;
+      }
+      box.innerHTML = chat.map(m => m.role === 'user'
+        ? `<div class="msg me">${esc(m.display || m.content)}</div>`
+        : `<div class="msg ai md">${md(m.content)}</div>`).join('');
+      box.parentElement.scrollTop = box.parentElement.scrollHeight;
+    }
+
+    async function streamCompletion(messages, onDelta, signal) {
+      const res = await fetch(aiCfg.base.replace(/\/+$/, '') + '/chat/completions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${aiCfg.key}` },
+        body: JSON.stringify({ model: aiCfg.model, stream: true, messages }),
+        signal
+      });
+      if (!res.ok) {
+        const body = await res.text().catch(() => '');
+        throw new Error(res.status === 401 ? 'The API key was rejected (401). Check it under Connection.' :
+          res.status === 404 ? 'Endpoint or model not found (404). Check the base URL and model name.' :
+          res.status === 402 || res.status === 429 ? `The provider refused the request (${res.status}): out of credits or rate-limited.` :
+          `The provider returned ${res.status}. ${body.slice(0, 180)}`);
+      }
+      if ((res.headers.get('content-type') || '').includes('application/json')) {
+        const j = await res.json(); onDelta(j.choices?.[0]?.message?.content || ''); return;
+      }
+      const reader = res.body.getReader(); const dec = new TextDecoder(); let buf = '';
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buf += dec.decode(value, { stream: true });
+        const lines = buf.split('\n'); buf = lines.pop();
+        for (const line of lines) {
+          const l = line.trim();
+          if (!l.startsWith('data:')) continue;
+          const data = l.slice(5).trim();
+          if (data === '[DONE]') continue;
+          try { const j = JSON.parse(data); const d = j.choices?.[0]?.delta?.content; if (d) onDelta(d); } catch { }
+        }
+      }
+    }
+
+    async function send(content, display, opts = {}) {
+      aiCfg = loadAi();
+      if (!aiCfg.key) {
+        $('ai-settings').open = true; $('ai-key').focus();
+        $('ai-status').textContent = 'Add your API key under Connection and save it, then try again.';
+        return false;
+      }
+      if (aiController) { toast('Wait for the current reply, or press Stop.'); return false; }
+      if (!state.chat) state.chat = [];
+      const history = state.chat.slice(-12).map(m => ({ role: m.role, content: m.content }));
+      const userMsg = { role: 'user', content, display: display || '' };
+      const aiMsg = { role: 'assistant', content: '', display: '' };
+      state.chat.push(userMsg, aiMsg);
+      renderChat();
+      const bubbles = $('chat').querySelectorAll('.msg.ai');
+      const bubble = bubbles[bubbles.length - 1];
+      const scroller = $('chat').parentElement;
+
+      aiController = new AbortController();
+      $('ai-stop').hidden = false; $('ai-send').hidden = true;
+      $('ai-status').textContent = '';
+      let frame = null;
+      const paint = () => { frame = null; bubble.innerHTML = md(aiMsg.content); scroller.scrollTop = scroller.scrollHeight; };
+      try {
+        await streamCompletion(
+          [{ role: 'system', content: buildSystem() }, ...history, { role: 'user', content }],
+          d => { aiMsg.content += d; if (!frame) frame = requestAnimationFrame(paint); },
+          aiController.signal);
+        paint();
+        if (!aiMsg.content.trim()) throw new Error('The model returned an empty reply. Try again or switch the model.');
+        state.chat = state.chat.slice(-40);
+        if (opts.label) { state.lastInsight = { text: aiMsg.content, at: Date.now(), label: opts.label }; renderInsightCard(); }
+        if (opts.onDone) opts.onDone(aiMsg.content);
+        saveStateToCloud();
+        return true;
+      } catch (e) {
+        if (e.name === 'AbortError' && aiMsg.content.trim()) {
+          $('ai-status').textContent = 'Stopped. The partial reply is kept.';
+          saveStateToCloud(); return false;
+        }
+        state.chat.splice(state.chat.indexOf(userMsg), 2);
+        renderChat();
+        $('ai-status').textContent = e.name === 'AbortError' ? 'Stopped.'
+          : e instanceof TypeError ? `Couldn't reach ${aiCfg.base}. Check the URL and your connection. If both are fine, the provider may be blocking requests from browsers (CORS).`
+          : e.message;
+        if (!display) $('ai-q').value = content;
+        return false;
+      } finally {
+        aiController = null; $('ai-stop').hidden = true; $('ai-send').hidden = false;
+      }
+    }
+
+    window.runCoach = function (kind) {
+      if (kind === 'custom') {
         const q = $('ai-q').value.trim();
         if (!q) { $('ai-q').focus(); return; }
-        label = q.length > 48 ? q.slice(0, 48) + '…' : q;
-        ask = `Answer this question directly using the data (skip the usual section format unless it helps): ${q}`;
+        $('ai-q').value = ''; $('ai-q').style.height = 'auto';
+        send(q, '');
+        return;
       }
-      const userMsg = `${ask}\n\nHabits and rules:\n${habitsText()}\n\nLog:\n${dates.map(dayText).join('\n')}`;
-
-      if (aiController) aiController.abort();
-      aiController = new AbortController();
-      aiText = '';
-      const out = $('ai-out');
-      out.innerHTML = ''; out.classList.add('caret');
-      $('ai-status').textContent = `Thinking about: ${label}`;
-      $('ai-stop').hidden = false;
-
-      let frame = null;
-      const paint = () => { frame = null; out.innerHTML = md(aiText); };
-      try {
-        const res = await fetch(aiCfg.base.replace(/\/+$/, '') + '/chat/completions', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${aiCfg.key}` },
-          body: JSON.stringify({ model: aiCfg.model, stream: true, messages: [{ role: 'system', content: SYSTEM }, { role: 'user', content: userMsg }] }),
-          signal: aiController.signal
+      openCoach();
+      if (kind === 'day') return send(reflectPrompt(selectedDate), `Analyze my day, ${niceDate(selectedDate)}`, { label: `Day analysis, ${niceDate(selectedDate)}` });
+      if (kind === 'week') return send(WEEK_PROMPT, 'Weekly review', { label: 'Weekly review' });
+      if (kind === 'plan') return send(PLAN_PROMPT, 'Plan tomorrow for me', { label: "Tomorrow's plan" });
+      if (kind === 'goals') {
+        if (!(state.goals || []).length) { closeAll(); openGoalSheet(); toast('Add a goal first, then the coach can check it.'); return; }
+        return send(goalCheckPrompt(state.goals), 'Check my progress on my goals', {
+          label: 'Goal check',
+          onDone: t => { if (state.goals.length === 1) { state.goals[0].lastCheck = { text: t, at: Date.now() }; renderGoals(); } }
         });
-        if (!res.ok) {
-          const body = await res.text().catch(() => '');
-          throw new Error(res.status === 401 ? 'The API key was rejected (401). Check it under Connection.' :
-            res.status === 404 ? 'Endpoint or model not found (404). Check the base URL and model name.' :
-            `The provider returned ${res.status}. ${body.slice(0, 180)}`);
-        }
-        const ctype = res.headers.get('content-type') || '';
-        if (ctype.includes('application/json')) {
-          const j = await res.json(); aiText = j.choices?.[0]?.message?.content || ''; paint();
-        } else {
-          const reader = res.body.getReader(); const dec = new TextDecoder(); let buf = '';
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            buf += dec.decode(value, { stream: true });
-            const lines = buf.split('\n'); buf = lines.pop();
-            for (const line of lines) {
-              const l = line.trim();
-              if (!l.startsWith('data:')) continue;
-              const data = l.slice(5).trim();
-              if (data === '[DONE]') continue;
-              try { const j = JSON.parse(data); aiText += j.choices?.[0]?.delta?.content || ''; } catch { }
-            }
-            if (!frame) frame = requestAnimationFrame(paint);
-          }
-          paint();
-        }
-        if (!aiText.trim()) throw new Error('The model returned an empty reply. Try again or switch the model.');
-        state.lastInsight = { text: aiText, at: Date.now(), label };
-        saveStateToCloud(); renderInsightCard();
-        $('ai-status').textContent = `${label}. Saved to your dashboard.`;
-      } catch (e) {
-        if (e.name === 'AbortError') $('ai-status').textContent = 'Stopped.';
-        else if (e instanceof TypeError) $('ai-status').textContent = `Couldn't reach ${aiCfg.base}. Check the URL and your connection. If both are fine, the provider may be blocking requests from browsers (CORS).`;
-        else $('ai-status').textContent = e.message;
-      } finally {
-        out.classList.remove('caret'); $('ai-stop').hidden = true; aiController = null;
+      }
+      if (kind === 'all') {
+        const i = anchorIdx();
+        const first = state.allDates.findIndex(d => dayScore(d) > 0 || hasCheckin(d));
+        const all = first < 0 ? [] : state.allDates.slice(first, i + 1);
+        return send(`Review my whole journey so far. Call out long-term trends, my most and least consistent habits, how the latest week compares with the start, and whether my overall trajectory gets my goals done in time.\n\nFull log:\n${all.map(dayText).join('\n') || '(nothing logged yet)'}`,
+          'Review my whole journey so far', { label: 'Whole journey' });
       }
     };
     window.stopCoach = function () { if (aiController) aiController.abort(); };
     window.copyInsight = async function () {
-      const text = aiText || state.lastInsight?.text || '';
+      const text = state.lastInsight?.text || '';
       if (!text) return toast('Nothing to copy yet.');
       try { await navigator.clipboard.writeText(text); toast('Copied.'); } catch { toast('Copy failed. Select the text and copy it manually.'); }
     };
