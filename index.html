@@ -309,6 +309,67 @@
     .chat-foot textarea { flex: 1; resize: none; min-height: 42px; max-height: 140px; }
 
 
+
+    /* ---------- quick-log sheet v2 ---------- */
+    .ed2 { display: flex; flex-direction: column; gap: 14px; }
+    .big { display: flex; align-items: center; justify-content: center; gap: 16px; padding: 4px 0 0; }
+    .bigstep { width: 52px; height: 52px; border-radius: 50%; border: 1px solid var(--line); background: var(--panel2); font-size: 24px; font-weight: 600; flex-shrink: 0; }
+    .bigstep:hover { border-color: var(--mari); }
+    .bigval { display: flex; flex-direction: column; align-items: center; min-width: 140px; }
+    .bigval input, .bigval strong { width: 160px; background: none; border: 0; outline: none; text-align: center; font-family: var(--display); font-size: 46px; font-weight: 700; line-height: 1.05; color: var(--ink); padding: 0; letter-spacing: -.02em; border-radius: 8px; }
+    .bigval input:focus { box-shadow: 0 2px 0 var(--mari); }
+    .bigval span { font-size: 13px; color: var(--muted); margin-top: 2px; }
+    .quick { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+    .quick button:not(.timer-btn) { border: 1px solid var(--line); background: var(--panel2); border-radius: 999px; padding: 5px 14px; font-size: 13px; font-weight: 600; }
+    .quick button:hover { border-color: var(--mari); }
+    .pbar { height: 6px; border-radius: 3px; background: var(--well); overflow: hidden; }
+    .pbar i { display: block; height: 100%; background: var(--fillc, var(--mari)); border-radius: 3px; transition: width .4s; }
+    .done-big { width: 100%; padding: 20px; border-radius: 16px; border: 2px dashed var(--line); background: none; font-family: var(--display); font-size: 22px; font-weight: 600; color: var(--muted); }
+    .done-big:hover { border-color: var(--teal); color: var(--ink); }
+    .done-big.on { border: 2px solid var(--teal); background: color-mix(in srgb, var(--teal) 16%, transparent); color: var(--teal); }
+    .text-big { font-size: 17px; padding: 13px 14px; }
+    .fold { border-top: 1px solid var(--line); padding-top: 11px; }
+    .fold summary { cursor: pointer; font-size: 13.5px; font-weight: 600; color: var(--muted); list-style: none; display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+    .fold summary::-webkit-details-marker { display: none; }
+    .fold summary::before { content: '▸'; color: var(--dim); transition: transform .15s; display: inline-block; }
+    .fold[open] summary::before { transform: rotate(90deg); }
+    .fold summary em { font-style: normal; font-weight: 500; color: var(--dim); font-size: 12.5px; }
+    .fold > div { margin-top: 11px; }
+    .setup-body { display: flex; flex-direction: column; gap: 16px; }
+    .lbl { display: block; font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+    .chipset { display: flex; flex-wrap: wrap; gap: 6px; }
+    .field + .chipset { margin-top: 7px; }
+    .chip { border: 1px solid var(--line); background: var(--well); border-radius: 999px; padding: 5px 12px; font-size: 12.5px; font-weight: 600; color: var(--muted); }
+    .chip:hover { border-color: #414a86; color: var(--ink); }
+    .chip.small { padding: 3px 10px; font-size: 11.5px; }
+    .chip.on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+    .hrow { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 10px 9px 12px; border-radius: 12px; background: var(--panel); border: 1px solid var(--line); border-left: 3px solid var(--line); }
+    .hrow.tone-good { border-left-color: var(--teal); }
+    .hrow.tone-partial { border-left-color: var(--mari); }
+    .hrow.tone-over { border-left-color: var(--rose); }
+    .hrow.tone-under { border-left-color: var(--sky); }
+    .hrow.focus { border-color: var(--mari); }
+    .hname { background: none; border: 0; padding: 0; text-align: left; display: flex; flex-direction: column; min-width: 0; flex: 1; }
+    .hname b { font-size: 14px; font-weight: 600; }
+    .hname small { font-size: 11.5px; color: var(--dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .hname:hover small { color: var(--muted); }
+    .hctl { flex-shrink: 0; }
+    .mstep { display: flex; align-items: center; gap: 4px; }
+    .mstep button { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--line); background: var(--panel2); font-weight: 700; padding: 0; }
+    .mstep button:hover { border-color: var(--mari); }
+    .mstep input { width: 54px; text-align: center; background: var(--well); border: 1px solid var(--line); border-radius: 8px; padding: 5px 4px; font-weight: 600; font-size: 14px; outline: none; }
+    .mstep input:focus { border-color: var(--mari); }
+    .mstep span { min-width: 58px; text-align: center; font-weight: 600; font-size: 14px; }
+    .done-mini { border: 1px dashed var(--line); background: none; border-radius: 999px; padding: 5px 13px; font-size: 12.5px; font-weight: 600; color: var(--muted); }
+    .done-mini.on { border: 1px solid var(--teal); color: var(--teal); }
+    .drawer-group .eds { gap: 8px; }
+    .setup-card { margin-top: 12px; border: 1px solid var(--line); border-radius: 14px; padding: 13px; background: var(--well); display: flex; flex-direction: column; gap: 11px; }
+    .setup-card h5 { margin: 0 0 6px; font-size: 13.5px; font-family: var(--display); font-weight: 600; }
+    .setup-card .chips span { color: var(--muted); }
+    .setup-card .chips span b { color: var(--ink); font-weight: 600; }
+    .setup-card .diff { font-size: 12.5px; color: var(--muted); margin: 0; }
+    .setup-card.pending { color: var(--dim); font-size: 13px; }
+
     /* ---------- Pip, the progress buddy ---------- */
     .buddy { position: fixed; right: 18px; bottom: 18px; z-index: 30; width: 270px; background: rgba(23, 26, 51, .95); border: 1px solid var(--line); border-radius: 22px; padding: 8px 14px 11px; box-shadow: 0 14px 34px rgba(0, 0, 0, .38); }
     .buddy-track { position: relative; height: 104px; }
@@ -430,6 +491,7 @@
         </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           <button class="btn small" onclick="openProfileSheet()">About me</button>
+          <button class="btn small" onclick="runCoach('setup')">✦ Design my habits</button>
           <button class="btn small accent" onclick="openGoalSheet()">+ New goal</button>
         </div>
       </div>
@@ -458,6 +520,7 @@
           <button class="btn small" onclick="addDateRow()">+ Date</button>
           <button class="btn small" onclick="addColumnModal()">+ Column</button>
           <button class="btn small" onclick="addCategoryModal()">+ Subcategory</button>
+          <button class="btn small" onclick="runCoach('setup')">✦ Redesign with AI</button>
           <button class="btn small" id="edit-mode-btn" onclick="toggleEditMode()">Edit layout</button>
           <button class="btn small" id="compact-btn" onclick="toggleCompactMode()">Compact</button>
         </div>
@@ -573,6 +636,7 @@
         </div>
       </details>
       <div class="prompts">
+        <button class="btn small" onclick="runCoach('setup')">Set up my habits</button>
         <button class="btn small" onclick="runCoach('day')">Analyze my day</button>
         <button class="btn small" onclick="runCoach('goals')">Check my goals</button>
         <button class="btn small" onclick="runCoach('week')">Weekly review</button>
@@ -629,7 +693,7 @@
       bgUrl: '', logs: {}, groups: defaultGroups, columnRules: {}, allDates: defaultDates,
       isCompact: false, isEditLayout: false, viewMode: '5',
       checkins: {}, lastInsight: null, running: null,
-      goals: [], profile: { name: '', about: '' }, chat: []
+      goals: [], profile: { name: '', about: '' }, chat: [], habitMeta: {}, layoutBackup: null
     };
 
     let state;
@@ -714,6 +778,8 @@
           if (!state.goals) state.goals = [];
           if (!state.profile) state.profile = { name: '', about: '' };
           if (!state.chat) state.chat = [];
+          if (!state.habitMeta) state.habitMeta = {};
+          if (state.layoutBackup === undefined) state.layoutBackup = null;
           if (!state.viewMode) state.viewMode = '5';
         } else {
           state = JSON.parse(JSON.stringify(defaultState));
@@ -822,6 +888,7 @@
       if (nn && nn !== cur) {
         state.groups[gIdx].columns[cIdx] = nn;
         if (state.columnRules[cur]) { state.columnRules[nn] = state.columnRules[cur]; delete state.columnRules[cur]; }
+        if (state.habitMeta?.[cur]) { state.habitMeta[nn] = state.habitMeta[cur]; delete state.habitMeta[cur]; }
         for (const date in state.logs) {
           if (state.logs[date][cur] !== undefined) { state.logs[date][nn] = state.logs[date][cur]; delete state.logs[date][cur]; }
         }
@@ -834,6 +901,7 @@
       if (confirm(`Delete column "${col}"?`)) {
         state.groups[gIdx].columns.splice(cIdx, 1);
         delete state.columnRules[col];
+        if (state.habitMeta) delete state.habitMeta[col];
         if (state.running && state.running.col === col) state.running = null;
         saveStateToCloud(); refreshAll();
       }
@@ -1053,8 +1121,7 @@
       const cd = cellOf(d, col); const p = progressOf(d, col); const t = activeTargetOf(d, col); const h = hoursOf(cd);
       const run = state.running && state.running.date === d && state.running.col === col;
       const runSlot = run ? cd.timeSlots?.[state.running.idx] : null;
-      const val = cd.actual && String(cd.actual).trim() ? esc(cd.actual) + (t ? `<span class="muted" style="font-size:13px;font-weight:500"> / ${esc(t)}</span>` : '')
-                : h > 0 ? `${h} h` : (t ? `Goal ${esc(t)}` : 'Tap to log');
+      const val = tileVal(d, col);
       return `
         <button class="tile tone-${p.tone}" style="--fill:${p.fill}${p.bg ? `;--fillbg:${p.bg}` : ''}" onclick="openSheet(${R(col)})">
           <span class="fill"></span>
@@ -1063,7 +1130,7 @@
           <span class="t-meta">
             ${p.over ? `<span class="over-tag">+${p.over} over</span>` : ''}
             ${run && runSlot?.from ? `<span class="live">${minsSince(runSlot.from)} min</span>` : ''}
-            ${h > 0 && cd.actual ? `<span>⏱ ${h}h</span>` : ''}
+            ${h > 0 && cd.actual && metaOf(col).type !== 'time' ? `<span>⏱ ${fmtH(h)}</span>` : ''}
             ${cd.reaction ? `<span>${cd.reaction}</span>` : ''}
             ${cd.reason ? `<span title="${esc(cd.reason)}">✎ note</span>` : ''}
           </span>
@@ -1225,14 +1292,15 @@
     function getCellInnerHtml(date, col, cd) {
       const target = activeTargetOf(date, col);
       const actual = cd.actual;
-      const displayVal = actual || (cd.reaction ? '-' : (target || '-'));
-      const subtitle = target && actual ? `T: ${target}` : (target && !actual ? `Target: ${target}` : '');
-      const h = hoursOf(cd);
+      const lbl = valueLabel(date, col), tl = targetLabel(col, target);
+      const displayVal = lbl || (cd.reaction ? '-' : (tl || '-'));
+      const subtitle = tl && lbl ? `T: ${tl}` : (tl && !lbl ? `Target: ${tl}` : '');
+      const h = metaOf(col).type === 'time' ? 0 : hoursOf(cd);
       const slots = (cd.timeSlots || []).filter(s => s.from && s.to).map(s => `${s.from}-${s.to}`).join(', ');
       return `
         <div class="cell-inner">
           <div class="cell-top">
-            <span class="cell-val ${!actual && !target ? 'empty' : ''}">${esc(displayVal)}</span>
+            <span class="cell-val ${!lbl && !target ? 'empty' : ''}">${esc(displayVal)}</span>
             ${cd.reaction ? `<span>${cd.reaction}</span>` : ''}
           </div>
           <div class="cell-sub">
@@ -1320,54 +1388,150 @@
     function refreshViews() { renderDay(false); renderTiles(); renderHeatmap(); renderStreak(); renderTable(false); renderGoals(); }
     function refreshAll() { renderDay(true); refreshViews(); }
 
-    // ============ editor (shared by sheet + drawer) ============
-    function editorHtml(date, col, focus) {
-      const ci = R(col); const cd = cellOf(date, col);
-      const inherited = getInheritedTarget(date, col);
-      const ownTarget = cd.target !== undefined && cd.target !== '';
-      const slots = cd.timeSlots && cd.timeSlots.length ? cd.timeSlots : [{ from: '', to: '' }];
+    // ============ habit types + units ============
+    const TYPES = { count: 'Count', time: 'Time', check: 'Done or not', text: 'Short text' };
+    const TYPE_HINT = {
+      count: 'For things you count: questions, pages, chapters, km.',
+      time: 'For time spent. Use the +15m buttons or the timer.',
+      check: "For yes/no habits, like a call home or meditation.",
+      text: 'For a word or two, like what you ate.'
+    };
+    const UNIT_SUGGEST = ['questions', 'problems', 'pages', 'chapters', 'lectures', 'papers', 'km', 'meals'];
+    function inferMeta(col) {
+      const n = col.toLowerCase();
+      const g = state.groups.find(g => g.columns.includes(col));
+      if (/instagram|youtube|hotstar|netflix|prime video|reels|ott|screen|social|twitter/.test(n) || (g && /media|screen|social/i.test(g.name))) return { type: 'time', unit: '' };
+      if (/call|meditat|journal|vitamin/.test(n)) return { type: 'check', unit: '' };
+      if (/breakfast|lunch|dinner|meal/.test(n)) return { type: 'count', unit: 'meals' };
+      if (/dsa|pyq|question|problem|leetcode|mcq/.test(n)) return { type: 'count', unit: 'questions' };
+      if (/paper|mock/.test(n)) return { type: 'count', unit: 'papers' };
+      if (/water/.test(n)) return { type: 'count', unit: 'glasses' };
+      return { type: 'time', unit: '' };
+    }
+    function metaOf(col) { const m = state.habitMeta?.[col]; return m && TYPES[m.type] ? { type: m.type, unit: m.unit || '' } : inferMeta(col); }
+    const isTimeNum = v => /^\s*\d*\.?\d+\s*(h|hr|hrs|hours?)?\s*$/i.test(String(v ?? ''));
+    function fmtH(h) {
+      h = +h || 0; if (h <= 0) return '0m';
+      const hh = Math.floor(h), mm = Math.round((h - hh) * 60);
+      return hh && mm ? `${hh}h ${mm}m` : hh ? `${hh}h` : `${mm}m`;
+    }
+    function targetLabel(col, t) {
+      if (t === '' || t == null) return '';
+      const m = metaOf(col);
+      if (m.type === 'time' && isTimeNum(t)) return fmtH(numOf(t));
+      return `${t}${m.type === 'count' && m.unit && isFinite(+String(t).trim()) ? ' ' + m.unit : ''}`;
+    }
+    function valueLabel(date, col) {
+      const m = metaOf(col); const cd = cellOf(date, col); const a = cd.actual;
+      const has = a !== undefined && String(a).trim() !== '';
+      if (m.type === 'check') return has || hoursOf(cd) > 0 ? 'Done' : '';
+      if (m.type === 'time') { if (has) return isTimeNum(a) ? fmtH(numOf(a)) : String(a); const h = hoursOf(cd); return h > 0 ? fmtH(h) : ''; }
+      if (m.type === 'count') return has ? `${String(a).trim()}${m.unit && isFinite(+String(a).trim()) ? ' ' + m.unit : ''}` : '';
+      return has ? String(a) : '';
+    }
+    function tileVal(d, col) {
+      const m = metaOf(col), cd = cellOf(d, col), t = activeTargetOf(d, col);
+      const lbl = valueLabel(d, col);
+      const small = s => s ? `<span class="muted" style="font-size:13px;font-weight:500"> ${s}</span>` : '';
+      if (!lbl) return t && m.type !== 'check' && m.type !== 'text' ? `Target ${esc(targetLabel(col, t))}` : 'Tap to log';
+      if (m.type === 'check') return '✓ Done';
+      if (m.type === 'count' && isFinite(+String(cd.actual).trim())) return `${esc(String(cd.actual).trim())}${small(esc(((t ? `/ ${t} ` : '') + (m.unit || '')).trim()))}`;
+      if (m.type === 'time') return `${esc(lbl)}${t ? small('/ ' + esc(targetLabel(col, t))) : ''}`;
+      return esc(lbl);
+    }
+
+    // ============ quick-log sheet (one habit) + drawer rows (whole day) ============
+    let openSetupCol = null, openMoreCol = null;
+    function sheetEditorHtml(date, col) {
+      const ci = R(col), m = metaOf(col), cd = cellOf(date, col);
+      const t = activeTargetOf(date, col), tn = numOf(t);
+      const rule = ruleOf(col);
       const run = state.running && state.running.date === date && state.running.col === col;
-      const hrs = hoursOf(cd);
-      return `
-        <div class="ed ${focus ? 'focus' : ''}" data-col="${ci}">
-          ${openPanel === 'drawer' ? `<h4>${esc(col)}</h4>` : ''}
-          <div class="grid2">
-            <label><span>Target ${!ownTarget && inherited ? '<em>(carried over)</em>' : ''}</span>
-              <input class="field" placeholder="${esc(inherited || 'Set a target')}" value="${esc(cd.target ?? '')}" oninput="updateCell(${ci},'target',this.value)"></label>
-            <label><span>Actual</span>
-              <div class="stepper">
-                <button type="button" onclick="bump(${ci},-1)" aria-label="Decrease">−</button>
-                <input class="field" value="${esc(cd.actual ?? '')}" oninput="updateCell(${ci},'actual',this.value)">
-                <button type="button" onclick="bump(${ci},1)" aria-label="Increase">+</button>
-              </div></label>
+      const slots = cd.timeSlots || [];
+      const has = cd.actual !== undefined && String(cd.actual).trim() !== '';
+      let main = '';
+      if (m.type === 'count') {
+        main = `<div class="big">
+            <button type="button" class="bigstep" onclick="bump(${ci},-1)" aria-label="One less">−</button>
+            <label class="bigval"><input inputmode="decimal" value="${esc(cd.actual ?? '')}" placeholder="0" oninput="updateCell(${ci},'actual',this.value)" aria-label="Amount done">
+              <span>${esc(((t ? `of ${t} ` : '') + (m.unit || (t ? '' : 'done'))).trim())}</span></label>
+            <button type="button" class="bigstep" onclick="bump(${ci},1)" aria-label="One more">+</button>
           </div>
+          <div class="quick"><button type="button" onclick="bump(${ci},5)">+5</button><button type="button" onclick="bump(${ci},10)">+10</button></div>`;
+      } else if (m.type === 'time') {
+        const h = has && isTimeNum(cd.actual) ? numOf(cd.actual) : hoursOf(cd);
+        main = `<div class="big">
+            <button type="button" class="bigstep" onclick="addTime(${ci},-0.25)" aria-label="15 minutes less">−</button>
+            <div class="bigval"><strong>${has && !isTimeNum(cd.actual) ? esc(cd.actual) : fmtH(h)}</strong><span>${t ? `of ${esc(targetLabel(col, t))}` : 'spent'}</span></div>
+            <button type="button" class="bigstep" onclick="addTime(${ci},0.25)" aria-label="15 minutes more">+</button>
+          </div>
+          <div class="quick">
+            <button type="button" onclick="addTime(${ci},0.25)">+15m</button><button type="button" onclick="addTime(${ci},0.5)">+30m</button><button type="button" onclick="addTime(${ci},1)">+1h</button>
+            <button type="button" class="timer-btn ${run ? 'running' : ''}" onclick="toggleTimer(${ci})">${run ? '■ Stop timer' : '▶ Start timer'}</button>
+          </div>`;
+      } else if (m.type === 'check') {
+        main = `<button type="button" class="done-big ${has ? 'on' : ''}" onclick="toggleCheck(${ci})" aria-pressed="${has}">${has ? '✓ Done' : 'Mark as done'}</button>`;
+      } else {
+        main = `<input class="field text-big" value="${esc(cd.actual ?? '')}" placeholder="What happened?" oninput="updateCell(${ci},'actual',this.value)" aria-label="${esc(col)}">`;
+      }
+      const a = numOf(scoreVal(cd));
+      const bar = tn && a !== null && (m.type === 'count' || m.type === 'time')
+        ? `<div class="pbar tone-${progressOf(date, col).tone}"><i style="width:${Math.min(100, a / tn * 100)}%"></i></div>` : '';
+      const note = `<input class="field note" value="${esc(cd.reason || '')}" placeholder="Add a note (optional)" oninput="updateCell(${ci},'reason',this.value)" aria-label="Note">`;
+      const shownSlots = slots.length ? slots : [{ from: '', to: '' }];
+      const slotSummary = slots.filter(s => s.from && s.to).map(s => `${s.from}–${s.to}`).join(', ');
+      const more = `<details class="fold" ${openMoreCol === col ? 'open' : ''} ontoggle="foldToggle('more',${ci},this.open)">
+          <summary>When did you do it? <em>${slotSummary || 'optional, helps the coach spot patterns'}</em></summary>
           <div class="slots">
-            <div class="slots-head">
-              <span>Time spent ${hrs > 0 ? `<b>${hrs} h</b>` : ''}</span>
-              <span style="display:flex;gap:6px">
-                <button type="button" class="timer-btn ${run ? 'running' : ''}" onclick="toggleTimer(${ci})">${run ? '■ Stop timer' : '▶ Start timer'}</button>
-                <button type="button" class="mini" onclick="addTimeSlot(${ci})">+ Slot</button>
-              </span>
-            </div>
-            ${slots.map((s, idx) => `
+            ${shownSlots.map((s, idx) => `
               <div class="slot">
                 <input type="time" value="${esc(s.from || '')}" onchange="updateTimeSlot(${ci},${idx},'from',this.value)" aria-label="From">
                 <span>to</span>
                 <input type="time" value="${esc(s.to || '')}" onchange="updateTimeSlot(${ci},${idx},'to',this.value)" aria-label="To">
-                ${slots.length > 1 ? `<button type="button" class="x" onclick="removeTimeSlot(${ci},${idx})" aria-label="Remove slot">×</button>` : ''}
+                ${shownSlots.length > 1 ? `<button type="button" class="x" onclick="removeTimeSlot(${ci},${idx})" aria-label="Remove">×</button>` : ''}
               </div>`).join('')}
+            <div><button type="button" class="mini" onclick="addTimeSlot(${ci})">+ Another time</button></div>
           </div>
-          <div class="reacts"><span>How did it feel?</span>
-            ${REACTIONS.map(e => `<button type="button" class="${cd.reaction === e ? 'sel' : ''}" onclick="setReaction(${ci},'${e}')" aria-pressed="${cd.reaction === e}">${e}</button>`).join('')}
+        </details>`;
+      const setup = `<details class="fold" ${openSetupCol === col ? 'open' : ''} ontoggle="foldToggle('setup',${ci},this.open)">
+          <summary>Habit settings <em>${TYPES[m.type]}${m.type === 'count' && m.unit ? `, ${esc(m.unit)}` : ''}${(m.type === 'count' || m.type === 'time') ? (t ? `, target ${esc(targetLabel(col, t))}` : ', no target yet') : ''}${(m.type === 'count' || m.type === 'time') ? `, ${RULE_TEXT[rule].toLowerCase()}` : ''}</em></summary>
+          <div class="setup-body">
+            <div><span class="lbl">Track it as</span>
+              <div class="chipset">${Object.entries(TYPES).map(([k, v]) => `<button type="button" class="chip ${m.type === k ? 'on' : ''}" onclick="setMeta(${ci},'type','${k}')">${v}</button>`).join('')}</div>
+              <p class="hint" style="margin-top:6px">${TYPE_HINT[m.type]}</p></div>
+            ${m.type === 'count' ? `<div><span class="lbl">Counted in</span>
+              <input class="field" value="${esc(m.unit || '')}" placeholder="e.g. questions" onchange="setMeta(${ci},'unit',this.value.trim())">
+              <div class="chipset">${UNIT_SUGGEST.map(u => `<button type="button" class="chip small ${m.unit === u ? 'on' : ''}" onclick="setMeta(${ci},'unit','${u}')">${u}</button>`).join('')}</div></div>` : ''}
+            ${m.type === 'count' || m.type === 'time' ? `<div><span class="lbl">Daily target${m.type === 'time' ? ', in hours' : ''}</span>
+              <input class="field" inputmode="decimal" value="${esc(t)}" placeholder="${m.type === 'time' ? 'e.g. 1.5' : 'e.g. 5'}" onchange="setTarget(${ci},this.value.trim())">
+              <p class="hint" style="margin-top:6px">Applies from this day onward until you change it.</p></div>
+            <div><span class="lbl">What counts as a good day</span>
+              <div class="chipset">${['more', 'less', 'exact'].map(r => `<button type="button" class="chip ${rule === r ? 'on' : ''}" onclick="setRule(${ci},'${r}')">${RULE_TEXT[r]}</button>`).join('')}</div></div>` : ''}
           </div>
-          <textarea class="field" placeholder="Reason or note (shows in the table)" oninput="updateCell(${ci},'reason',this.value)">${esc(cd.reason || '')}</textarea>
+        </details>`;
+      return `<div class="ed2" data-col="${ci}">${main}${bar}${note}${more}${setup}</div>`;
+    }
+
+    function rowHtml(date, col, focus) {
+      const ci = R(col), m = metaOf(col), cd = cellOf(date, col), t = activeTargetOf(date, col);
+      const has = cd.actual !== undefined && String(cd.actual).trim() !== '';
+      let ctl;
+      if (m.type === 'count') ctl = `<div class="mstep"><button type="button" onclick="bump(${ci},-1)" aria-label="One less">−</button><input inputmode="decimal" value="${esc(cd.actual ?? '')}" placeholder="0" oninput="updateCell(${ci},'actual',this.value)" aria-label="${esc(col)}"><button type="button" onclick="bump(${ci},1)" aria-label="One more">+</button></div>`;
+      else if (m.type === 'time') ctl = `<div class="mstep"><button type="button" onclick="addTime(${ci},-0.25)" aria-label="15 minutes less">−</button><span>${esc(valueLabel(date, col) || '0m')}</span><button type="button" onclick="addTime(${ci},0.25)" aria-label="15 minutes more">+</button></div>`;
+      else if (m.type === 'check') ctl = `<button type="button" class="done-mini ${has ? 'on' : ''}" onclick="toggleCheck(${ci})">${has ? '✓ Done' : 'Mark done'}</button>`;
+      else ctl = `<input class="field" style="width:160px" value="${esc(cd.actual ?? '')}" placeholder="What happened?" oninput="updateCell(${ci},'actual',this.value)" aria-label="${esc(col)}">`;
+      const sub = [t && (m.type === 'count' || m.type === 'time') ? `Target ${targetLabel(col, t)}` : '', m.type === 'count' && m.unit && !t ? m.unit : '', cd.reason ? '✎ has a note' : ''].filter(Boolean).join(', ');
+      return `<div class="hrow tone-${progressOf(date, col).tone} ${focus ? 'focus' : ''}" data-col="${ci}">
+          <button type="button" class="hname" onclick="openSheet(${ci}, ${R(date)})"><b>${esc(col)}</b><small>${esc(sub) || 'Tap for notes, times and settings'}</small></button>
+          <div class="hctl">${ctl}</div>
         </div>`;
     }
+
     function rerenderEditor(col) {
       if (openPanel === 'sheet' && sheetCol === col) { renderSheet(); return; }
       if (openPanel === 'drawer') {
-        const el = $('drawer-content').querySelector(`.ed[data-col="${R(col)}"]`);
-        if (el) el.outerHTML = editorHtml(activeDate, col, el.classList.contains('focus'));
+        const el = $('drawer-content').querySelector(`.hrow[data-col="${R(col)}"]`);
+        if (el) el.outerHTML = rowHtml(activeDate, col, el.classList.contains('focus'));
       }
     }
     function ensureCell(col) {
@@ -1381,6 +1545,11 @@
       scheduleRefresh();
       checkCelebrate(activeDate);
     }
+    function syncTimeFromSlots(col, c) {
+      if (metaOf(col).type !== 'time') return;
+      const h = computeHoursFromSlots(c.timeSlots);
+      if (h > 0) { c.actual = String(h); c.hours = String(h); }
+    }
 
     window.updateCell = function (ci, field, value) { const col = V(ci); ensureCell(col)[field] = value; afterEdit(col, false); };
     window.setReaction = function (ci, e) { const col = V(ci); const c = ensureCell(col); c.reaction = c.reaction === e ? '' : e; afterEdit(col, true); };
@@ -1390,10 +1559,23 @@
       c.actual = String(Math.max(0, +(n + delta).toFixed(2)));
       afterEdit(col, true);
     };
+    window.addTime = function (ci, d) {
+      const col = V(ci); const c = ensureCell(col);
+      const cur = c.actual !== undefined && String(c.actual).trim() !== '' && isTimeNum(c.actual) ? numOf(c.actual) : hoursOf(c);
+      const v = Math.max(0, Math.round((cur + d) * 100) / 100);
+      c.actual = v ? String(v) : ''; c.hours = c.actual;
+      afterEdit(col, true);
+    };
+    window.toggleCheck = function (ci) {
+      const col = V(ci); const c = ensureCell(col);
+      c.actual = c.actual && String(c.actual).trim() ? '' : '✓';
+      afterEdit(col, true);
+    };
     window.addTimeSlot = function (ci) {
       const col = V(ci); const c = ensureCell(col);
       if (!c.timeSlots || !c.timeSlots.length) c.timeSlots = [{ from: '', to: '' }];
       c.timeSlots.push({ from: '', to: '' });
+      openMoreCol = col;
       afterEdit(col, true);
     };
     window.removeTimeSlot = function (ci, idx) {
@@ -1403,6 +1585,8 @@
       if (state.running && state.running.date === activeDate && state.running.col === col) {
         if (state.running.idx === idx) state.running = null; else if (state.running.idx > idx) state.running.idx--;
       }
+      syncTimeFromSlots(col, c);
+      openMoreCol = col;
       afterEdit(col, true);
     };
     window.updateTimeSlot = function (ci, idx, field, val) {
@@ -1410,20 +1594,21 @@
       if (!c.timeSlots || !c.timeSlots.length) c.timeSlots = [{ from: '', to: '' }];
       if (!c.timeSlots[idx]) c.timeSlots[idx] = { from: '', to: '' };
       c.timeSlots[idx][field] = val;
-      afterEdit(col, false);
-      // refresh the hours label only
-      const ed = document.querySelector(`#${openPanel} .ed[data-col="${ci}"] .slots-head b, #${openPanel}-content .ed[data-col="${ci}"] .slots-head b`);
-      if (ed) ed.textContent = `${hoursOf(c)} h`;
+      syncTimeFromSlots(col, c);
+      openMoreCol = col;
+      afterEdit(col, true);
     };
     window.toggleTimer = function (ci) {
       const col = V(ci); const now = hhmm();
       const r = state.running;
       if (r && r.date === activeDate && r.col === col) {
-        const s = state.logs[r.date]?.[r.col]?.timeSlots?.[r.idx]; if (s) s.to = now;
+        const cell = state.logs[r.date]?.[r.col];
+        const s = cell?.timeSlots?.[r.idx]; if (s) s.to = now;
         state.running = null;
-        toast(`Timer stopped. ${hoursOf(cellOf(activeDate, col))} h logged for ${col}.`);
+        if (cell) syncTimeFromSlots(col, cell);
+        toast(`Timer stopped. ${fmtH(hoursOf(cellOf(activeDate, col)))} logged for ${col}.`);
       } else {
-        if (r) { const s = state.logs[r.date]?.[r.col]?.timeSlots?.[r.idx]; if (s && !s.to) s.to = now; }
+        if (r) { const pc = state.logs[r.date]?.[r.col]; const s = pc?.timeSlots?.[r.idx]; if (s && !s.to) { s.to = now; syncTimeFromSlots(r.col, pc); } }
         const c = ensureCell(col);
         const slots = c.timeSlots || [];
         let idx = slots.findIndex(s => !s.from && !s.to);
@@ -1433,6 +1618,116 @@
         toast(`Timer started for ${col}. You can close this.`);
       }
       afterEdit(col, true);
+    };
+    window.foldToggle = function (which, ci, open) {
+      const col = V(ci);
+      if (which === 'setup') openSetupCol = open ? col : (openSetupCol === col ? null : openSetupCol);
+      else openMoreCol = open ? col : (openMoreCol === col ? null : openMoreCol);
+    };
+    window.setMeta = function (ci, key, val) {
+      const col = V(ci);
+      if (!state.habitMeta) state.habitMeta = {};
+      const m = { ...metaOf(col), [key]: val };
+      state.habitMeta[col] = { type: m.type, unit: m.unit || '' };
+      if (key === 'type' && val === 'time' && state.logs[activeDate]?.[col]) syncTimeFromSlots(col, state.logs[activeDate][col]);
+      openSetupCol = col;
+      saveStateToCloud(); rerenderEditor(col); scheduleRefresh();
+    };
+    window.setRule = function (ci, r) {
+      const col = V(ci); state.columnRules[col] = r; openSetupCol = col;
+      saveStateToCloud(); rerenderEditor(col); scheduleRefresh();
+    };
+    window.setTarget = function (ci, v) { const col = V(ci); ensureCell(col).target = v; openSetupCol = col; afterEdit(col, true); };
+
+    // ============ AI habit setup: apply a proposed setup from the chat ============
+    const SETUP_RULES = `## Changing habits
+When the user wants to set up, add, remove, rename or retune their habits, write your explanation first, then end the reply with a fenced code block whose language tag is habits, containing JSON for the COMPLETE setup (not a diff):
+\`\`\`habits
+{"groups":[{"name":"📚 Academics","habits":[{"name":"DSA","type":"count","unit":"questions","target":5,"rule":"more"},{"name":"Instagram","type":"time","target":0.5,"rule":"less"}]}]}
+\`\`\`
+type is count, time (target in hours), check (done or not, no target) or text. rule is more, less or exact. Keep an existing habit's exact name when it stays, so its history is kept. Keep it lean, usually 8 to 14 habits in 2 to 4 groups with an emoji at the start of each group name, because logging should take under two minutes a day. The app shows the block as an "Apply this setup" card, so don't mention JSON or code in your prose. Only include the block when proposing or revising a setup.`;
+    const SETUP_PROMPT = `Help me set up the habits I track. Look at my profile, my goals and my current habits.
+If you know too little about me (no profile and no goals), don't propose yet: ask me 3 or 4 short questions first, about what I'm working towards, my daily routine, what usually derails me, and how much time I'm willing to spend logging.
+Otherwise propose the habits I should track daily, grouped, each with a one-line reason and a realistic starting target based on my recent logs. Say which of my current habits to drop or merge and why. Then ask what I'd like to change, and include the habits block.`;
+
+    function splitReply(text) {
+      const m = text.match(/```(?:habits|json)\s*([\s\S]*?)```/);
+      if (m) {
+        let data = null;
+        try { data = JSON.parse(m[1]); if (!data || !Array.isArray(data.groups)) data = null; } catch { data = null; }
+        return { prose: text.replace(m[0], '').trim(), data, pending: false };
+      }
+      const open = text.search(/```(?:habits|json)/);
+      if (open >= 0) return { prose: text.slice(0, open).trim(), data: null, pending: true };
+      return { prose: text, data: null, pending: false };
+    }
+    function cleanSetup(data) {
+      const seen = new Set(); const groups = [];
+      (data.groups || []).forEach(g => {
+        if (!g || !g.name || !Array.isArray(g.habits)) return;
+        const habits = [];
+        g.habits.forEach(h => {
+          const name = String(h?.name || '').trim().slice(0, 60);
+          if (!name || seen.has(name)) return; seen.add(name);
+          const type = TYPES[h.type] ? h.type : 'count';
+          const target = (type === 'count' || type === 'time') && h.target !== undefined && h.target !== null && h.target !== '' ? String(h.target) : '';
+          habits.push({ name, type, unit: type === 'count' ? String(h.unit || '').slice(0, 20) : '', target, rule: ['more', 'less', 'exact'].includes(h.rule) ? h.rule : 'more' });
+        });
+        if (habits.length) groups.push({ name: String(g.name).slice(0, 60), habits });
+      });
+      return groups;
+    }
+    function setupCardHtml(data, idx, applied) {
+      const groups = cleanSetup(data);
+      if (!groups.length) return '';
+      const current = new Set(allColumns());
+      const proposed = new Set(groups.flatMap(g => g.habits.map(h => h.name)));
+      const added = [...proposed].filter(n => !current.has(n));
+      const removed = [...current].filter(n => !proposed.has(n));
+      const hdesc = h => h.type === 'check' ? 'done or not' : h.type === 'text' ? 'short text'
+        : h.target ? (h.type === 'time' ? `${fmtH(numOf(h.target))}${h.rule === 'less' ? ' max' : ''}` : `${h.target}${h.unit ? ' ' + h.unit : ''}`) : (h.unit || (h.type === 'time' ? 'time' : 'count'));
+      return `<div class="setup-card">
+          ${groups.map(g => `<div><h5>${esc(g.name)}</h5><div class="chips">${g.habits.map(h => `<span><b>${esc(h.name)}</b> ${esc(hdesc(h))}</span>`).join('')}</div></div>`).join('')}
+          <p class="diff">${added.length ? `New: ${esc(added.join(', '))}. ` : ''}${removed.length ? `Leaving out: ${esc(removed.join(', '))}. ` : ''}${!added.length && !removed.length ? 'Same habits, updated settings. ' : ''}Past entries are kept either way.</p>
+          <div>${applied
+            ? `<span class="hint" style="display:inline-block;margin-right:10px">Applied to your tracker.</span><button class="btn small" onclick="undoSetup(${idx})">Undo</button>`
+            : `<button class="btn small accent" onclick="applySetup(${idx})">Apply this setup</button>`}</div>
+        </div>`;
+    }
+    function assistantHtml(m, idx) {
+      const r = splitReply(m.content || '');
+      let html = md(r.prose);
+      if (r.pending) html += `<div class="setup-card pending">Putting the setup together…</div>`;
+      if (r.data) html += setupCardHtml(r.data, idx, !!m.applied);
+      return html;
+    }
+    window.applySetup = function (idx) {
+      const m = state.chat?.[idx]; if (!m) return;
+      const r = splitReply(m.content); if (!r.data) return;
+      const groups = cleanSetup(r.data);
+      if (!groups.length) { toast("That setup was empty, so nothing changed."); return; }
+      if (!confirm('Replace your current habit columns with this setup? Your past entries stay saved, and bringing a habit back later restores its history.')) return;
+      state.layoutBackup = JSON.parse(JSON.stringify({ groups: state.groups, columnRules: state.columnRules, habitMeta: state.habitMeta || {} }));
+      if (!state.habitMeta) state.habitMeta = {};
+      const anchor = state.allDates.includes(todayStr) ? todayStr : selectedDate;
+      state.groups = groups.map(g => ({ name: g.name, color: 'bg-amber-950/40 text-amber-300 border-amber-900/50', columns: g.habits.map(h => h.name) }));
+      groups.forEach(g => g.habits.forEach(h => {
+        state.habitMeta[h.name] = { type: h.type, unit: h.unit };
+        state.columnRules[h.name] = h.rule;
+        if (h.target) { if (!state.logs[anchor]) state.logs[anchor] = {}; if (!state.logs[anchor][h.name]) state.logs[anchor][h.name] = {}; state.logs[anchor][h.name].target = h.target; }
+      }));
+      state.chat.forEach(x => { if (x.applied) x.applied = false; });
+      m.applied = true;
+      saveStateToCloud(); refreshAll(); renderChat();
+      toast('Your habits are set up. Pip is starting fresh.');
+    };
+    window.undoSetup = function (idx) {
+      const b = state.layoutBackup; if (!b) { toast('Nothing to undo.'); return; }
+      state.groups = b.groups; state.columnRules = b.columnRules; state.habitMeta = b.habitMeta;
+      state.layoutBackup = null;
+      if (state.chat?.[idx]) state.chat[idx].applied = false;
+      saveStateToCloud(); refreshAll(); renderChat();
+      toast('Back to your previous habits.');
     };
 
     // ============ panels ============
@@ -1456,6 +1751,7 @@
     window.openSheet = function (ci, di) {
       sheetCol = V(ci);
       activeDate = di !== undefined ? V(di) : selectedDate;
+      openSetupCol = null; openMoreCol = null;
       openLayer('sheet');
       renderSheet();
     };
@@ -1463,17 +1759,16 @@
       const col = sheetCol; if (!col) return;
       const gi = state.groups.findIndex(g => g.columns.includes(col));
       const { cur, best } = habitStreak(col);
-      const rule = ruleOf(col);
       $('sheet-head').innerHTML = `
         <div>
           <h2>${esc(col)}</h2>
-          <p>${esc(niceDate(activeDate))}. ${RULE_TEXT[rule]}. ${cur ? `🔥 ${cur}-day streak` : 'No streak yet'}${best > cur ? `, best ${best}` : ''}.</p>
+          <p>${esc(niceDate(activeDate))}. ${cur ? `🔥 ${cur}-day streak` : 'No streak yet'}${best > cur ? `, best ${best}` : ''}.</p>
         </div>
         <button class="round" onclick="closeAll()" aria-label="Close">×</button>`;
       $('sheet').style.setProperty('--hue', groupHue(state.groups[gi] || {}, Math.max(0, gi)));
-      $('sheet-body').innerHTML = editorHtml(activeDate, col, false) + `
+      $('sheet-body').innerHTML = sheetEditorHtml(activeDate, col) + `
         <div class="sheet-foot">
-          <button class="linkish" onclick="openDrawer(${R(activeDate)}, ${R(col)})">Open the full day</button>
+          <button class="linkish" onclick="openDrawer(${R(activeDate)}, ${R(col)})">Log the whole day</button>
           <button class="btn accent" onclick="closeAll()">Done</button>
         </div>`;
     }
@@ -1486,11 +1781,11 @@
       let html = `<div class="drawer-group" style="--hue:var(--mari)"><h3>Check-in</h3><div class="checkin" id="drawer-checkin">${checkinHtml(activeDate)}</div></div>`;
       state.groups.forEach((g, gi) => {
         html += `<div class="drawer-group" style="--hue:${groupHue(g, gi)}"><h3>${esc(g.name)}</h3><div class="eds">
-          ${g.columns.map(col => editorHtml(activeDate, col, col === focusCol)).join('')}</div></div>`;
+          ${g.columns.map(col => rowHtml(activeDate, col, col === focusCol)).join('')}</div></div>`;
       });
       $('drawer-content').innerHTML = html;
       $('drawer-content').scrollTop = 0;
-      if (focusCol) setTimeout(() => $('drawer-content').querySelector(`.ed[data-col="${R(focusCol)}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 320);
+      if (focusCol) setTimeout(() => $('drawer-content').querySelector(`.hrow[data-col="${R(focusCol)}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 320);
     };
 
     // ============ celebration + toast ============
@@ -1668,7 +1963,8 @@
     function habitsText() {
       return state.groups.map(g => `${g.name}: ` + g.columns.map(c => {
         const t = activeTargetOf(selectedDate, c);
-        return `${c} [${RULE_TEXT[ruleOf(c)].toLowerCase()}${t ? `, current target ${t}` : ''}]`;
+        const m = metaOf(c);
+        return `${c} [${m.type}${m.unit ? ' in ' + m.unit : ''}${m.type === 'time' ? ' (hours)' : ''}, ${RULE_TEXT[ruleOf(c)].toLowerCase()}${t ? `, current target ${targetLabel(c, t)}` : ''}]`;
       }).join('; ')).join('\n');
     }
     function dayText(date) {
@@ -1686,8 +1982,8 @@
         const sl = (cd.timeSlots || []).filter(s => s.from).map(s => `${s.from}-${s.to || 'still running'}`).join(', ');
         if (!(cd.actual || h || sl || cd.reaction || cd.reason)) return;
         const t = activeTargetOf(date, col);
-        const bits = [`actual ${cd.actual || '—'}`];
-        if (t) bits.push(`target ${t}`);
+        const bits = [`did ${valueLabel(date, col) || '—'}`];
+        if (t) bits.push(`target ${targetLabel(col, t)}`);
         if (h || sl) bits.push(`${h ? h + 'h' : ''}${sl ? ` at ${sl}` : ''}`.trim());
         if (cd.reaction) bits.push(`felt ${cd.reaction}`);
         if (cd.reason) bits.push(`note: "${cd.reason}"`);
@@ -1711,6 +2007,8 @@
       return `You are ${p.name ? p.name + "'s" : "the user's"} personal coach inside their daily habit tracker. You know them through their profile, goals and daily logs below. Think like a thoughtful mentor who has read every entry: connect causes to effects across days, use exact times and numbers from the logs, and say plainly where they're falling short. Use your general knowledge of what goals like theirs require (syllabus coverage, study hours, training progressions), and label estimates as estimates. Never invent log data; if something needed for a conclusion wasn't logged, say what to log. No generic productivity advice, no filler, no motivational clichés. Write in short markdown with ### headings and bullets. Keep answers under about 300 words unless asked for a plan.
 
 Today is ${niceDate(todayStr)} (${todayStr}). The day open in the app is ${niceDate(selectedDate)} (${selectedDate}). Times are 24-hour.
+
+${SETUP_RULES}
 
 ## About the user
 ${p.about ? p.about : 'No profile written yet. You may suggest they fill in "About me" once, briefly.'}
@@ -1792,13 +2090,14 @@ For each goal: am I on track or behind (compare logged hours and active days wit
         box.innerHTML = `<div class="chat-empty">
           <p>${n ? `Hi ${esc(n)}. ` : ''}Pick one of the buttons above or ask anything. I can see your last 14 days of logs, your check-ins, your goals and their plans.</p>
           <p><b>Analyze my day</b> traces why the day went the way it did, e.g. how last night's screen time led to a late wake-up and a missed workout.<br>
-          <b>Check my goals</b> compares your pace with what each goal needs and points out what's being neglected.</p>
+          <b>Check my goals</b> compares your pace with what each goal needs and points out what's being neglected.<br>
+          <b>Set up my habits</b> talks through which habits you should track, then rebuilds your columns in one tap.</p>
           ${!(state.profile?.about) ? `<p>Tip: fill in <b>About me</b> in the goals section so answers fit your routine.</p>` : ''}</div>`;
         return;
       }
-      box.innerHTML = chat.map(m => m.role === 'user'
+      box.innerHTML = chat.map((m, i) => m.role === 'user'
         ? `<div class="msg me">${esc(m.display || m.content)}</div>`
-        : `<div class="msg ai md">${md(m.content)}</div>`).join('');
+        : `<div class="msg ai md">${assistantHtml(m, i)}</div>`).join('');
       box.parentElement.scrollTop = box.parentElement.scrollHeight;
     }
 
@@ -1857,7 +2156,7 @@ For each goal: am I on track or behind (compare logged hours and active days wit
       $('ai-stop').hidden = false; $('ai-send').hidden = true;
       $('ai-status').textContent = '';
       let frame = null;
-      const paint = () => { frame = null; bubble.innerHTML = md(aiMsg.content); scroller.scrollTop = scroller.scrollHeight; };
+      const paint = () => { frame = null; bubble.innerHTML = assistantHtml(aiMsg, state.chat.indexOf(aiMsg)); scroller.scrollTop = scroller.scrollHeight; };
       try {
         await streamCompletion(
           [{ role: 'system', content: buildSystem() }, ...history, { role: 'user', content }],
@@ -1896,6 +2195,7 @@ For each goal: am I on track or behind (compare logged hours and active days wit
         return;
       }
       openCoach();
+      if (kind === 'setup') return send(SETUP_PROMPT, 'Help me set up my habits');
       if (kind === 'day') return send(reflectPrompt(selectedDate), `Analyze my day, ${niceDate(selectedDate)}`, { label: `Day analysis, ${niceDate(selectedDate)}` });
       if (kind === 'week') return send(WEEK_PROMPT, 'Weekly review', { label: 'Weekly review' });
       if (kind === 'plan') return send(PLAN_PROMPT, 'Plan tomorrow for me', { label: "Tomorrow's plan" });
