@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personal Daily Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #12142a; --panel: #1a1e3a; --panel2: #222847; --well: #12152c; --line: #2e3563;
+      --ink: #ecebf6; --muted: #a2a7c9; --dim: #6d7399;
+      --mari: #f4b740; --teal: #4fc3b0; --rose: #ef6f7f; --sky: #86b7ff;
+      --display: 'Bricolage Grotesque', 'Segoe UI', system-ui, sans-serif;
+      --body: 'Figtree', 'Segoe UI', system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body { background: var(--bg) center / cover fixed no-repeat; color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.5; min-height: 100vh; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    body.has-bg::before { content: ''; position: fixed; inset: 0; background: rgba(14, 16, 34, .74); backdrop-filter: blur(6px); z-index: 0; }
+    h1, h2, h3, h4 { font-family: var(--display); margin: 0; font-weight: 600; }
+    button { font: inherit; color: inherit; cursor: pointer; }
+    input, textarea, select { font: inherit; color: var(--ink); }
+    :focus-visible { outline: 2px solid var(--mari); outline-offset: 2px; }
+    [hidden] { display: none !important; }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-thumb { background: #353c6b; border-radius: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+
+    /* ---------- primitives ---------- */
+    .btn { background: var(--panel2); border: 1px solid var(--line); border-radius: 999px; padding: 8px 15px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; transition: background .15s, border-color .15s; white-space: nowrap; }
+    .btn:hover { background: #2b3257; border-color: #414a86; }
+    .btn.accent { background: var(--mari); color: #2a1d02; border-color: var(--mari); }
+    .btn.accent:hover { background: #ffc75a; }
+    .btn.small { padding: 5px 12px; font-size: 12px; }
+    .btn.on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+    .btn.warn-on { background: var(--rose); color: #2a0a10; border-color: var(--rose); }
+    .round { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line); background: var(--panel2); display: grid; place-items: center; font-size: 18px; line-height: 1; flex-shrink: 0; }
+    .round:hover { border-color: #414a86; }
+    .field { width: 100%; background: var(--well); border: 1px solid var(--line); border-radius: 10px; padding: 9px 11px; font-size: 14px; outline: none; transition: border-color .15s; }
+    .field:focus { border-color: var(--mari); }
+    textarea.field { resize: vertical; min-height: 56px; }
+    .muted { color: var(--muted); }
+    .hint { color: var(--dim); font-size: 12px; margin: 0; }
+    .panel { background: rgba(26, 30, 58, .92); border: 1px solid var(--line); border-radius: 22px; padding: 20px; }
+
+    /* ---------- gate + loader ---------- */
+    .gate, .loader { position: fixed; inset: 0; z-index: 200; background: var(--bg); display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .gate-card { width: min(360px, 100%); text-align: center; display: flex; flex-direction: column; gap: 16px; }
+    .gate-card h2 { font-size: 30px; letter-spacing: -.02em; }
+    .gate-card p { color: var(--muted); margin: 0; font-size: 14px; }
+    .gate-card .field { text-align: center; padding: 13px; font-size: 16px; letter-spacing: .08em; }
+    .gate-card .btn { justify-content: center; padding: 12px; font-size: 14px; }
+    .gate-err { color: var(--rose); font-size: 13px; }
+    .loader { flex-direction: column; gap: 14px; z-index: 150; transition: opacity .4s; }
+    .spin { width: 42px; height: 42px; border: 4px solid var(--line); border-top-color: var(--mari); border-radius: 50%; animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ---------- layout ---------- */
+    .shell { position: relative; z-index: 1; max-width: 1320px; margin: 0 auto; padding: 26px 20px 90px; display: flex; flex-direction: column; gap: 22px; transition: opacity .4s; }
+    .shell.is-hidden { opacity: 0; pointer-events: none; }
+
+    .top { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; flex-wrap: wrap; }
+    #app-heading { font-size: clamp(28px, 4.2vw, 44px); font-weight: 700; letter-spacing: -.025em; line-height: 1.02; outline: none; }
+    #app-quote { color: var(--muted); margin: 8px 0 0; font-size: 14px; outline: none; max-width: 62ch; }
+    [contenteditable]:hover, [contenteditable]:focus { text-decoration: underline dashed var(--dim); text-underline-offset: 6px; }
+    .top-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .streak { display: flex; align-items: center; gap: 9px; padding: 5px 15px 5px 9px; border-radius: 999px; background: var(--panel2); border: 1px solid var(--line); }
+    .streak .flame { font-size: 22px; }
+    .streak.cold .flame { filter: grayscale(1); opacity: .5; }
+    .streak b { font-family: var(--display); font-size: 22px; line-height: 1; }
+    .streak small { color: var(--muted); font-size: 11.5px; line-height: 1.15; }
+    #save-status { font-size: 12px; color: var(--dim); min-width: 52px; }
+
+    /* ---------- today hero ---------- */
+    .today { display: grid; grid-template-columns: auto 1fr auto; gap: 30px; align-items: center; }
+    .day-nav { display: flex; align-items: center; gap: 12px; }
+    .day-label { min-width: 170px; }
+    .day-label .dow { font-family: var(--display); font-size: 34px; font-weight: 700; line-height: 1; letter-spacing: -.02em; }
+    .day-label .dm { color: var(--muted); font-size: 14px; margin-top: 4px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .linkish { background: none; border: 0; padding: 0; color: var(--mari); font-weight: 600; font-size: 13px; }
+    .linkish:hover { text-decoration: underline; }
+    .checkin { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+    .checkin-row { display: flex; gap: 22px; flex-wrap: wrap; align-items: center; }
+    .ci-label { font-size: 12px; color: var(--dim); margin-right: 4px; }
+    .moods { display: flex; align-items: center; gap: 2px; }
+    .moods button { font-size: 22px; background: none; border: 0; padding: 3px 5px; border-radius: 10px; opacity: .42; filter: grayscale(.7); transition: transform .15s, opacity .15s, filter .15s; }
+    .moods button:hover { opacity: .85; filter: none; }
+    .moods button.sel { opacity: 1; filter: none; transform: scale(1.18); background: rgba(244, 183, 64, .16); }
+    .energy { display: flex; gap: 4px; align-items: flex-end; height: 28px; }
+    .energy button { width: 11px; border-radius: 3px; border: 0; background: var(--line); padding: 0; transition: background .15s; }
+    .energy button.sel { background: var(--teal); }
+    .ring { position: relative; width: 104px; height: 104px; }
+    .ring svg { transform: rotate(-90deg); }
+    .ring .track { stroke: var(--line); }
+    .ring .bar { stroke: var(--mari); transition: stroke-dashoffset .6s cubic-bezier(.2, .8, .2, 1); stroke-linecap: round; }
+    .ring.full .bar { stroke: var(--teal); }
+    .ring .ring-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .ring b { font-family: var(--display); font-size: 26px; line-height: 1; }
+    .ring small { font-size: 11px; color: var(--muted); }
+
+    /* ---------- habit tiles (the memorable bit) ---------- */
+    #tiles { display: flex; flex-direction: column; gap: 22px; }
+    .tg-head { display: flex; justify-content: space-between; align-items: baseline; margin: 0 4px 10px; gap: 12px; flex-wrap: wrap; }
+    .tg-head h3 { font-size: 18px; display: flex; align-items: center; gap: 9px; }
+    .tg-head h3::before { content: ''; width: 11px; height: 11px; border-radius: 3px; background: var(--hue); }
+    .tg-head span { color: var(--muted); font-size: 13px; }
+    .tile-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; }
+    .tile { position: relative; overflow: hidden; text-align: left; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 12px 13px 11px; min-height: 104px; display: flex; flex-direction: column; justify-content: space-between; gap: 6px; transition: border-color .15s, transform .1s; }
+    .tile:hover { border-color: var(--hue); }
+    .tile:active { transform: scale(.98); }
+    .tile .fill { position: absolute; left: 0; right: 0; bottom: 0; height: calc(var(--fill) * 100%); background: color-mix(in srgb, var(--fillc) 20%, transparent); border-top: 2px solid color-mix(in srgb, var(--fillc) 75%, transparent); transition: height .6s cubic-bezier(.2, .8, .2, 1); }
+    .tone-none .fill { display: none; }
+    .tone-good { --fillc: var(--teal); }
+    .tone-partial { --fillc: var(--mari); }
+    .tone-over { --fillc: var(--rose); }
+    .tile > span { position: relative; }
+    .t-name { font-weight: 600; font-size: 13.5px; line-height: 1.25; color: var(--muted); }
+    .t-val { font-family: var(--display); font-size: 19px; font-weight: 600; line-height: 1.15; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
+    .tone-none .t-val { font-family: var(--body); font-size: 13px; color: var(--dim); font-weight: 500; }
+    .t-meta { font-size: 12px; color: var(--muted); display: flex; gap: 8px; align-items: center; min-height: 18px; flex-wrap: wrap; }
+    .live { color: var(--rose); font-weight: 700; display: inline-flex; align-items: center; gap: 5px; }
+    .live::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--rose); animation: pulse 1.4s ease-in-out infinite; }
+    @keyframes pulse { 50% { opacity: .25; } }
+    .tile.ghost { border-style: dashed; background: transparent; align-items: center; justify-content: center; color: var(--dim); font-weight: 600; font-size: 13px; }
+    .tile.ghost:hover { color: var(--ink); }
+
+    /* ---------- insights row ---------- */
+    .insights { display: grid; grid-template-columns: 1.15fr 1fr; gap: 16px; }
+    .insights h2 { font-size: 19px; margin-bottom: 12px; }
+    .heat { display: grid; grid-template-rows: repeat(7, 13px); grid-auto-flow: column; grid-auto-columns: 13px; gap: 3px; overflow-x: auto; padding: 3px; }
+    .heat button { width: 13px; height: 13px; border-radius: 3px; border: 0; padding: 0; background: var(--panel2); }
+    .heat .l1 { background: color-mix(in srgb, var(--teal) 28%, var(--panel2)); }
+    .heat .l2 { background: color-mix(in srgb, var(--teal) 50%, var(--panel2)); }
+    .heat .l3 { background: color-mix(in srgb, var(--teal) 75%, var(--panel2)); }
+    .heat .l4 { background: var(--teal); }
+    .heat .future { opacity: .35; }
+    .heat .is-today { box-shadow: 0 0 0 2px var(--mari); }
+    .heat .is-sel { box-shadow: 0 0 0 2px var(--ink); }
+    .stats { display: flex; gap: 26px; flex-wrap: wrap; margin-top: 16px; }
+    .stat b { font-family: var(--display); font-size: 24px; display: block; line-height: 1.1; }
+    .stat span { font-size: 12px; color: var(--muted); }
+    .legend { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--dim); margin-top: 10px; }
+    .legend i { width: 11px; height: 11px; border-radius: 3px; display: inline-block; }
+    .insight-card { display: flex; flex-direction: column; }
+    .insight-card .md { max-height: 220px; overflow: hidden; position: relative; -webkit-mask-image: linear-gradient(#000 75%, transparent); mask-image: linear-gradient(#000 75%, transparent); }
+    .insight-card .row { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+    .insight-card .foot { margin-top: auto; padding-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .md { font-size: 14px; line-height: 1.6; }
+    .md p { margin: 0 0 8px; }
+    .md h4 { font-size: 15px; margin: 12px 0 4px; color: var(--mari); }
+    .md ul { margin: 0 0 8px; padding-left: 18px; }
+    .md li { margin-bottom: 3px; }
+    .md strong { color: #fff; }
+
+    /* ---------- full log table ---------- */
+    .table-panel { padding: 0; overflow: hidden; }
+    .tp-bar { display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center; padding: 16px 18px; border-bottom: 1px solid var(--line); }
+    .tp-bar h2 { font-size: 19px; }
+    .tp-tools { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .seg { display: inline-flex; background: var(--well); border: 1px solid var(--line); border-radius: 999px; padding: 3px; }
+    .seg button { border: 0; background: none; padding: 5px 13px; border-radius: 999px; font-size: 12px; font-weight: 600; color: var(--muted); }
+    .seg button.on { background: var(--ink); color: var(--bg); }
+    .table-wrap { overflow: auto; max-height: 70vh; }
+    table { border-collapse: separate; border-spacing: 0; width: 100%; font-size: 12px; }
+    th, td { border-right: 1px solid rgba(46, 53, 99, .75); border-bottom: 1px solid rgba(46, 53, 99, .75); }
+    thead { position: sticky; top: 0; z-index: 3; }
+    thead th { background: #171a33; font-weight: 600; }
+    .corner { position: sticky; left: 0; z-index: 4; background: #171a33; min-width: 86px; }
+    .date-h { text-align: left; padding: 10px 12px; color: var(--muted); }
+    .grp-h { padding: 8px; font-size: 12px; color: var(--hue); border-bottom: 2px solid var(--hue); text-align: center; }
+    .totals-h { --hue: var(--sky); }
+    .col-h { padding: 8px; min-width: 140px; color: var(--ink); font-size: 11.5px; line-height: 1.25; text-align: center; vertical-align: top; }
+    .col-h.tot-h { min-width: 90px; color: var(--sky); }
+    .col-h.grand { color: var(--teal); }
+    .empty-h { color: var(--dim); font-weight: 500; }
+    .h-tools { display: flex; flex-direction: column; gap: 5px; align-items: center; margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--line); }
+    .h-tools .row { display: flex; gap: 4px; justify-content: center; flex-wrap: wrap; }
+    .h-tools select { background: var(--well); border: 1px solid var(--line); border-radius: 6px; font-size: 10.5px; padding: 2px 4px; }
+    .mini { border: 1px solid var(--line); background: var(--panel2); border-radius: 6px; font-size: 10.5px; padding: 2px 7px; font-weight: 600; }
+    .mini:hover { border-color: var(--mari); }
+    .mini.danger { color: var(--rose); }
+    .date-cell { position: sticky; left: 0; z-index: 2; background: #171a33; padding: 10px 12px; font-weight: 700; color: var(--muted); cursor: pointer; white-space: nowrap; }
+    .date-cell:hover { color: var(--ink); }
+    tr.is-today .date-cell { color: var(--bg); background: var(--mari); }
+    tr.is-today td.cell { box-shadow: inset 0 2px 0 rgba(244, 183, 64, .35), inset 0 -2px 0 rgba(244, 183, 64, .35); }
+    td.cell { position: relative; min-width: 140px; vertical-align: top; cursor: pointer; transition: box-shadow .12s; }
+    td.cell:hover { box-shadow: inset 0 0 0 2px var(--mari) !important; }
+    .cell-inner { padding: 7px 9px; display: flex; flex-direction: column; gap: 3px; }
+    .cell-top { display: flex; justify-content: space-between; gap: 4px; align-items: flex-start; }
+    .cell-val { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .cell-val.empty { color: #3d446f; }
+    .cell-sub { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; }
+    .subtitle { font-size: 10px; color: var(--muted); }
+    .hrs { background: rgba(134, 183, 255, .16); color: var(--sky); padding: 1px 5px; border-radius: 4px; font-size: 9.5px; font-weight: 700; }
+    .slot-list { font-size: 9.5px; color: var(--dim); font-variant-numeric: tabular-nums; }
+    .reason-text { font-size: 10.5px; color: #f3d38a; font-style: italic; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    td.tot { padding: 10px; text-align: center; font-weight: 600; color: var(--sky); white-space: nowrap; }
+    td.tot.grand { color: var(--teal); font-weight: 700; }
+    .compact-mode td.cell, .compact-mode .col-h { min-width: 64px; max-width: 90px; }
+    .compact-mode .cell-inner { padding: 4px 6px; font-size: 10.5px; }
+    .compact-mode .subtitle, .compact-mode .reason-text, .compact-mode .slot-list { display: none; }
+    .compact-mode .col-h { font-size: 10px; }
+
+    /* ---------- side panels, sheet ---------- */
+    .scrim { position: fixed; inset: 0; background: rgba(8, 9, 22, .6); z-index: 40; opacity: 0; pointer-events: none; transition: opacity .25s; }
+    .scrim.show { opacity: 1; pointer-events: auto; }
+    .side { position: fixed; top: 0; right: 0; height: 100%; width: min(460px, 100%); background: #171a33; border-left: 1px solid var(--line); z-index: 50; display: flex; flex-direction: column; transform: translateX(102%); transition: transform .3s cubic-bezier(.2, .8, .2, 1); }
+    .side.wide { width: min(540px, 100%); }
+    .side.open { transform: none; }
+    .side-head { padding: 18px 20px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .side-head h2 { font-size: 21px; }
+    .side-body { padding: 18px 20px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 14px; }
+    .side-foot { padding: 14px 20px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .drawer-group h3 { font-size: 15px; color: var(--hue); margin: 10px 0 10px; }
+    .drawer-group .eds { display: flex; flex-direction: column; gap: 10px; }
+
+    .sheet { position: fixed; left: 50%; bottom: 0; width: min(560px, 100%); max-height: 88vh; background: #171a33; border: 1px solid var(--line); border-bottom: 0; border-radius: 24px 24px 0 0; z-index: 50; transform: translate(-50%, 104%); transition: transform .3s cubic-bezier(.2, .8, .2, 1); display: flex; flex-direction: column; }
+    .sheet.open { transform: translate(-50%, 0); }
+    .sheet .grab { width: 44px; height: 5px; border-radius: 3px; background: var(--line); margin: 10px auto 0; }
+    .sheet-head { padding: 12px 22px 4px; display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+    .sheet-head h2 { font-size: 26px; letter-spacing: -.02em; line-height: 1.1; }
+    .sheet-head p { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+    .sheet-body { padding: 12px 22px 22px; overflow-y: auto; }
+
+    .ed { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+    .ed.focus { border-color: var(--mari); }
+    .sheet .ed { background: none; border: 0; padding: 0; }
+    .ed h4 { font-size: 15px; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1.3fr; gap: 10px; }
+    .grid2 label, .settings label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--muted); }
+    .grid2 em { color: var(--dim); font-style: normal; }
+    .stepper { display: flex; gap: 6px; }
+    .stepper button { width: 38px; flex-shrink: 0; border-radius: 10px; border: 1px solid var(--line); background: var(--panel2); font-size: 18px; font-weight: 700; }
+    .stepper button:hover { border-color: var(--mari); }
+    .stepper .field { text-align: center; font-weight: 600; }
+    .slots { background: var(--well); border: 1px solid var(--line); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; gap: 7px; }
+    .slots-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
+    .slots-head b { color: var(--sky); font-weight: 700; }
+    .slot { display: flex; gap: 7px; align-items: center; font-size: 12px; color: var(--dim); }
+    .slot input { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 5px 7px; font-size: 13px; color-scheme: dark; }
+    .slot .x { background: none; border: 0; color: var(--rose); font-weight: 700; font-size: 16px; padding: 0 4px; }
+    .timer-btn { border-radius: 999px; padding: 4px 11px; font-size: 12px; font-weight: 700; border: 1px solid var(--teal); color: var(--teal); background: transparent; }
+    .timer-btn.running { border-color: var(--rose); color: var(--bg); background: var(--rose); }
+    .reacts { display: flex; gap: 6px; align-items: center; }
+    .reacts span { font-size: 12px; color: var(--dim); margin-right: 4px; }
+    .reacts button { font-size: 19px; background: none; border: 0; padding: 3px 5px; border-radius: 9px; opacity: .45; transition: transform .15s, opacity .15s; }
+    .reacts button.sel { opacity: 1; transform: scale(1.2); background: rgba(255, 255, 255, .08); }
+    .sheet-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; gap: 10px; flex-wrap: wrap; }
+
+    /* ---------- coach ---------- */
+    .settings { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 10px 14px; }
+    .settings summary { cursor: pointer; font-weight: 600; font-size: 14px; }
+    .settings[open] summary { margin-bottom: 10px; }
+    .settings > div { display: flex; flex-direction: column; gap: 10px; }
+    .prompts { display: flex; flex-wrap: wrap; gap: 8px; }
+    .ask { display: flex; gap: 8px; }
+    .ai-out { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; min-height: 120px; }
+    .ai-out:empty::before { content: 'Pick a review above or ask your own question. The coach only sees what you have logged here.'; color: var(--dim); font-size: 13px; }
+    .caret::after { content: '▍'; color: var(--mari); animation: pulse 1s infinite; }
+
+    .toast { position: fixed; left: 50%; bottom: 22px; transform: translate(-50%, 20px); background: var(--ink); color: var(--bg); padding: 10px 18px; border-radius: 999px; font-size: 13px; font-weight: 600; z-index: 300; opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; max-width: calc(100% - 32px); text-align: center; }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+    .confetti { position: fixed; top: -12px; width: 9px; height: 13px; border-radius: 2px; z-index: 400; pointer-events: none; animation: fall 1.7s cubic-bezier(.3, .6, .5, 1) forwards; }
+    @keyframes fall { to { transform: translate(var(--dx), 105vh) rotate(var(--rot)); opacity: .8; } }
+
+    @media (max-width: 900px) {
+      .today { grid-template-columns: 1fr auto; }
+      .today .checkin { grid-column: 1 / -1; grid-row: 2; }
+      .insights { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 560px) {
+      .shell { padding: 18px 12px 80px; }
+      .tile-grid { grid-template-columns: repeat(2, 1fr); }
+      .day-label .dow { font-size: 28px; }
+      .ring { width: 88px; height: 88px; }
+      .ring svg { width: 88px; height: 88px; }
+      .grid2 { grid-template-columns: 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; animation: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Password gate -->
+  <div id="auth-gate" class="gate">
+    <form class="gate-card" onsubmit="checkPassword(event)">
+      <h2>Welcome back</h2>
+      <p>Enter your password to open your dashboard.</p>
+      <input type="password" id="password-input" class="field" placeholder="Password" autocomplete="current-password" autofocus>
+      <button type="submit" class="btn accent">Open dashboard</button>
+      <p id="auth-error" class="gate-err" hidden>That password didn't match. Try again.</p>
+    </form>
+  </div>
+
+  <div id="loader" class="loader" style="display:none">
+    <div class="spin"></div>
+    <p id="loader-text" class="muted">Loading your dashboard…</p>
+  </div>
+
+  <div id="main-app" class="shell is-hidden">
+    <header class="top">
+      <div>
+        <h1 id="app-heading" contenteditable="true" spellcheck="false" onblur="saveHeader()">My Daily Mastery Dashboard</h1>
+        <p id="app-quote" contenteditable="true" spellcheck="false" onblur="saveHeader()">"Consistency is what transforms average into excellence."</p>
+      </div>
+      <div class="top-actions">
+        <span id="save-status" aria-live="polite"></span>
+        <div id="streak-pill" class="streak"></div>
+        <button class="btn accent" onclick="openCoach()">✦ AI coach</button>
+        <button class="round" onclick="promptBg()" title="Set background image" aria-label="Set background image">🖼</button>
+        <button class="round" onclick="lockApp()" title="Lock dashboard" aria-label="Lock dashboard">🔒</button>
+      </div>
+    </header>
+
+    <section class="panel today">
+      <div class="day-nav">
+        <button class="round" onclick="shiftDay(-1)" aria-label="Previous day">‹</button>
+        <div class="day-label">
+          <div class="dow" id="day-dow"></div>
+          <div class="dm"><span id="day-dm"></span><button id="day-today-btn" class="linkish" onclick="goToday()">Jump to today</button></div>
+        </div>
+        <button class="round" onclick="shiftDay(1)" aria-label="Next day">›</button>
+      </div>
+      <div class="checkin" id="checkin"></div>
+      <div class="ring" id="ring"></div>
+    </section>
+
+    <section id="tiles"></section>
+
+    <section class="insights">
+      <div class="panel">
+        <h2>Consistency</h2>
+        <div class="heat" id="heatmap"></div>
+        <div class="legend">Less <i style="background:var(--panel2)"></i><i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="l4"></i> More</div>
+        <div class="stats" id="stats"></div>
+      </div>
+      <div class="panel insight-card" id="insight-card"></div>
+    </section>
+
+    <section class="panel table-panel">
+      <div class="tp-bar">
+        <h2>Full log</h2>
+        <div class="tp-tools">
+          <div class="seg" role="group" aria-label="Rows to show">
+            <button id="view-today" onclick="setViewMode('today')">Today</button>
+            <button id="view-5" onclick="setViewMode('5')">5 days</button>
+            <button id="view-all" onclick="setViewMode('all')">Complete</button>
+          </div>
+          <button class="btn small" onclick="addDateRow()">+ Date</button>
+          <button class="btn small" onclick="addColumnModal()">+ Column</button>
+          <button class="btn small" onclick="addCategoryModal()">+ Subcategory</button>
+          <button class="btn small" id="edit-mode-btn" onclick="toggleEditMode()">Edit layout</button>
+          <button class="btn small" id="compact-btn" onclick="toggleCompactMode()">Compact</button>
+        </div>
+      </div>
+      <div class="table-wrap" id="table-wrap">
+        <table id="main-table">
+          <thead>
+            <tr id="group-headers"></tr>
+            <tr id="column-headers"></tr>
+          </thead>
+          <tbody id="table-body"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <div id="scrim" class="scrim" onclick="closeAll()"></div>
+
+  <!-- Full-day drawer -->
+  <aside id="drawer" class="side" aria-label="Day log">
+    <div class="side-head">
+      <h2 id="drawer-title">Day log</h2>
+      <button class="round" onclick="closeAll()" aria-label="Close">×</button>
+    </div>
+    <div class="side-body" id="drawer-content"></div>
+    <div class="side-foot">
+      <span class="hint">Changes save automatically.</span>
+      <button class="btn accent" onclick="closeAll()">Done</button>
+    </div>
+  </aside>
+
+  <!-- One-habit quick log sheet -->
+  <div id="sheet" class="sheet" role="dialog" aria-label="Log habit">
+    <div class="grab"></div>
+    <div class="sheet-head" id="sheet-head"></div>
+    <div class="sheet-body" id="sheet-body"></div>
+  </div>
+
+  <!-- AI coach -->
+  <aside id="coach" class="side wide" aria-label="AI coach">
+    <div class="side-head">
+      <h2>✦ Coach</h2>
+      <button class="round" onclick="closeAll()" aria-label="Close">×</button>
+    </div>
+    <div class="side-body">
+      <details id="ai-settings" class="settings">
+        <summary>Connection</summary>
+        <div>
+          <label>Base URL <input id="ai-base" class="field" placeholder="https://aicredits.in/v1"></label>
+          <label>API key <input id="ai-key" class="field" type="password" autocomplete="off" placeholder="Paste your key"></label>
+          <label>Model <input id="ai-model" class="field" placeholder="google/gemini-2.5-flash-lite"></label>
+          <p class="hint">Works with any OpenAI-compatible endpoint. The key is kept in this browser only and is never written to your cloud data.</p>
+          <div><button class="btn small accent" onclick="saveAiSettings()">Save connection</button></div>
+        </div>
+      </details>
+      <div class="prompts">
+        <button class="btn small" onclick="runCoach('day')">Review this day</button>
+        <button class="btn small" onclick="runCoach('week')">Last 7 days</button>
+        <button class="btn small" onclick="runCoach('all')">Everything so far</button>
+        <button class="btn small" onclick="runCoach('plan')">Plan tomorrow's targets</button>
+      </div>
+      <div class="ask">
+        <input id="ai-q" class="field" placeholder="Ask anything, e.g. does Instagram hurt my DSA days?" onkeydown="if(event.key==='Enter')runCoach('custom')">
+        <button class="btn accent small" onclick="runCoach('custom')">Ask</button>
+      </div>
+      <p id="ai-status" class="hint"></p>
+      <div id="ai-out" class="md ai-out"></div>
+    </div>
+    <div class="side-foot">
+      <button id="ai-stop" class="btn small" onclick="stopCoach()" hidden>Stop</button>
+      <span></span>
+      <button class="btn small" onclick="copyInsight()">Copy text</button>
+    </div>
+  </aside>
+
+  <div id="toast" class="toast" role="status"></div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+
+    // ==========================================
+    // Firebase config (unchanged)
+    // ==========================================
+    const firebaseConfig = {
+      apiKey: "AIzaSyAjIG30nPmTBBAZ7c7cmgeXn25BwdviEEA",
+      authDomain: "daily-tracker-bbee6.firebaseapp.com",
+      projectId: "daily-tracker-bbee6",
+      storageBucket: "daily-tracker-bbee6.firebasestorage.app",
+      messagingSenderId: "1004152891425",
+      appId: "1:1004152891425:web:64e4a889971932f2701b60"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    let activeDocId = "my_dashboard";
+    let docRef = doc(db, "tracker_data", activeDocId);
+
+    const defaultGroups = [
+      { name: '📚 Academics & Career', color: 'bg-indigo-950/40 text-indigo-300 border-indigo-900/50', columns: ["DSA", "Probability", "Linear Alg", "Differential Eq", "PYQs", "DDP", "Recent Adv Gen AI", "Theoretical Biophysics", "Finance theory", "Test Paper", "Company Orientation"] },
+      { name: '🌱 Lifestyle & Time', color: 'bg-emerald-950/40 text-emerald-300 border-emerald-900/50', columns: ["Running/Sports", "Breakfast + Lunch + Dinner", "Phone call", "Sleep Time and From to What"] },
+      { name: '📺 Media', color: 'bg-rose-950/40 text-rose-300 border-rose-900/50', columns: ["Instagram", "JioHotstar", "Youtube"] }
+    ];
+
+    const defaultDates = [];
+    { let cur = new Date('2026-09-01T00:00:00'); const end = new Date('2026-12-05T00:00:00');
+      while (cur <= end) { defaultDates.push(`${String(cur.getDate()).padStart(2, '0')}/${String(cur.getMonth() + 1).padStart(2, '0')}`); cur.setDate(cur.getDate() + 1); } }
+
+    const defaultState = {
+      heading: "My Daily Mastery Dashboard",
+      quote: '"Consistency is what transforms average into excellence."',
+      bgUrl: '', logs: {}, groups: defaultGroups, columnRules: {}, allDates: defaultDates,
+      isCompact: false, isEditLayout: false, viewMode: '5',
+      checkins: {}, lastInsight: null, running: null
+    };
+
+    let state;
+    let activeDate = null;      // date being edited in drawer/sheet
+    let selectedDate = null;    // date shown in the "today" hero + tiles
+    let sheetCol = null;
+    let openPanel = null;       // 'drawer' | 'sheet' | 'coach'
+    const celebrated = new Set();
+    const todayStr = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' });
+
+    const $ = id => document.getElementById(id);
+    const safeId = s => String(s).replace(/[^a-zA-Z0-9]/g, '-');
+    const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    // Registry so column/date names with quotes never break inline handlers
+    const reg = [];
+    const R = v => { let i = reg.indexOf(v); if (i < 0) { reg.push(v); i = reg.length - 1; } return i; };
+    const V = i => reg[i];
+
+    const HUES = ['#a09dff', '#4fc3b0', '#ef6f7f', '#f4b740', '#86b7ff', '#d69cf2'];
+    const groupHue = (g, i) => HUES[i % HUES.length];
+    const MOODS = [['😣', 'Rough'], ['😕', 'Low'], ['😐', 'Okay'], ['🙂', 'Good'], ['😄', 'Great']];
+    const REACTIONS = ['😄', '😢', '😡', '🔥'];
+    const RULE_TEXT = { more: 'More is better', less: 'Less is better', exact: 'Hit it exactly' };
+
+    // ============ auth ============
+    window.checkPassword = function (event) {
+      event.preventDefault();
+      const inputVal = $('password-input').value;
+      if (inputVal === "what's up") activeDocId = "my_dashboard";
+      else if (inputVal === "soham") activeDocId = "soham_dashboard";
+      else { $('auth-error').hidden = false; $('password-input').value = ''; return; }
+
+      docRef = doc(db, "tracker_data", activeDocId);
+      $('auth-gate').style.display = 'none';
+      $('loader').style.display = 'flex';
+      $('loader').style.opacity = '1';
+      $('loader-text').innerText = `Loading ${activeDocId === 'soham_dashboard' ? "Soham's" : 'your'} dashboard…`;
+      initApp();
+    };
+
+    window.lockApp = function () {
+      closeAll();
+      $('main-app').classList.add('is-hidden');
+      $('password-input').value = '';
+      $('auth-error').hidden = true;
+      $('auth-gate').style.display = 'flex';
+      $('password-input').focus();
+    };
+
+    // ============ cloud ============
+    let saveTimeout;
+    window.saveStateToCloud = function () {
+      clearTimeout(saveTimeout);
+      $('save-status').textContent = 'Saving…';
+      saveTimeout = setTimeout(async () => {
+        try {
+          await setDoc(docRef, state);
+          $('save-status').textContent = 'Saved';
+          setTimeout(() => { if ($('save-status').textContent === 'Saved') $('save-status').textContent = ''; }, 2000);
+        } catch (e) {
+          console.error("Error saving to cloud: ", e);
+          $('save-status').textContent = '';
+          toast("Couldn't save. Check your connection and try again.");
+        }
+      }, 800);
+    };
+
+    async function initApp() {
+      try {
+        const snap = await getDoc(docRef);
+        if (snap.exists()) {
+          state = snap.data();
+          if (!state.groups) state.groups = defaultGroups;
+          if (!state.columnRules) state.columnRules = {};
+          if (!state.allDates) state.allDates = defaultDates;
+          if (!state.logs) state.logs = {};
+          if (state.isEditLayout === undefined) state.isEditLayout = false;
+          if (!state.checkins) state.checkins = {};
+          if (state.lastInsight === undefined) state.lastInsight = null;
+          if (state.running === undefined) state.running = null;
+          if (!state.viewMode) state.viewMode = '5';
+        } else {
+          state = JSON.parse(JSON.stringify(defaultState));
+          if (activeDocId === 'soham_dashboard') state.heading = "Soham's Daily Mastery Dashboard";
+          await setDoc(docRef, state);
+        }
+      } catch (e) {
+        console.error("Failed to connect to Firebase", e);
+        state = JSON.parse(JSON.stringify(defaultState));
+        toast("Couldn't reach the cloud. Changes may not save.");
+      }
+
+      selectedDate = state.allDates.includes(todayStr) ? todayStr : state.allDates[state.allDates.length - 1];
+      renderHeader(); renderBg(); updateViewButtons(); updateEditModeButton(); updateCompact();
+      renderDay(true); renderTiles(); renderHeatmap(); renderStreak(); renderInsightCard();
+      renderTable(true);
+
+      $('loader').style.opacity = '0';
+      setTimeout(() => { $('loader').style.display = 'none'; $('main-app').classList.remove('is-hidden'); }, 350);
+    }
+
+    // ============ header / bg / modes ============
+    function renderHeader() { $('app-heading').innerText = state.heading; $('app-quote').innerText = state.quote; }
+    window.saveHeader = function () {
+      state.heading = $('app-heading').innerText.trim();
+      state.quote = $('app-quote').innerText.trim();
+      saveStateToCloud();
+    };
+    window.promptBg = function () {
+      const url = prompt("Paste an image URL for the background (leave blank for the plain theme):", state.bgUrl || '');
+      if (url !== null) { state.bgUrl = url.trim(); saveStateToCloud(); renderBg(); }
+    };
+    function renderBg() {
+      document.body.style.backgroundImage = state.bgUrl ? `url("${state.bgUrl.replace(/"/g, '%22')}")` : 'none';
+      document.body.classList.toggle('has-bg', !!state.bgUrl);
+    }
+    window.toggleCompactMode = function () { state.isCompact = !state.isCompact; saveStateToCloud(); updateCompact(); };
+    function updateCompact() {
+      $('main-table').classList.toggle('compact-mode', !!state.isCompact);
+      $('compact-btn').classList.toggle('on', !!state.isCompact);
+    }
+    window.toggleEditMode = function () { state.isEditLayout = !state.isEditLayout; saveStateToCloud(); updateEditModeButton(); renderTable(); };
+    function updateEditModeButton() {
+      const b = $('edit-mode-btn');
+      b.textContent = state.isEditLayout ? 'Done editing layout' : 'Edit layout';
+      b.classList.toggle('warn-on', !!state.isEditLayout);
+    }
+    window.setViewMode = function (mode) { state.viewMode = mode; saveStateToCloud(); updateViewButtons(); renderTable(true); };
+    function updateViewButtons() { ['today', '5', 'all'].forEach(id => $(`view-${id}`).classList.toggle('on', state.viewMode === id)); }
+
+    // ============ layout editing (unchanged behaviour) ============
+    window.addDateRow = function () {
+      const newDate = prompt("Enter a new date to track (DD/MM, e.g. 31/12):");
+      if (newDate && !state.allDates.includes(newDate.trim())) {
+        const d = newDate.trim();
+        state.allDates.push(d);
+        if (!state.logs[d]) state.logs[d] = {};
+        saveStateToCloud(); refreshAll();
+      }
+    };
+    window.addCategoryModal = function () {
+      const catName = prompt("Name for the new subcategory:");
+      if (catName) {
+        state.groups.push({ name: catName, color: 'bg-amber-950/40 text-amber-300 border-amber-900/50', columns: [] });
+        saveStateToCloud(); refreshAll();
+      }
+    };
+    window.addColumnModal = function () {
+      const colName = prompt("Name for the new column / habit:");
+      if (!colName) return;
+      const groupNames = state.groups.map((g, i) => `${i + 1}. ${g.name}`).join('\n');
+      const choice = prompt(`Which subcategory should "${colName}" go into?\n\n${groupNames}\n\nType 'new' to create a new subcategory:`);
+      if (!choice) return;
+      if (choice.toLowerCase() === 'new') {
+        const newCat = prompt("Name for the new subcategory:");
+        if (newCat) state.groups.push({ name: newCat, color: 'bg-amber-950/40 text-amber-300 border-amber-900/50', columns: [colName] });
+      } else {
+        const idx = parseInt(choice) - 1;
+        if (!isNaN(idx) && state.groups[idx]) {
+          if (state.groups[idx].columns.includes(colName)) { alert("That column already exists in this subcategory."); return; }
+          state.groups[idx].columns.push(colName);
+        } else { alert("That number doesn't match a subcategory."); return; }
+      }
+      saveStateToCloud(); refreshAll();
+    };
+    window.addColumnToGroup = function (gIdx) {
+      const colName = prompt(`New habit in "${state.groups[gIdx].name}":`);
+      if (!colName) return;
+      if (state.groups[gIdx].columns.includes(colName)) { alert("That column already exists in this subcategory."); return; }
+      state.groups[gIdx].columns.push(colName);
+      saveStateToCloud(); refreshAll();
+    };
+    window.renameCategory = function (gIdx) {
+      const cur = state.groups[gIdx].name;
+      const nn = prompt(`Rename subcategory "${cur}" to:`, cur);
+      if (nn && nn !== cur) { state.groups[gIdx].name = nn; saveStateToCloud(); refreshAll(); }
+    };
+    window.deleteCategory = function (gIdx) {
+      const name = state.groups[gIdx].name;
+      if (state.groups.length <= 1) { alert("Keep at least one subcategory."); return; }
+      if (confirm(`Delete subcategory "${name}" and every column inside it?`)) { state.groups.splice(gIdx, 1); saveStateToCloud(); refreshAll(); }
+    };
+    window.renameColumn = function (gIdx, cIdx) {
+      const cur = state.groups[gIdx].columns[cIdx];
+      const nn = prompt(`Rename column "${cur}" to:`, cur);
+      if (nn && nn !== cur) {
+        state.groups[gIdx].columns[cIdx] = nn;
+        if (state.columnRules[cur]) { state.columnRules[nn] = state.columnRules[cur]; delete state.columnRules[cur]; }
+        for (const date in state.logs) {
+          if (state.logs[date][cur] !== undefined) { state.logs[date][nn] = state.logs[date][cur]; delete state.logs[date][cur]; }
+        }
+        if (state.running && state.running.col === cur) state.running.col = nn;
+        saveStateToCloud(); refreshAll();
+      }
+    };
+    window.deleteColumn = function (gIdx, cIdx) {
+      const col = state.groups[gIdx].columns[cIdx];
+      if (confirm(`Delete column "${col}"?`)) {
+        state.groups[gIdx].columns.splice(cIdx, 1);
+        delete state.columnRules[col];
+        if (state.running && state.running.col === col) state.running = null;
+        saveStateToCloud(); refreshAll();
+      }
+    };
+    window.moveColumn = function (fromIdx, cIdx) {
+      const col = state.groups[fromIdx].columns[cIdx];
+      const groupNames = state.groups.map((g, i) => `${i + 1}. ${g.name}`).join('\n');
+      const choice = prompt(`Move "${col}" to which subcategory?\n\n${groupNames}`);
+      if (!choice) return;
+      const t = parseInt(choice) - 1;
+      if (!isNaN(t) && state.groups[t] && t !== fromIdx) {
+        state.groups[fromIdx].columns.splice(cIdx, 1);
+        state.groups[t].columns.push(col);
+        saveStateToCloud(); refreshAll();
+      } else if (t === fromIdx) alert("It's already in that subcategory.");
+      else alert("That number doesn't match a subcategory.");
+    };
+    window.updateColumnRule = function (ci, ruleVal) {
+      state.columnRules[V(ci)] = ruleVal;
+      saveStateToCloud(); refreshAll();
+    };
+
+    // ============ calculations ============
+    const cellOf = (date, col) => state.logs[date]?.[col] || {};
+    const numOf = v => { const n = parseFloat(String(v ?? '').replace(/[^\d.-]/g, '')); return isNaN(n) ? null : n; };
+    const allColumns = () => state.groups.flatMap(g => g.columns);
+
+    function computeHoursFromSlots(slots) {
+      if (!slots || !Array.isArray(slots)) return 0;
+      let mins = 0;
+      slots.forEach(s => {
+        if (s.from && s.to) {
+          const [fH, fM] = s.from.split(':').map(Number);
+          const [tH, tM] = s.to.split(':').map(Number);
+          if (!isNaN(fH) && !isNaN(tH)) {
+            const start = fH * 60 + (fM || 0);
+            let end = tH * 60 + (tM || 0);
+            if (end < start) end += 1440;
+            mins += end - start;
+          }
+        }
+      });
+      return parseFloat((mins / 60).toFixed(1));
+    }
+    function hoursOf(cd) {
+      if (cd.hours) { const h = parseFloat(cd.hours); if (!isNaN(h)) return h; }
+      return cd.timeSlots ? computeHoursFromSlots(cd.timeSlots) : 0;
+    }
+    function calculateGroupHours(date, cols) {
+      const t = cols.reduce((s, c) => s + hoursOf(cellOf(date, c)), 0);
+      return t > 0 ? `${t.toFixed(1)} hrs` : '-';
+    }
+    function calculateGrandTotalHours(date) {
+      const t = allColumns().reduce((s, c) => s + hoursOf(cellOf(date, c)), 0);
+      return t > 0 ? `${t.toFixed(1)} hrs` : '-';
+    }
+    function getInheritedTarget(date, col) {
+      const cd = state.logs[date]?.[col];
+      if (cd && cd.target !== undefined && cd.target !== '') return cd.target;
+      const dIdx = state.allDates.indexOf(date);
+      for (let i = dIdx - 1; i >= 0; i--) {
+        const pt = state.logs[state.allDates[i]]?.[col]?.target;
+        if (pt !== undefined && pt !== '') return pt;
+      }
+      return '';
+    }
+    const activeTargetOf = (date, col) => getInheritedTarget(date, col);
+
+    function calculateProgressStyle(target, actual, col) {
+      if (!target || !actual) return '';
+      const t = numOf(target), a = numOf(actual);
+      if (t === null || a === null || t === 0) return '';
+      const rule = state.columnRules?.[col] || 'more';
+      if (rule === 'more') { const r = Math.max(0, Math.min(1, a / t)); return `rgba(79,195,176,${(r * 0.42).toFixed(2)})`; }
+      if (rule === 'less') {
+        if (a <= t) return 'rgba(134,183,255,0.22)';
+        const ex = Math.min(1, (a - t) / t); return `rgba(239,111,127,${(0.15 + ex * 0.3).toFixed(2)})`;
+      }
+      if (rule === 'exact') return a > t ? 'rgba(239,111,127,0.35)' : 'rgba(79,195,176,0.2)';
+      return '';
+    }
+    function isDone(date, col) {
+      const cd = cellOf(date, col);
+      return (cd.actual !== undefined && String(cd.actual).trim() !== '') || hoursOf(cd) > 0;
+    }
+    function progressOf(date, col) {
+      if (!isDone(date, col)) return { fill: 0, tone: 'none' };
+      const cd = cellOf(date, col);
+      const t = numOf(activeTargetOf(date, col)), a = numOf(cd.actual);
+      const rule = state.columnRules?.[col] || 'more';
+      if (t && a !== null) {
+        if (rule === 'more') { const r = Math.max(0.06, Math.min(1, a / t)); return { fill: r, tone: r >= 1 ? 'good' : 'partial' }; }
+        if (rule === 'less') return { fill: 1, tone: a <= t ? 'good' : 'over' };
+        if (rule === 'exact') return { fill: 1, tone: a > t ? 'over' : 'good' };
+      }
+      return { fill: 1, tone: 'good' };
+    }
+    const hasCheckin = d => { const c = state.checkins?.[d]; return !!(c && (c.mood || c.energy || (c.win && c.win.trim()))); };
+    function dayScore(d) { const cols = allColumns(); return cols.length ? cols.filter(c => isDone(d, c)).length / cols.length : 0; }
+    function anchorIdx() { const i = state.allDates.indexOf(todayStr); return i >= 0 ? i : state.allDates.length - 1; }
+
+    function streakFor(test) {
+      const dates = state.allDates; const idx = anchorIdx();
+      let cur = 0, i = idx;
+      if (i >= 0 && !test(dates[i])) i--;            // today not logged yet doesn't break it
+      while (i >= 0 && test(dates[i])) { cur++; i--; }
+      let best = 0, run = 0;
+      for (let j = 0; j <= idx; j++) { if (test(dates[j])) { run++; best = Math.max(best, run); } else run = 0; }
+      return { cur, best };
+    }
+    const dayStreak = () => streakFor(d => dayScore(d) > 0 || hasCheckin(d));
+    const habitStreak = col => streakFor(d => isDone(d, col));
+
+    function parseDM(s) {
+      const m = /^(\d{1,2})\/(\d{1,2})$/.exec((s || '').trim());
+      if (!m) return null;
+      const d = new Date(new Date().getFullYear(), +m[2] - 1, +m[1]);
+      return isNaN(d) ? null : d;
+    }
+    function niceDate(s) {
+      const d = parseDM(s);
+      return d ? d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }) : s;
+    }
+    const hhmm = () => { const n = new Date(); return `${String(n.getHours()).padStart(2, '0')}:${String(n.getMinutes()).padStart(2, '0')}`; };
+    function minsSince(from) {
+      const [h, m] = from.split(':').map(Number); const n = new Date();
+      let d = n.getHours() * 60 + n.getMinutes() - (h * 60 + m); if (d < 0) d += 1440; return d;
+    }
+
+    // ============ hero: day, check-in, ring ============
+    function renderDay(withCheckin) {
+      const d = parseDM(selectedDate);
+      $('day-dow').textContent = d ? d.toLocaleDateString('en-GB', { weekday: 'long' }) : selectedDate;
+      $('day-dm').textContent = d ? d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long' }) + (selectedDate === todayStr ? ', today' : '') : '';
+      $('day-today-btn').hidden = selectedDate === todayStr || !state.allDates.includes(todayStr);
+      if (withCheckin) $('checkin').innerHTML = checkinHtml(selectedDate);
+
+      const cols = allColumns(); const done = cols.filter(c => isDone(selectedDate, c)).length;
+      const pct = cols.length ? done / cols.length : 0;
+      const C = 2 * Math.PI * 42;
+      $('ring').className = 'ring' + (pct === 1 ? ' full' : '');
+      $('ring').innerHTML = `
+        <svg width="104" height="104" viewBox="0 0 104 104" aria-hidden="true">
+          <circle class="track" cx="52" cy="52" r="42" fill="none" stroke-width="9"/>
+          <circle class="bar" cx="52" cy="52" r="42" fill="none" stroke-width="9" stroke-dasharray="${C}" stroke-dashoffset="${C * (1 - pct)}"/>
+        </svg>
+        <div class="ring-text"><b>${done}/${cols.length}</b><small>logged</small></div>`;
+    }
+    function checkinHtml(date) {
+      const c = state.checkins?.[date] || {}; const di = R(date);
+      return `
+        <div class="checkin-row">
+          <div class="moods" role="group" aria-label="Mood"><span class="ci-label">Mood</span>
+            ${MOODS.map((m, i) => `<button class="${c.mood === i + 1 ? 'sel' : ''}" onclick="setCheck(${di},'mood',${i + 1})" title="${m[1]}" aria-label="${m[1]}" aria-pressed="${c.mood === i + 1}">${m[0]}</button>`).join('')}
+          </div>
+          <div class="energy" role="group" aria-label="Energy"><span class="ci-label">Energy</span>
+            ${[1, 2, 3, 4, 5].map(n => `<button class="${(c.energy || 0) >= n ? 'sel' : ''}" style="height:${8 + n * 4}px" onclick="setCheck(${di},'energy',${n})" aria-label="Energy ${n} of 5"></button>`).join('')}
+          </div>
+        </div>
+        <input class="field" placeholder="One line about the day: a win, a lesson, anything" value="${esc(c.win || '')}" oninput="setCheck(${di},'win',this.value)">`;
+    }
+    window.setCheck = function (di, key, val) {
+      const date = V(di);
+      if (!state.checkins) state.checkins = {};
+      const c = state.checkins[date] || (state.checkins[date] = {});
+      if (key !== 'win' && c[key] === val) c[key] = 0; else c[key] = val;
+      saveStateToCloud();
+      if (key !== 'win') {
+        if (date === selectedDate) $('checkin').innerHTML = checkinHtml(selectedDate);
+        const dc = $('drawer-checkin'); if (dc && openPanel === 'drawer' && activeDate === date) dc.innerHTML = checkinHtml(date);
+      } else if (openPanel === 'drawer' && date === selectedDate) {
+        $('checkin').innerHTML = checkinHtml(selectedDate);
+      }
+      scheduleRefresh();
+    };
+    window.shiftDay = function (dir) {
+      const i = state.allDates.indexOf(selectedDate) + dir;
+      if (i >= 0 && i < state.allDates.length) { selectedDate = state.allDates[i]; renderDay(true); renderTiles(); renderHeatmap(); }
+    };
+    window.goToday = function () { if (state.allDates.includes(todayStr)) { selectedDate = todayStr; renderDay(true); renderTiles(); renderHeatmap(); } };
+    window.selectDay = function (di) { selectedDate = V(di); renderDay(true); renderTiles(); renderHeatmap(); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+
+    // ============ tiles ============
+    function renderTiles() {
+      const d = selectedDate;
+      $('tiles').innerHTML = state.groups.map((g, gi) => {
+        const done = g.columns.filter(c => isDone(d, c)).length;
+        const hrs = calculateGroupHours(d, g.columns);
+        return `
+          <div class="tile-group" style="--hue:${groupHue(g, gi)}">
+            <div class="tg-head"><h3>${esc(g.name)}</h3><span>${done} of ${g.columns.length} logged${hrs !== '-' ? `, ${hrs}` : ''}</span></div>
+            <div class="tile-grid">
+              ${g.columns.map(col => tileHtml(d, col)).join('')}
+              <button class="tile ghost" onclick="addColumnToGroup(${gi})">+ Add habit</button>
+            </div>
+          </div>`;
+      }).join('');
+    }
+    function tileHtml(d, col) {
+      const cd = cellOf(d, col); const p = progressOf(d, col); const t = activeTargetOf(d, col); const h = hoursOf(cd);
+      const run = state.running && state.running.date === d && state.running.col === col;
+      const runSlot = run ? cd.timeSlots?.[state.running.idx] : null;
+      const val = cd.actual && String(cd.actual).trim() ? esc(cd.actual) + (t ? `<span class="muted" style="font-size:13px;font-weight:500"> / ${esc(t)}</span>` : '')
+                : h > 0 ? `${h} h` : (t ? `Goal ${esc(t)}` : 'Tap to log');
+      return `
+        <button class="tile tone-${p.tone}" style="--fill:${p.fill}" onclick="openSheet(${R(col)})">
+          <span class="fill"></span>
+          <span class="t-name">${esc(col)}</span>
+          <span class="t-val">${val}</span>
+          <span class="t-meta">
+            ${run && runSlot?.from ? `<span class="live">${minsSince(runSlot.from)} min</span>` : ''}
+            ${h > 0 && cd.actual ? `<span>⏱ ${h}h</span>` : ''}
+            ${cd.reaction ? `<span>${cd.reaction}</span>` : ''}
+            ${cd.reason ? `<span title="${esc(cd.reason)}">✎ note</span>` : ''}
+          </span>
+        </button>`;
+    }
+
+    // ============ heatmap, stats, streak ============
+    function renderHeatmap() {
+      const tIdx = anchorIdx();
+      $('heatmap').innerHTML = state.allDates.map((d, i) => {
+        const s = dayScore(d); const lv = s === 0 ? (hasCheckin(d) ? 1 : 0) : s <= .25 ? 1 : s <= .5 ? 2 : s <= .8 ? 3 : 4;
+        const cls = [`l${lv}`, i > tIdx ? 'future' : '', d === todayStr ? 'is-today' : '', d === selectedDate ? 'is-sel' : ''].join(' ');
+        return `<button class="${cls}" onclick="selectDay(${R(d)})" title="${esc(niceDate(d))}: ${Math.round(s * 100)}% logged" aria-label="${esc(niceDate(d))}, ${Math.round(s * 100)} percent logged"></button>`;
+      }).join('');
+      const { cur, best } = dayStreak();
+      const last7 = state.allDates.slice(Math.max(0, tIdx - 6), tIdx + 1);
+      const avg = last7.length ? Math.round(last7.reduce((s, d) => s + dayScore(d), 0) / last7.length * 100) : 0;
+      const hrs = last7.reduce((s, d) => s + allColumns().reduce((a, c) => a + hoursOf(cellOf(d, c)), 0), 0);
+      $('stats').innerHTML = `
+        <div class="stat"><b>${cur}</b><span>day streak</span></div>
+        <div class="stat"><b>${best}</b><span>best streak</span></div>
+        <div class="stat"><b>${avg}%</b><span>logged, last 7 days</span></div>
+        <div class="stat"><b>${hrs.toFixed(1)}</b><span>hours tracked, last 7 days</span></div>`;
+    }
+    function renderStreak() {
+      const { cur, best } = dayStreak();
+      $('streak-pill').className = 'streak' + (cur ? '' : ' cold');
+      $('streak-pill').innerHTML = `<span class="flame">🔥</span><b>${cur}</b><small>day streak<br>best ${best}</small>`;
+    }
+
+    // ============ full table ============
+    function getCellInnerHtml(date, col, cd) {
+      const target = activeTargetOf(date, col);
+      const actual = cd.actual;
+      const displayVal = actual || (cd.reaction ? '-' : (target || '-'));
+      const subtitle = target && actual ? `T: ${target}` : (target && !actual ? `Target: ${target}` : '');
+      const h = hoursOf(cd);
+      const slots = (cd.timeSlots || []).filter(s => s.from && s.to).map(s => `${s.from}-${s.to}`).join(', ');
+      return `
+        <div class="cell-inner">
+          <div class="cell-top">
+            <span class="cell-val ${!actual && !target ? 'empty' : ''}">${esc(displayVal)}</span>
+            ${cd.reaction ? `<span>${cd.reaction}</span>` : ''}
+          </div>
+          <div class="cell-sub">
+            ${subtitle ? `<span class="subtitle">${esc(subtitle)}</span>` : ''}
+            ${h > 0 ? `<span class="hrs">⏱ ${h}h</span>` : ''}
+          </div>
+          ${slots ? `<div class="slot-list">${slots}</div>` : ''}
+          ${cd.reason ? `<div class="reason-text">${esc(cd.reason)}</div>` : ''}
+        </div>`;
+    }
+
+    function renderTable(scroll) {
+      let visible = [];
+      const todayIdx = state.allDates.indexOf(todayStr);
+      if (state.viewMode === 'today') visible = todayIdx !== -1 ? [todayStr] : [state.allDates[state.allDates.length - 1]];
+      else if (state.viewMode === '5') {
+        if (todayIdx !== -1) {
+          let start = todayIdx - 4, end = todayIdx + 1;
+          if (start < 0) { end += Math.abs(start); start = 0; }
+          visible = state.allDates.slice(start, end);
+        } else visible = state.allDates.slice(-5);
+      } else visible = state.allDates;
+
+      let g1 = `<th class="corner"></th>`;
+      let g2 = `<th class="corner date-h">Date</th>`;
+      state.groups.forEach((group, gIdx) => {
+        const hue = groupHue(group, gIdx); const n = group.columns.length;
+        const catTools = state.isEditLayout ? `<div class="h-tools"><div class="row">
+            <button class="mini" onclick="renameCategory(${gIdx})">Rename</button>
+            <button class="mini danger" onclick="deleteCategory(${gIdx})">Delete</button></div></div>` : '';
+        g1 += `<th colspan="${Math.max(1, n)}" class="grp-h" style="--hue:${hue}">${esc(group.name)}${catTools}</th>`;
+        if (!n) g2 += `<th class="col-h empty-h">No columns yet</th>`;
+        group.columns.forEach((col, cIdx) => {
+          let tools = '';
+          if (state.isEditLayout) {
+            const rule = state.columnRules?.[col] || 'more';
+            tools = `<div class="h-tools">
+                <select onchange="updateColumnRule(${R(col)}, this.value)" aria-label="Scoring rule for ${esc(col)}">
+                  <option value="more" ${rule === 'more' ? 'selected' : ''}>📈 More the better</option>
+                  <option value="less" ${rule === 'less' ? 'selected' : ''}>📉 Less the better</option>
+                  <option value="exact" ${rule === 'exact' ? 'selected' : ''}>🎯 Exactly required</option>
+                </select>
+                <div class="row">
+                  <button class="mini" onclick="renameColumn(${gIdx}, ${cIdx})">Rename</button>
+                  <button class="mini" onclick="moveColumn(${gIdx}, ${cIdx})">Move</button>
+                  <button class="mini danger" onclick="deleteColumn(${gIdx}, ${cIdx})">Delete</button>
+                </div></div>`;
+          }
+          g2 += `<th class="col-h"><div>${esc(col)}</div>${tools}</th>`;
+        });
+      });
+      g1 += `<th colspan="${state.groups.length + 1}" class="grp-h totals-h">Hours</th>`;
+      state.groups.forEach(g => { g2 += `<th class="col-h tot-h">${esc(g.name.split(' ')[1] || g.name)}</th>`; });
+      g2 += `<th class="col-h tot-h grand">Total</th>`;
+      $('group-headers').innerHTML = g1;
+      $('column-headers').innerHTML = g2;
+
+      $('table-body').innerHTML = visible.map(date => {
+        const di = R(date);
+        let row = `<tr class="${date === todayStr ? 'is-today' : ''}"><td class="date-cell" onclick="openDrawer(${di})" title="Open the full log for ${esc(date)}">${esc(date)}</td>`;
+        state.groups.forEach(group => {
+          if (!group.columns.length) row += `<td></td>`;
+          group.columns.forEach(col => {
+            const cd = cellOf(date, col);
+            const bg = calculateProgressStyle(activeTargetOf(date, col), cd.actual, col);
+            row += `<td class="cell" id="td-${safeId(date)}-${safeId(col)}" style="background-color:${bg || 'transparent'}" onclick="openSheet(${R(col)}, ${di})">${getCellInnerHtml(date, col, cd)}</td>`;
+          });
+        });
+        state.groups.forEach(g => { row += `<td class="tot">${calculateGroupHours(date, g.columns)}</td>`; });
+        row += `<td class="tot grand">${calculateGrandTotalHours(date)}</td></tr>`;
+        return row;
+      }).join('');
+
+      if (scroll && state.viewMode !== 'today') {
+        setTimeout(() => {
+          const wrap = $('table-wrap'); const tr = document.querySelector('#table-body tr.is-today');
+          if (tr) wrap.scrollTo({ top: tr.offsetTop - wrap.clientHeight / 2, behavior: 'smooth' });
+        }, 300);
+      }
+    }
+
+    // ============ refresh orchestration ============
+    let refreshT;
+    function scheduleRefresh() { clearTimeout(refreshT); refreshT = setTimeout(refreshViews, 120); }
+    function refreshViews() { renderDay(false); renderTiles(); renderHeatmap(); renderStreak(); renderTable(false); }
+    function refreshAll() { renderDay(true); refreshViews(); }
+
+    // ============ editor (shared by sheet + drawer) ============
+    function editorHtml(date, col, focus) {
+      const ci = R(col); const cd = cellOf(date, col);
+      const inherited = getInheritedTarget(date, col);
+      const ownTarget = cd.target !== undefined && cd.target !== '';
+      const slots = cd.timeSlots && cd.timeSlots.length ? cd.timeSlots : [{ from: '', to: '' }];
+      const run = state.running && state.running.date === date && state.running.col === col;
+      const hrs = hoursOf(cd);
+      return `
+        <div class="ed ${focus ? 'focus' : ''}" data-col="${ci}">
+          ${openPanel === 'drawer' ? `<h4>${esc(col)}</h4>` : ''}
+          <div class="grid2">
+            <label><span>Target ${!ownTarget && inherited ? '<em>(carried over)</em>' : ''}</span>
+              <input class="field" placeholder="${esc(inherited || 'Set a target')}" value="${esc(cd.target ?? '')}" oninput="updateCell(${ci},'target',this.value)"></label>
+            <label><span>Actual</span>
+              <div class="stepper">
+                <button type="button" onclick="bump(${ci},-1)" aria-label="Decrease">−</button>
+                <input class="field" value="${esc(cd.actual ?? '')}" oninput="updateCell(${ci},'actual',this.value)">
+                <button type="button" onclick="bump(${ci},1)" aria-label="Increase">+</button>
+              </div></label>
+          </div>
+          <div class="slots">
+            <div class="slots-head">
+              <span>Time spent ${hrs > 0 ? `<b>${hrs} h</b>` : ''}</span>
+              <span style="display:flex;gap:6px">
+                <button type="button" class="timer-btn ${run ? 'running' : ''}" onclick="toggleTimer(${ci})">${run ? '■ Stop timer' : '▶ Start timer'}</button>
+                <button type="button" class="mini" onclick="addTimeSlot(${ci})">+ Slot</button>
+              </span>
+            </div>
+            ${slots.map((s, idx) => `
+              <div class="slot">
+                <input type="time" value="${esc(s.from || '')}" onchange="updateTimeSlot(${ci},${idx},'from',this.value)" aria-label="From">
+                <span>to</span>
+                <input type="time" value="${esc(s.to || '')}" onchange="updateTimeSlot(${ci},${idx},'to',this.value)" aria-label="To">
+                ${slots.length > 1 ? `<button type="button" class="x" onclick="removeTimeSlot(${ci},${idx})" aria-label="Remove slot">×</button>` : ''}
+              </div>`).join('')}
+          </div>
+          <div class="reacts"><span>How did it feel?</span>
+            ${REACTIONS.map(e => `<button type="button" class="${cd.reaction === e ? 'sel' : ''}" onclick="setReaction(${ci},'${e}')" aria-pressed="${cd.reaction === e}">${e}</button>`).join('')}
+          </div>
+          <textarea class="field" placeholder="Reason or note (shows in the table)" oninput="updateCell(${ci},'reason',this.value)">${esc(cd.reason || '')}</textarea>
+        </div>`;
+    }
+    function rerenderEditor(col) {
+      if (openPanel === 'sheet' && sheetCol === col) { renderSheet(); return; }
+      if (openPanel === 'drawer') {
+        const el = $('drawer-content').querySelector(`.ed[data-col="${R(col)}"]`);
+        if (el) el.outerHTML = editorHtml(activeDate, col, el.classList.contains('focus'));
+      }
+    }
+    function ensureCell(col) {
+      if (!state.logs[activeDate]) state.logs[activeDate] = {};
+      if (!state.logs[activeDate][col]) state.logs[activeDate][col] = {};
+      return state.logs[activeDate][col];
+    }
+    function afterEdit(col, structural) {
+      saveStateToCloud();
+      if (structural) rerenderEditor(col);
+      scheduleRefresh();
+      checkCelebrate(activeDate);
+    }
+
+    window.updateCell = function (ci, field, value) { const col = V(ci); ensureCell(col)[field] = value; afterEdit(col, false); };
+    window.setReaction = function (ci, e) { const col = V(ci); const c = ensureCell(col); c.reaction = c.reaction === e ? '' : e; afterEdit(col, true); };
+    window.bump = function (ci, delta) {
+      const col = V(ci); const c = ensureCell(col);
+      const n = numOf(c.actual) ?? 0;
+      c.actual = String(Math.max(0, +(n + delta).toFixed(2)));
+      afterEdit(col, true);
+    };
+    window.addTimeSlot = function (ci) {
+      const col = V(ci); const c = ensureCell(col);
+      if (!c.timeSlots || !c.timeSlots.length) c.timeSlots = [{ from: '', to: '' }];
+      c.timeSlots.push({ from: '', to: '' });
+      afterEdit(col, true);
+    };
+    window.removeTimeSlot = function (ci, idx) {
+      const col = V(ci); const c = ensureCell(col);
+      if (!c.timeSlots) return;
+      c.timeSlots.splice(idx, 1);
+      if (state.running && state.running.date === activeDate && state.running.col === col) {
+        if (state.running.idx === idx) state.running = null; else if (state.running.idx > idx) state.running.idx--;
+      }
+      afterEdit(col, true);
+    };
+    window.updateTimeSlot = function (ci, idx, field, val) {
+      const col = V(ci); const c = ensureCell(col);
+      if (!c.timeSlots || !c.timeSlots.length) c.timeSlots = [{ from: '', to: '' }];
+      if (!c.timeSlots[idx]) c.timeSlots[idx] = { from: '', to: '' };
+      c.timeSlots[idx][field] = val;
+      afterEdit(col, false);
+      // refresh the hours label only
+      const ed = document.querySelector(`#${openPanel} .ed[data-col="${ci}"] .slots-head b, #${openPanel}-content .ed[data-col="${ci}"] .slots-head b`);
+      if (ed) ed.textContent = `${hoursOf(c)} h`;
+    };
+    window.toggleTimer = function (ci) {
+      const col = V(ci); const now = hhmm();
+      const r = state.running;
+      if (r && r.date === activeDate && r.col === col) {
+        const s = state.logs[r.date]?.[r.col]?.timeSlots?.[r.idx]; if (s) s.to = now;
+        state.running = null;
+        toast(`Timer stopped. ${hoursOf(cellOf(activeDate, col))} h logged for ${col}.`);
+      } else {
+        if (r) { const s = state.logs[r.date]?.[r.col]?.timeSlots?.[r.idx]; if (s && !s.to) s.to = now; }
+        const c = ensureCell(col);
+        const slots = c.timeSlots || [];
+        let idx = slots.findIndex(s => !s.from && !s.to);
+        if (idx < 0) { slots.push({ from: now, to: '' }); idx = slots.length - 1; } else slots[idx].from = now;
+        c.timeSlots = slots;
+        state.running = { date: activeDate, col, idx };
+        toast(`Timer started for ${col}. You can close this.`);
+      }
+      afterEdit(col, true);
+    };
+
+    // ============ panels ============
+    function openLayer(name) {
+      ['drawer', 'sheet', 'coach'].forEach(n => $(n).classList.toggle('open', n === name));
+      $('scrim').classList.add('show');
+      openPanel = name;
+    }
+    window.closeAll = function () {
+      ['drawer', 'sheet', 'coach'].forEach(n => $(n).classList.remove('open'));
+      $('scrim').classList.remove('show');
+      if (openPanel === 'drawer' || openPanel === 'sheet') {
+        const closing = openPanel;
+        setTimeout(() => { if (openPanel !== closing) { if (closing === 'drawer') $('drawer-content').innerHTML = ''; else { $('sheet-body').innerHTML = ''; } } }, 320);
+      }
+      openPanel = null; sheetCol = null;
+    };
+    window.closeDrawer = window.closeAll;
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && openPanel) closeAll(); });
+
+    window.openSheet = function (ci, di) {
+      sheetCol = V(ci);
+      activeDate = di !== undefined ? V(di) : selectedDate;
+      openLayer('sheet');
+      renderSheet();
+    };
+    function renderSheet() {
+      const col = sheetCol; if (!col) return;
+      const gi = state.groups.findIndex(g => g.columns.includes(col));
+      const { cur, best } = habitStreak(col);
+      const rule = state.columnRules?.[col] || 'more';
+      $('sheet-head').innerHTML = `
+        <div>
+          <h2>${esc(col)}</h2>
+          <p>${esc(niceDate(activeDate))}. ${RULE_TEXT[rule]}. ${cur ? `🔥 ${cur}-day streak` : 'No streak yet'}${best > cur ? `, best ${best}` : ''}.</p>
+        </div>
+        <button class="round" onclick="closeAll()" aria-label="Close">×</button>`;
+      $('sheet').style.setProperty('--hue', groupHue(state.groups[gi] || {}, Math.max(0, gi)));
+      $('sheet-body').innerHTML = editorHtml(activeDate, col, false) + `
+        <div class="sheet-foot">
+          <button class="linkish" onclick="openDrawer(${R(activeDate)}, ${R(col)})">Open the full day</button>
+          <button class="btn accent" onclick="closeAll()">Done</button>
+        </div>`;
+    }
+
+    window.openDrawer = function (di, fi) {
+      activeDate = V(di);
+      const focusCol = fi !== undefined && fi !== null ? V(fi) : null;
+      openLayer('drawer');
+      $('drawer-title').innerText = `Log for ${niceDate(activeDate)}`;
+      let html = `<div class="drawer-group" style="--hue:var(--mari)"><h3>Check-in</h3><div class="checkin" id="drawer-checkin">${checkinHtml(activeDate)}</div></div>`;
+      state.groups.forEach((g, gi) => {
+        html += `<div class="drawer-group" style="--hue:${groupHue(g, gi)}"><h3>${esc(g.name)}</h3><div class="eds">
+          ${g.columns.map(col => editorHtml(activeDate, col, col === focusCol)).join('')}</div></div>`;
+      });
+      $('drawer-content').innerHTML = html;
+      $('drawer-content').scrollTop = 0;
+      if (focusCol) setTimeout(() => $('drawer-content').querySelector(`.ed[data-col="${R(focusCol)}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 320);
+    };
+
+    // ============ celebration + toast ============
+    function checkCelebrate(date) {
+      const cols = allColumns();
+      if (!cols.length || celebrated.has(date)) return;
+      if (cols.every(c => isDone(date, c))) {
+        celebrated.add(date);
+        toast(`Every habit logged for ${niceDate(date)}. That's a full day.`);
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) confetti();
+      }
+    }
+    function confetti() {
+      const colors = ['#f4b740', '#4fc3b0', '#ef6f7f', '#86b7ff', '#a09dff'];
+      for (let i = 0; i < 70; i++) {
+        const s = document.createElement('span'); s.className = 'confetti';
+        s.style.left = Math.random() * 100 + 'vw';
+        s.style.background = colors[i % colors.length];
+        s.style.setProperty('--dx', (Math.random() * 160 - 80) + 'px');
+        s.style.setProperty('--rot', (Math.random() * 720 - 360) + 'deg');
+        s.style.animationDelay = Math.random() * .35 + 's';
+        document.body.appendChild(s); setTimeout(() => s.remove(), 2300);
+      }
+    }
+    let toastT;
+    function toast(msg) {
+      const t = $('toast'); t.textContent = msg; t.classList.add('show');
+      clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 2600);
+    }
+    // keep live timers ticking on tiles
+    setInterval(() => { if (state?.running && openPanel !== 'sheet') renderTiles(); }, 30000);
+
+    // ============ AI coach ============
+    const AI_STORE = 'tracker_ai_cfg';
+    const AI_DEFAULTS = { base: 'https://aicredits.in/v1', key: '', model: 'google/gemini-2.5-flash-lite' };
+    function loadAi() { try { return { ...AI_DEFAULTS, ...JSON.parse(localStorage.getItem(AI_STORE) || '{}') }; } catch { return { ...AI_DEFAULTS }; } }
+    let aiCfg = loadAi();
+    let aiController = null;
+    let aiText = '';
+
+    window.openCoach = function () {
+      aiCfg = loadAi();
+      $('ai-base').value = aiCfg.base; $('ai-key').value = aiCfg.key; $('ai-model').value = aiCfg.model;
+      $('ai-settings').open = !aiCfg.key;
+      if (!aiText && state.lastInsight?.text) { aiText = state.lastInsight.text; $('ai-out').innerHTML = md(aiText); $('ai-status').textContent = `Last review: ${state.lastInsight.label}, ${new Date(state.lastInsight.at).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}`; }
+      openLayer('coach');
+    };
+    window.saveAiSettings = function () {
+      aiCfg = { base: $('ai-base').value.trim() || AI_DEFAULTS.base, key: $('ai-key').value.trim(), model: $('ai-model').value.trim() || AI_DEFAULTS.model };
+      try { localStorage.setItem(AI_STORE, JSON.stringify(aiCfg)); toast('Connection saved on this device.'); }
+      catch { toast('Saved for this session only. This browser blocks storage.'); }
+      $('ai-settings').open = false;
+    };
+
+    function habitsText() {
+      return state.groups.map(g => `${g.name}: ` + g.columns.map(c => {
+        const t = activeTargetOf(selectedDate, c);
+        return `${c} [${RULE_TEXT[state.columnRules?.[c] || 'more'].toLowerCase()}${t ? `, current target ${t}` : ''}]`;
+      }).join('; ')).join('\n');
+    }
+    function dayText(date) {
+      const parts = [];
+      const c = state.checkins?.[date];
+      if (c) {
+        if (c.mood) parts.push(`mood ${c.mood}/5 (${MOODS[c.mood - 1][1]})`);
+        if (c.energy) parts.push(`energy ${c.energy}/5`);
+        if (c.win && c.win.trim()) parts.push(`day note: "${c.win.trim()}"`);
+      }
+      const lines = [];
+      allColumns().forEach(col => {
+        const cd = cellOf(date, col);
+        const h = hoursOf(cd);
+        if (!(cd.actual || h || cd.reaction || cd.reason)) return;
+        const t = activeTargetOf(date, col);
+        const bits = [`actual ${cd.actual || '—'}`];
+        if (t) bits.push(`target ${t}`);
+        if (h) bits.push(`${h}h`);
+        if (cd.reaction) bits.push(`felt ${cd.reaction}`);
+        if (cd.reason) bits.push(`note: "${cd.reason}"`);
+        lines.push(`  - ${col}: ${bits.join(', ')}`);
+      });
+      return `${niceDate(date)} (${date})${parts.length ? ' | ' + parts.join(', ') : ''}\n${lines.length ? lines.join('\n') : '  (nothing logged)'}`;
+    }
+    function datesFor(kind) {
+      const sIdx = state.allDates.indexOf(selectedDate);
+      if (kind === 'day') return [selectedDate];
+      if (kind === 'week' || kind === 'plan') return state.allDates.slice(Math.max(0, sIdx - 6), sIdx + 1);
+      if (kind === 'custom') return state.allDates.slice(Math.max(0, sIdx - 13), sIdx + 1);
+      const tIdx = anchorIdx();
+      const first = state.allDates.findIndex(d => dayScore(d) > 0 || hasCheckin(d));
+      return first < 0 ? [] : state.allDates.slice(first, tIdx + 1);
+    }
+
+    const SYSTEM = `You are a sharp, warm accountability coach for a university student who tracks daily habits: academics, lifestyle (sleep, food, exercise, calls) and media use. Use only the data given; never invent numbers. Be concise and specific, cite actual habits and dates. Media columns like Instagram, JioHotstar and Youtube are usually "less is better". No generic productivity advice. Format in short markdown: a one-line verdict, then "### What went well" (2-3 bullets), "### What slipped" (2-3 bullets), "### Pattern I notice" (1-2 bullets linking habits, e.g. media vs study, sleep vs output, mood vs activity), "### One thing for tomorrow" (a single concrete action). Keep it under 230 words.`;
+
+    window.runCoach = async function (kind) {
+      aiCfg = loadAi();
+      if (!aiCfg.key) { $('ai-settings').open = true; $('ai-key').focus(); $('ai-status').textContent = 'Add your API key under Connection first, then save it.'; return; }
+      const dates = datesFor(kind);
+      if (!dates.length) { $('ai-status').textContent = 'There is nothing logged yet. Log a few habits first, then ask again.'; return; }
+      let label, ask;
+      if (kind === 'day') { label = `Review of ${niceDate(selectedDate)}`; ask = `Review this single day.`; }
+      else if (kind === 'week') { label = 'Last 7 days'; ask = `Review these 7 days as a week. Mention consistency and trends.`; }
+      else if (kind === 'all') { label = 'Everything so far'; ask = `Review the whole journey so far. Call out long-term trends, the most and least consistent habits, and how the recent week compares with earlier.`; }
+      else if (kind === 'plan') { label = "Tomorrow's targets"; ask = `Instead of the usual format, propose realistic targets for the next day for each habit that has data, based on recent actuals and targets. Output a short bulleted list "Habit: target (why, in under 10 words)", then one line on what to protect time for.`; }
+      else {
+        const q = $('ai-q').value.trim();
+        if (!q) { $('ai-q').focus(); return; }
+        label = q.length > 48 ? q.slice(0, 48) + '…' : q;
+        ask = `Answer this question directly using the data (skip the usual section format unless it helps): ${q}`;
+      }
+      const userMsg = `${ask}\n\nHabits and rules:\n${habitsText()}\n\nLog:\n${dates.map(dayText).join('\n')}`;
+
+      if (aiController) aiController.abort();
+      aiController = new AbortController();
+      aiText = '';
+      const out = $('ai-out');
+      out.innerHTML = ''; out.classList.add('caret');
+      $('ai-status').textContent = `Thinking about: ${label}`;
+      $('ai-stop').hidden = false;
+
+      let frame = null;
+      const paint = () => { frame = null; out.innerHTML = md(aiText); };
+      try {
+        const res = await fetch(aiCfg.base.replace(/\/+$/, '') + '/chat/completions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${aiCfg.key}` },
+          body: JSON.stringify({ model: aiCfg.model, stream: true, messages: [{ role: 'system', content: SYSTEM }, { role: 'user', content: userMsg }] }),
+          signal: aiController.signal
+        });
+        if (!res.ok) {
+          const body = await res.text().catch(() => '');
+          throw new Error(res.status === 401 ? 'The API key was rejected (401). Check it under Connection.' :
+            res.status === 404 ? 'Endpoint or model not found (404). Check the base URL and model name.' :
+            `The provider returned ${res.status}. ${body.slice(0, 180)}`);
+        }
+        const ctype = res.headers.get('content-type') || '';
+        if (ctype.includes('application/json')) {
+          const j = await res.json(); aiText = j.choices?.[0]?.message?.content || ''; paint();
+        } else {
+          const reader = res.body.getReader(); const dec = new TextDecoder(); let buf = '';
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            buf += dec.decode(value, { stream: true });
+            const lines = buf.split('\n'); buf = lines.pop();
+            for (const line of lines) {
+              const l = line.trim();
+              if (!l.startsWith('data:')) continue;
+              const data = l.slice(5).trim();
+              if (data === '[DONE]') continue;
+              try { const j = JSON.parse(data); aiText += j.choices?.[0]?.delta?.content || ''; } catch { }
+            }
+            if (!frame) frame = requestAnimationFrame(paint);
+          }
+          paint();
+        }
+        if (!aiText.trim()) throw new Error('The model returned an empty reply. Try again or switch the model.');
+        state.lastInsight = { text: aiText, at: Date.now(), label };
+        saveStateToCloud(); renderInsightCard();
+        $('ai-status').textContent = `${label}. Saved to your dashboard.`;
+      } catch (e) {
+        if (e.name === 'AbortError') $('ai-status').textContent = 'Stopped.';
+        else if (e instanceof TypeError) $('ai-status').textContent = `Couldn't reach ${aiCfg.base}. Check the URL and your connection. If both are fine, the provider may be blocking requests from browsers (CORS).`;
+        else $('ai-status').textContent = e.message;
+      } finally {
+        out.classList.remove('caret'); $('ai-stop').hidden = true; aiController = null;
+      }
+    };
+    window.stopCoach = function () { if (aiController) aiController.abort(); };
+    window.copyInsight = async function () {
+      const text = aiText || state.lastInsight?.text || '';
+      if (!text) return toast('Nothing to copy yet.');
+      try { await navigator.clipboard.writeText(text); toast('Copied.'); } catch { toast('Copy failed. Select the text and copy it manually.'); }
+    };
+
+    function renderInsightCard() {
+      const li = state.lastInsight;
+      $('insight-card').innerHTML = li?.text ? `
+          <div class="row"><h2>From your coach</h2><span class="hint">${esc(li.label)}, ${new Date(li.at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</span></div>
+          <div class="md">${md(li.text)}</div>
+          <div class="foot"><button class="btn small" onclick="openCoach()">Read in full</button><button class="btn small accent" onclick="openCoach();runCoach('week')">Refresh weekly review</button></div>`
+        : `
+          <h2>Your coach</h2>
+          <p class="muted" style="margin:0 0 6px">Get a short, honest read on how your days are going: what's working, what's slipping, and one thing to try tomorrow.</p>
+          <p class="hint">It only uses what you log here. Add your API key once and it's remembered on this device.</p>
+          <div class="foot"><button class="btn accent" onclick="openCoach();runCoach('week')">Get my weekly review</button><button class="btn small" onclick="openCoach()">Set up connection</button></div>`;
+    }
+
+    function md(src) {
+      const inline = s => s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/(^|[^*])\*(?!\s)([^*]+?)\*/g, '$1<em>$2</em>');
+      let html = '', inList = false;
+      for (const raw of esc(src).split('\n')) {
+        const l = raw.trim();
+        if (/^([-*•]|\d+[.)])\s+/.test(l)) {
+          if (!inList) { html += '<ul>'; inList = true; }
+          html += `<li>${inline(l.replace(/^([-*•]|\d+[.)])\s+/, ''))}</li>`; continue;
+        }
+        if (inList) { html += '</ul>'; inList = false; }
+        if (/^#{1,6}\s+/.test(l)) { html += `<h4>${inline(l.replace(/^#{1,6}\s+/, ''))}</h4>`; continue; }
+        if (l) html += `<p>${inline(l)}</p>`;
+      }
+      if (inList) html += '</ul>';
+      return html;
+    }
+  </script>
+</body>
+</html>
