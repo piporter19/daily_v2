@@ -370,6 +370,50 @@
     .setup-card .diff { font-size: 12.5px; color: var(--muted); margin: 0; }
     .setup-card.pending { color: var(--dim); font-size: 13px; }
 
+    /* ---------- login intro ---------- */
+    #intro { position: fixed; inset: 0; z-index: 120; pointer-events: none; overflow: hidden; transition: opacity .9s ease; }
+    #intro.out { opacity: 0; }
+    #intro .sky { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 35%, rgba(244, 183, 64, .10), transparent 62%); animation: skyIn 1s ease-out both; }
+    @keyframes skyIn { from { opacity: 0; } }
+    #intro .cloud { position: absolute; opacity: 0; animation: cloudDrift 4.2s ease-in-out forwards; }
+    #intro .cloud svg { display: block; width: 100%; height: auto; }
+    @keyframes cloudDrift { 0% { opacity: 0; transform: translateX(0); } 22%, 78% { opacity: var(--o); } 100% { opacity: 0; transform: translateX(var(--dx)); } }
+    #intro .bird-fly { position: absolute; left: 0; top: 0; animation: fly 3.4s cubic-bezier(.45, .05, .55, .95) forwards; filter: drop-shadow(0 6px 14px rgba(244, 183, 64, .35)); }
+    @keyframes fly {
+      0% { transform: translate(-14vw, 62vh) rotate(-8deg); }
+      30% { transform: translate(24vw, 44vh) rotate(-3deg); }
+      55% { transform: translate(52vw, 40vh) rotate(3deg); }
+      80% { transform: translate(80vw, 26vh) rotate(-8deg); }
+      100% { transform: translate(112vw, 12vh) rotate(-12deg); }
+    }
+    #intro .bird-bob { animation: bob .56s ease-in-out infinite alternate; }
+    @keyframes bob { to { transform: translateY(-9px); } }
+    #intro .wing-f { transform-box: view-box; transform-origin: 52px 37px; animation: flap .26s ease-in-out infinite alternate; }
+    #intro .wing-b { transform-box: view-box; transform-origin: 55px 35px; animation: flapB .26s ease-in-out infinite alternate; }
+    @keyframes flap { from { transform: rotate(-40deg); } to { transform: rotate(30deg); } }
+    @keyframes flapB { from { transform: rotate(-30deg); } to { transform: rotate(24deg); } }
+    #intro .spark { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: #ffd684; box-shadow: 0 0 10px #f4b740; opacity: 0; animation: spark 1.3s ease-out forwards; }
+    @keyframes spark { 0% { opacity: 0; transform: scale(.4); } 18% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: translateY(46px) scale(.2); } }
+
+    /* ---------- "Now doing" session timer ---------- */
+    .now { grid-column: 1 / -1; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin: -6px -20px -20px; padding: 14px 20px; border-top: 1px solid var(--line); border-radius: 0 0 22px 22px; background: rgba(18, 21, 44, .55); }
+    .now-what { display: flex; flex-direction: column; flex: 1; min-width: 200px; }
+    .now-label { font-size: 11px; letter-spacing: .09em; text-transform: uppercase; color: var(--dim); font-weight: 700; }
+    .now-what b { font-family: var(--display); font-size: 22px; line-height: 1.15; font-weight: 700; }
+    .now-what small { font-size: 12.5px; color: var(--muted); }
+    .now-icon { font-size: 22px; opacity: .8; }
+    .now.live { background: color-mix(in srgb, var(--mari) 11%, #12152c); }
+    .now-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--mari); animation: ping 1.6s ease-out infinite; flex-shrink: 0; }
+    @keyframes ping { 0% { box-shadow: 0 0 0 0 rgba(244, 183, 64, .55); } 100% { box-shadow: 0 0 0 13px rgba(244, 183, 64, 0); } }
+    .now-clock { font-family: var(--display); font-size: 36px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--mari); letter-spacing: -.01em; min-width: 130px; text-align: right; }
+    .now-actions { display: flex; gap: 8px; }
+    .now.picking { flex-direction: column; align-items: stretch; gap: 10px; }
+    .now-head { display: flex; justify-content: space-between; align-items: center; }
+    .now-pick { display: flex; flex-direction: column; gap: 12px; max-height: 280px; overflow: auto; }
+    .np-group > span { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+    .np-group > span::before { content: ''; width: 9px; height: 9px; border-radius: 3px; background: var(--hue); }
+    @media (max-width: 560px) { .now-clock { font-size: 30px; min-width: 0; text-align: left; } }
+
     /* ---------- Pip, the progress buddy ---------- */
     .buddy { position: fixed; right: 18px; bottom: 18px; z-index: 30; width: 270px; background: rgba(23, 26, 51, .95); border: 1px solid var(--line); border-radius: 22px; padding: 8px 14px 11px; box-shadow: 0 14px 34px rgba(0, 0, 0, .38); }
     .buddy-track { position: relative; height: 104px; }
@@ -463,6 +507,7 @@
         <span id="save-status" aria-live="polite"></span>
         <div id="streak-pill" class="streak"></div>
         <button class="btn accent" onclick="openCoach()">✦ AI coach</button>
+        <button class="round" id="snd-btn" onclick="toggleSound()" aria-label="Toggle sounds">🔊</button>
         <button class="round" onclick="promptBg()" title="Set background image" aria-label="Set background image">🖼</button>
         <button class="round" onclick="lockApp()" title="Lock dashboard" aria-label="Lock dashboard">🔒</button>
       </div>
@@ -479,6 +524,7 @@
       </div>
       <div class="checkin" id="checkin"></div>
       <div class="ring" id="ring"></div>
+      <div class="now" id="now"></div>
     </section>
 
     <section id="tiles"></section>
@@ -727,6 +773,7 @@
       else { $('auth-error').hidden = false; $('password-input').value = ''; return; }
 
       docRef = doc(db, "tracker_data", activeDocId);
+      audio();   // unlock sound while we still have the tap
       $('auth-gate').style.display = 'none';
       $('loader').style.display = 'flex';
       $('loader').style.opacity = '1';
@@ -738,6 +785,7 @@
       closeAll();
       $('main-app').classList.add('is-hidden');
       $('buddy').hidden = true;
+      nowPicking = false; document.title = baseTitle;
       $('password-input').value = '';
       $('auth-error').hidden = true;
       $('auth-gate').style.display = 'flex';
@@ -798,7 +846,7 @@
       renderTable(true);
 
       $('loader').style.opacity = '0';
-      setTimeout(() => { $('loader').style.display = 'none'; $('main-app').classList.remove('is-hidden'); $('buddy').hidden = false; renderBuddy(); buddyGreet(); }, 350);
+      setTimeout(() => { $('loader').style.display = 'none'; $('main-app').classList.remove('is-hidden'); $('buddy').hidden = false; renderBuddy(); buddyGreet(); playIntro(); }, 350);
     }
 
     // ============ header / bg / modes ============
@@ -1054,7 +1102,7 @@
       $('day-dm').textContent = d ? d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long' }) + (selectedDate === todayStr ? ', today' : '') : '';
       $('day-today-btn').hidden = selectedDate === todayStr || !state.allDates.includes(todayStr);
       if (withCheckin) $('checkin').innerHTML = checkinHtml(selectedDate);
-      renderBuddy();
+      renderBuddy(); renderNow();
 
       const cols = allColumns(); const done = cols.filter(c => isDone(selectedDate, c)).length;
       const pct = cols.length ? done / cols.length : 0;
@@ -1207,7 +1255,7 @@
       const p = buddyPrev;
       if (p && p.date === selectedDate && p.done !== n.done) {
         buddyWalk();
-        if (n.done > p.done) buddyHop();
+        if (n.done > p.done) { buddyHop(); sfx(n.pct >= 1 ? 'bloom' : 'done'); }
         buddySay(buddyLine(n));
       } else if (p && p.date === selectedDate && n.over > p.over) {
         buddySay(buddyLine(n));
@@ -1281,6 +1329,205 @@
       }, 2600 + Math.random() * 3200);
     })();
     window.addEventListener('resize', () => { if (state) renderBuddy(); });
+
+    // ============ sound: soft, musical taps and chimes (synthesised, no files) ============
+    const SND_KEY = 'tracker_sound';
+    let soundOn = (() => { try { return localStorage.getItem(SND_KEY) !== '0'; } catch { return true; } })();
+    let actx = null, master = null, echoIn = null;
+    function audio() {
+      if (!soundOn) return null;
+      if (!actx) {
+        const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return null;
+        actx = new AC();
+        const lp = actx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 5200;
+        master = actx.createGain(); master.gain.value = 0.55;
+        master.connect(lp); lp.connect(actx.destination);
+        // a short, soft echo gives the notes a calm sense of space
+        const d = actx.createDelay(); d.delayTime.value = 0.19;
+        const fb = actx.createGain(); fb.gain.value = 0.28;
+        const wet = actx.createGain(); wet.gain.value = 0.22;
+        echoIn = actx.createGain();
+        echoIn.connect(d); d.connect(fb); fb.connect(d); d.connect(wet); wet.connect(lp);
+      }
+      if (actx.state === 'suspended') actx.resume();
+      return actx;
+    }
+    function tone(freq, t0, dur, vol, type = 'sine', glideTo = null) {
+      const o = actx.createOscillator(); o.type = type;
+      o.frequency.setValueAtTime(freq, t0);
+      if (glideTo) o.frequency.exponentialRampToValueAtTime(glideTo, t0 + dur * 0.6);
+      const g = actx.createGain();
+      g.gain.setValueAtTime(0.0001, t0);
+      g.gain.exponentialRampToValueAtTime(vol, t0 + 0.008);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+      o.connect(g); g.connect(master); g.connect(echoIn);
+      o.start(t0); o.stop(t0 + dur + 0.05);
+    }
+    const PENTA = [659.25, 783.99, 880, 1046.5, 1174.66];   // E G A C D: any order sounds pleasant
+    let lastNote = -1;
+    function sfx(kind) {
+      const ctx = audio(); if (!ctx) return;
+      const t = ctx.currentTime + 0.005;
+      if (kind === 'tap') {
+        let i; do { i = Math.floor(Math.random() * PENTA.length); } while (i === lastNote); lastNote = i;
+        tone(PENTA[i], t, 0.32, 0.08); tone(PENTA[i] * 2, t, 0.16, 0.02, 'triangle');
+      } else if (kind === 'done') {
+        tone(783.99, t, 0.7, 0.09); tone(1174.66, t + 0.09, 0.9, 0.08); tone(1567.98, t + 0.18, 1.0, 0.045, 'triangle');
+      } else if (kind === 'bloom') {
+        [523.25, 659.25, 783.99, 1046.5, 1318.51].forEach((f, i) => tone(f, t + i * 0.09, 1.3, 0.075));
+      } else if (kind === 'start') {
+        tone(587.33, t, 0.35, 0.08); tone(880, t + 0.08, 0.6, 0.08);
+      } else if (kind === 'end') {
+        tone(880, t, 0.45, 0.08); tone(659.25, t + 0.1, 0.6, 0.07); tone(1318.51, t + 0.2, 0.9, 0.04, 'triangle');
+      } else if (kind === 'chirp') {
+        tone(2300, t, 0.09, 0.03, 'sine', 3100); tone(2550, t + 0.14, 0.1, 0.03, 'sine', 3450);
+      }
+    }
+    function renderSoundBtn() { const b = $('snd-btn'); if (b) { b.textContent = soundOn ? '🔊' : '🔈'; b.title = soundOn ? 'Sounds on' : 'Sounds off'; b.setAttribute('aria-pressed', soundOn); } }
+    window.toggleSound = function () {
+      soundOn = !soundOn;
+      try { localStorage.setItem(SND_KEY, soundOn ? '1' : '0'); } catch { }
+      renderSoundBtn();
+      if (soundOn) sfx('done');
+    };
+    renderSoundBtn();
+    // a soft note on every box or button you tap
+    document.addEventListener('click', e => {
+      const el = e.target.closest('button, .tile, td.cell, summary');
+      if (!el || el.closest('#auth-gate') || el.id === 'snd-btn') return;
+      sfx('tap');
+    }, true);
+
+    // ============ login intro: a golden bird crosses the sky, then it all fades ============
+    const BIRD_SVG = `<svg class="bird" viewBox="0 0 110 70" width="110" height="70" aria-hidden="true">
+        <defs><radialGradient id="bird-g" cx="40%" cy="35%" r="75%"><stop offset="0" stop-color="#ffd684"/><stop offset="1" stop-color="#e3951f"/></radialGradient></defs>
+        <path class="wing-b" d="M56 34 C46 14 30 6 20 8 C30 18 40 30 52 38Z" fill="#cf8416"/>
+        <path d="M24 40 L5 31 L9 42 L3 51 L25 46Z" fill="#e3951f"/>
+        <ellipse cx="50" cy="42" rx="28" ry="17" fill="url(#bird-g)"/>
+        <ellipse cx="55" cy="49" rx="17" ry="8" fill="#ffe9b0" opacity=".65"/>
+        <circle cx="76" cy="31" r="13" fill="url(#bird-g)"/>
+        <path d="M87.5 28.5 L99 33 L87.5 37.5Z" fill="#e0701f"/>
+        <circle cx="80" cy="28.5" r="2.7" fill="#1a1d3a"/><circle cx="81" cy="27.6" r=".9" fill="#fff"/>
+        <ellipse cx="78.5" cy="35.5" rx="3.2" ry="2" fill="#ef6f7f" opacity=".55"/>
+        <path class="wing-f" d="M52 36 C44 12 26 2 14 4 C24 16 34 32 50 44Z" fill="#ffc55a"/>
+      </svg>`;
+    const CLOUD = `<svg viewBox="0 0 100 56" aria-hidden="true"><path d="M18 52 C6 52 2 38 14 33 C13 19 33 13 40 23 C46 8 72 9 74 27 C88 24 96 44 83 52Z" fill="#dfe3ff"/></svg>`;
+    function playIntro() {
+      if (reducedMotion()) return;
+      document.getElementById('intro')?.remove();
+      const clouds = [[8, 14, 260, .22, 70], [62, 8, 320, .16, -60], [30, 58, 220, .18, 50], [74, 50, 180, .24, -40], [-4, 36, 200, .14, 80]];
+      const path = [[-14, 62], [24, 44], [52, 40], [80, 26], [112, 12]];
+      const at = t => { const s = t * 4, i = Math.min(3, Math.floor(s)), f = s - i; return [path[i][0] + (path[i + 1][0] - path[i][0]) * f, path[i][1] + (path[i + 1][1] - path[i][1]) * f]; };
+      let sparks = '';
+      for (let i = 2; i < 16; i++) { const t = i / 16, [x, y] = at(t); sparks += `<i class="spark" style="left:calc(${x}vw + 30px);top:calc(${y}vh + 44px);animation-delay:${(t * 3.4).toFixed(2)}s"></i>`; }
+      const el = document.createElement('div');
+      el.id = 'intro';
+      el.innerHTML = `<div class="sky"></div>
+        ${clouds.map(([x, y, w, o, dx], i) => `<div class="cloud" style="left:${x}vw;top:${y}vh;width:${w}px;--o:${o};--dx:${dx}px;animation-delay:${i * 0.12}s">${CLOUD}</div>`).join('')}
+        ${sparks}
+        <div class="bird-fly"><div class="bird-bob">${BIRD_SVG}</div></div>`;
+      document.body.appendChild(el);
+      setTimeout(() => sfx('chirp'), 500);
+      setTimeout(() => el.classList.add('out'), 3300);
+      setTimeout(() => el.remove(), 4300);
+    }
+
+    // ============ "Now doing": one-tap session timer ============
+    const baseTitle = document.title;
+    let nowPicking = false;
+    function elapsedMs(r) {
+      if (r.startAt) return Date.now() - r.startAt;
+      const f = r.from || cellOf(r.date, r.col).timeSlots?.[r.idx]?.from;
+      return f ? minsSince(f) * 60000 : 0;
+    }
+    function fmtClock(ms) {
+      const s = Math.max(0, Math.floor(ms / 1000));
+      const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), x = s % 60;
+      return `${h ? h + ':' : ''}${String(m).padStart(h ? 2 : 1, '0')}:${String(x).padStart(2, '0')}`;
+    }
+    function startSession(col, date) {
+      const now = hhmm();
+      if (!state.logs[date]) state.logs[date] = {};
+      if (!state.logs[date][col]) state.logs[date][col] = {};
+      const c = state.logs[date][col];
+      const slots = c.timeSlots || [];
+      let idx = slots.findIndex(s => !s.from && !s.to);
+      if (idx < 0) { slots.push({ from: now, to: '' }); idx = slots.length - 1; } else slots[idx] = { from: now, to: '' };
+      c.timeSlots = slots;
+      state.running = { date, col, idx, from: now, startAt: Date.now() };
+      saveStateToCloud(); scheduleRefresh();
+    }
+    function endSession() {
+      const r = state.running; if (!r) return null;
+      const cell = state.logs[r.date]?.[r.col];
+      const s = cell?.timeSlots?.[r.idx];
+      const to = hhmm(), mins = Math.round(elapsedMs(r) / 60000);
+      const from = s?.from || r.from || '';
+      let saved = false;
+      if (s) {
+        if (mins < 1) cell.timeSlots.splice(r.idx, 1);
+        else { s.to = to; saved = true; }
+        syncTimeFromSlots(r.col, cell);
+        if (saved && metaOf(r.col).type === 'check' && !(cell.actual && String(cell.actual).trim())) cell.actual = '✓';
+      }
+      state.running = null;
+      document.title = baseTitle;
+      saveStateToCloud(); scheduleRefresh();
+      return { col: r.col, date: r.date, from, to, mins, saved };
+    }
+    function renderNow() {
+      const el = $('now'); if (!el || !state) return;
+      const r = state.running;
+      if (nowPicking) {
+        el.className = 'now picking';
+        el.innerHTML = `<div class="now-head"><span class="now-label">${r ? `Switch from ${esc(r.col)} to…` : 'What are you starting?'}</span><button class="linkish" onclick="nowPick(false)">Cancel</button></div>
+          <div class="now-pick">${state.groups.map((g, gi) => g.columns.length ? `<div class="np-group" style="--hue:${groupHue(g, gi)}"><span>${esc(g.name)}</span>
+            <div class="chipset">${g.columns.map(c => `<button class="chip ${r && r.col === c ? 'on' : ''}" onclick="startNow(${R(c)})">${esc(c)}</button>`).join('')}</div></div>` : '').join('')}</div>`;
+        return;
+      }
+      if (r) {
+        const since = r.from || cellOf(r.date, r.col).timeSlots?.[r.idx]?.from || '';
+        el.className = 'now live';
+        el.innerHTML = `<span class="now-dot" aria-hidden="true"></span>
+          <div class="now-what"><span class="now-label">Now doing</span><b>${esc(r.col)}</b><small>Started at ${esc(since)}${r.date !== todayStr ? `, ${esc(niceDate(r.date))}` : ''}</small></div>
+          <div class="now-clock" id="now-clock" aria-label="Elapsed time">${fmtClock(elapsedMs(r))}</div>
+          <div class="now-actions"><button class="btn small" onclick="nowPick(true)">Switch</button><button class="btn accent" onclick="endNow()">■ End</button></div>`;
+      } else {
+        el.className = 'now idle';
+        el.innerHTML = `<span class="now-icon" aria-hidden="true">⏱</span>
+          <div class="now-what"><span class="now-label">Track your time</span><small>Pick what you're working on. When you end, the start time, end time and duration are saved to that habit.</small></div>
+          <button class="btn accent" onclick="nowPick(true)">▶ Start a session</button>`;
+      }
+    }
+    window.nowPick = function (on) { nowPicking = on; renderNow(); };
+    window.startNow = function (ci) {
+      const col = V(ci);
+      nowPicking = false;
+      if (state.running && state.running.col === col) { renderNow(); return; }
+      let switched = null;
+      if (state.running) switched = endSession();
+      const date = state.allDates.includes(todayStr) ? todayStr : selectedDate;
+      startSession(col, date);
+      sfx('start');
+      toast(switched?.saved ? `Saved ${fmtH(switched.mins / 60)} to ${switched.col}. Now timing ${col}.` : `Timing ${col}. Hit End when you're done.`);
+      renderNow();
+    };
+    window.endNow = function () {
+      const info = endSession(); if (!info) return;
+      sfx('end');
+      renderNow();
+      if (!info.saved) { toast('That was under a minute, so nothing was saved.'); return; }
+      toast(`Saved ${fmtH(info.mins / 60)} to ${info.col} (${info.from}–${info.to}).`);
+      if (metaOf(info.col).type === 'count') setTimeout(() => openSheet(R(info.col), R(info.date)), 450);
+    };
+    setInterval(() => {
+      const r = state?.running;
+      if (r) {
+        const t = fmtClock(elapsedMs(r));
+        const c = $('now-clock'); if (c) c.textContent = t;
+        document.title = `⏱ ${t} ${r.col}`;
+      } else if (document.title !== baseTitle) document.title = baseTitle;
+    }, 1000);
 
     function renderStreak() {
       const { cur, best } = dayStreak();
@@ -1599,25 +1846,16 @@
       afterEdit(col, true);
     };
     window.toggleTimer = function (ci) {
-      const col = V(ci); const now = hhmm();
-      const r = state.running;
+      const col = V(ci); const r = state.running;
       if (r && r.date === activeDate && r.col === col) {
-        const cell = state.logs[r.date]?.[r.col];
-        const s = cell?.timeSlots?.[r.idx]; if (s) s.to = now;
-        state.running = null;
-        if (cell) syncTimeFromSlots(col, cell);
-        toast(`Timer stopped. ${fmtH(hoursOf(cellOf(activeDate, col)))} logged for ${col}.`);
+        const info = endSession(); sfx('end');
+        toast(info?.saved ? `Saved ${fmtH(info.mins / 60)} to ${col} (${info.from}–${info.to}).` : 'That was under a minute, so nothing was saved.');
       } else {
-        if (r) { const pc = state.logs[r.date]?.[r.col]; const s = pc?.timeSlots?.[r.idx]; if (s && !s.to) { s.to = now; syncTimeFromSlots(r.col, pc); } }
-        const c = ensureCell(col);
-        const slots = c.timeSlots || [];
-        let idx = slots.findIndex(s => !s.from && !s.to);
-        if (idx < 0) { slots.push({ from: now, to: '' }); idx = slots.length - 1; } else slots[idx].from = now;
-        c.timeSlots = slots;
-        state.running = { date: activeDate, col, idx };
-        toast(`Timer started for ${col}. You can close this.`);
+        if (r) endSession();
+        startSession(col, activeDate); sfx('start');
+        toast(`Timing ${col}. It keeps running if you close this.`);
       }
-      afterEdit(col, true);
+      rerenderEditor(col); renderNow();
     };
     window.foldToggle = function (which, ci, open) {
       const col = V(ci);
