@@ -370,6 +370,109 @@
     .setup-card .diff { font-size: 12.5px; color: var(--muted); margin: 0; }
     .setup-card.pending { color: var(--dim); font-size: 13px; }
 
+    /* ---------- login gate v2 ---------- */
+    .gate { background: linear-gradient(180deg, #0b0d26 0%, #13173a 55%, #1b2050 100%); overflow: hidden; flex-direction: column; transition: opacity .6s ease; }
+    .gate.out { opacity: 0; }
+    .gate-sky { position: absolute; inset: 0; pointer-events: none; }
+    #stars i { position: absolute; border-radius: 50%; background: #fff6dc; opacity: .25; animation: twinkle var(--d) ease-in-out var(--dl) infinite; transition: opacity 1s; }
+    #stars i.flash { animation: starflash .8s ease-out; }
+    @keyframes twinkle { 50% { opacity: .9; } }
+    @keyframes starflash { 0% { opacity: 1; transform: scale(3.2); box-shadow: 0 0 10px #ffd684; } 100% { opacity: .3; transform: scale(1); } }
+    .moon { position: absolute; top: 11%; right: 15%; width: 48px; height: 48px; border-radius: 50%; box-shadow: 11px 7px 0 0 #f6e7b8; transform: rotate(-20deg); opacity: .9; transition: opacity 1s, transform 1.4s; }
+    .gcloud { position: absolute; opacity: .07; animation: gdrift 60s ease-in-out infinite alternate; }
+    .gcloud svg { display: block; width: 100%; height: auto; }
+    .gcloud.c1 { top: 16%; left: -6%; width: 300px; }
+    .gcloud.c2 { top: 36%; left: 62%; width: 240px; animation-duration: 80s; animation-delay: -20s; }
+    .gcloud.c3 { top: 5%; left: 32%; width: 190px; animation-duration: 95s; animation-delay: -45s; }
+    @keyframes gdrift { to { transform: translateX(18vw); } }
+    .gate-dawn { position: absolute; left: 0; right: 0; bottom: 0; height: 80%; background: radial-gradient(ellipse 70% 85% at 50% 100%, rgba(244, 183, 64, .55), rgba(239, 111, 127, .2) 45%, transparent 72%); opacity: 0; transition: opacity 1.3s ease; }
+    .gate.go .gate-dawn { opacity: 1; }
+    .gate.go #stars i { opacity: 0 !important; }
+    .gate.go .moon { opacity: 0; transform: translateY(30px) rotate(-20deg); }
+    .gate-scene { position: absolute; bottom: -2px; left: 50%; transform: translateX(-50%); width: min(560px, 125vw); height: auto; }
+    .gp-breathe { transform-box: fill-box; transform-origin: 50% 100%; animation: breathe 3.6s ease-in-out infinite; }
+    @keyframes breathe { 50% { transform: scale(1.025, .985); } }
+    #gp-lids { transition: opacity .35s; }
+    .gb-idle { transform-box: fill-box; transform-origin: 50% 100%; }
+    #gb-walk { transition: transform .33s linear; }
+    #gb-face { transform-box: fill-box; transform-origin: 50% 50%; transition: transform .18s ease; }
+    #gb-face.right { transform: scaleX(-1); }
+    #gb-hop.hop { animation: gbhop .33s ease-out; }
+    @keyframes gbhop { 45% { transform: translateY(-9px); } }
+    .gb-idle.peck { animation: peck2 .75s ease-in-out; }
+    @keyframes peck2 { 0%, 100% { transform: none; } 22% { transform: rotate(-14deg) translateY(3px); } 42% { transform: none; } 64% { transform: rotate(-12deg) translateY(3px); } }
+    .gb-idle.flutter .gw-f { animation: flap .15s ease-in-out 4 alternate; }
+    .gb-idle.flutter .gw-b { animation: flapB .15s ease-in-out 4 alternate; }
+    @keyframes peck { 0%, 84%, 100% { transform: none; } 88% { transform: rotate(-10deg) translateY(2px); } 92% { transform: none; } 95% { transform: rotate(-6deg); } }
+    .gw-f { transform-box: fill-box; transform-origin: 92% 92%; transform: rotate(36deg); }
+    .gw-b { transform-box: fill-box; transform-origin: 92% 92%; transform: rotate(26deg); }
+    .gate.go .gb-idle { animation: takeoff 1.4s cubic-bezier(.5, 0, .75, .5) forwards; }
+    .gate.go .gw-f { animation: flap .22s ease-in-out infinite alternate; }
+    .gate.go .gw-b { animation: flapB .22s ease-in-out infinite alternate; }
+    @keyframes takeoff { 0% { transform: none; } 14% { transform: translate(6px, -18px); } 100% { transform: translate(-520px, -560px) rotate(14deg); } }
+    .gate-main { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 16px; width: min(380px, 100%); margin-bottom: min(24vh, 190px); transition: transform .7s cubic-bezier(.3, .7, .3, 1), opacity .5s; }
+    .gate.go .gate-main { transform: translateY(-26px); opacity: 0; }
+    .gate-greet { text-align: center; line-height: 1.3; }
+    .gate-greet span { display: block; font-family: var(--display); font-size: 16px; font-weight: 600; color: var(--mari); }
+    .gate-greet small { color: var(--dim); font-size: 13px; }
+    .gate .gate-card { background: rgba(26, 30, 58, .74); border: 1px solid var(--line); border-radius: 26px; padding: 28px 26px 24px; backdrop-filter: blur(10px); width: 100%; box-shadow: 0 24px 60px rgba(0, 0, 0, .35); }
+    .pw { position: relative; }
+    .gate-card .pw .field { padding-right: 66px; }
+    .pw-eye { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: 0; color: var(--muted); font-size: 12px; font-weight: 600; padding: 6px 8px; border-radius: 8px; }
+    .pw-eye:hover { color: var(--ink); }
+    .remember { display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 13px; color: var(--muted); cursor: pointer; user-select: none; }
+    .remember input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+    .remember .sw { width: 34px; height: 20px; border-radius: 999px; background: var(--line); position: relative; transition: background .2s; flex-shrink: 0; }
+    .remember .sw::after { content: ''; position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; border-radius: 50%; background: var(--ink); transition: transform .2s; }
+    .remember input:checked + .sw { background: var(--teal); }
+    .remember input:checked + .sw::after { transform: translateX(14px); }
+    .remember input:focus-visible + .sw { outline: 2px solid var(--mari); outline-offset: 2px; }
+    .gate-card .gate-go { font-size: 15px; padding: 13px; }
+    .gate-card .gate-go span { transition: transform .2s; }
+    .gate-card .gate-go:hover span { transform: translateX(4px); }
+    .gate-card .linkish { align-self: center; }
+    .gate-card.shake { animation: shake .45s; }
+    @keyframes shake { 20% { transform: translateX(-8px); } 40% { transform: translateX(7px); } 60% { transform: translateX(-5px); } 80% { transform: translateX(3px); } }
+    @media (max-height: 640px) { .gate-main { margin-bottom: 110px; } .gate-scene { width: min(420px, 110vw); } }
+
+    /* ---------- login: time-of-day skies ---------- */
+    .gate.t-morning { background: linear-gradient(180deg, #6fa3d8 0%, #b7cbe6 45%, #f2cdae 80%, #f7dcb8 100%); }
+    .gate.t-afternoon { background: linear-gradient(180deg, #4d8fd1 0%, #8fbfea 55%, #cfe5f6 100%); }
+    .gate.t-evening { background: linear-gradient(180deg, #212254 0%, #633c75 42%, #c2607a 72%, #f0a05a 100%); }
+    .sun { position: absolute; width: 84px; height: 84px; border-radius: 50%; background: #ffd684; box-shadow: 0 0 60px 20px rgba(255, 214, 132, .55), 0 0 140px 60px rgba(255, 200, 120, .25); display: none; transition: transform 1.4s, opacity 1s; }
+    .t-morning .sun { display: block; left: 15%; top: 30%; animation: sunrise 3.2s cubic-bezier(.2, .8, .2, 1) both; }
+    .t-afternoon .sun { display: block; right: 17%; top: 9%; background: #fff1c4; box-shadow: 0 0 60px 24px rgba(255, 241, 196, .6), 0 0 160px 70px rgba(255, 230, 170, .25); }
+    .t-evening .sun { display: block; right: 13%; top: 54%; background: #ffb36b; box-shadow: 0 0 70px 26px rgba(255, 150, 90, .5), 0 0 170px 70px rgba(239, 111, 127, .25); animation: sunset 3.2s ease-out both; }
+    @keyframes sunrise { from { transform: translateY(70px); opacity: .3; } }
+    @keyframes sunset { from { transform: translateY(-40px); } }
+    .gate:not(.t-night) .moon { display: none; }
+    .t-morning #stars, .t-afternoon #stars { display: none; }
+    .t-evening #stars i { max-height: 2px; opacity: .15; }
+    .t-morning .gcloud, .t-afternoon .gcloud { opacity: .75; }
+    .t-evening .gcloud { opacity: .22; }
+    .gate { --h1: #0f1230; --h2: #171b42; }
+    .gate.t-morning { --h1: #3d6868; --h2: #4a7a70; }
+    .gate.t-afternoon { --h1: #3a7056; --h2: #488463; }
+    .gate.t-evening { --h1: #2b2346; --h2: #3a2c56; }
+    .hill1 { fill: var(--h1); } .hill2 { fill: var(--h2); }
+    .gate-ground { position: absolute; left: -15%; right: -15%; bottom: -70px; height: 124px; border-radius: 50% 50% 0 0 / 100% 100% 0 0; background: var(--h1); }
+    .t-evening .gate-greet small, .t-night .gate-greet small { color: #aab0d6; }
+    .t-evening .gcloud { opacity: .15 !important; }
+    .t-morning .gate-greet span, .t-afternoon .gate-greet span { color: #1b2050; }
+    .t-morning .gate-greet small, .t-afternoon .gate-greet small { color: #2e3a6a; }
+    .flock { position: absolute; top: 20%; left: 0; display: none; animation: flockfly 38s linear infinite; }
+    .t-morning .flock, .t-afternoon .flock, .t-evening .flock { display: block; }
+    .flock.f2 { top: 27%; animation-duration: 52s; animation-delay: -20s; }
+    .flock svg { display: inline-block; width: 18px; margin-right: 10px; animation: vflap .5s ease-in-out infinite alternate; }
+    .flock svg:nth-child(2) { width: 14px; animation-delay: -.2s; transform-origin: center; }
+    .flock svg path { stroke: #1b2050; }
+    .t-evening .flock svg path { stroke: #2a1a3a; }
+    @keyframes flockfly { from { transform: translateX(-12vw); } to { transform: translateX(112vw); } }
+    @keyframes vflap { to { transform: scaleY(.45); } }
+    .gate.go .sun { transform: translateY(-40px) scale(1.15); }
+    .gate-snd { position: absolute; top: 16px; right: 16px; z-index: 2; background: rgba(18, 21, 44, .55); color: var(--ink); border: 1px solid rgba(255, 255, 255, .14); border-radius: 999px; padding: 7px 14px; font-size: 12.5px; font-weight: 600; backdrop-filter: blur(8px); display: inline-flex; gap: 6px; align-items: center; transition: background .2s; }
+    .gate-snd:hover { background: rgba(18, 21, 44, .75); }
+
     /* ---------- login intro ---------- */
     #intro { position: fixed; inset: 0; z-index: 120; pointer-events: none; overflow: hidden; transition: opacity .9s ease; }
     #intro.out { opacity: 0; }
@@ -481,15 +584,80 @@
 </head>
 <body>
 
-  <!-- Password gate -->
+  <!-- Login: a night sky, a sleepy Pip and a small golden bird. Pip wakes as you type; on unlock, dawn breaks and the bird takes off. -->
   <div id="auth-gate" class="gate">
-    <form class="gate-card" onsubmit="checkPassword(event)">
-      <h2>Welcome back</h2>
-      <p>Enter your password to open your dashboard.</p>
-      <input type="password" id="password-input" class="field" placeholder="Password" autocomplete="current-password" autofocus>
-      <button type="submit" class="btn accent">Open dashboard</button>
-      <p id="auth-error" class="gate-err" hidden>That password didn't match. Try again.</p>
-    </form>
+    <div class="gate-sky" aria-hidden="true">
+      <div id="stars"></div>
+      <div class="moon"></div>
+      <div class="sun"></div>
+      <div class="flock"><svg viewBox="0 0 20 8"><path d="M1 6 Q5 1 10 5 Q15 1 19 6" fill="none" stroke-width="1.6" stroke-linecap="round"/></svg><svg viewBox="0 0 20 8"><path d="M1 6 Q5 1 10 5 Q15 1 19 6" fill="none" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+      <div class="flock f2"><svg viewBox="0 0 20 8"><path d="M1 6 Q5 1 10 5 Q15 1 19 6" fill="none" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+      <div class="gcloud c1"><svg viewBox="0 0 100 56"><path d="M18 52 C6 52 2 38 14 33 C13 19 33 13 40 23 C46 8 72 9 74 27 C88 24 96 44 83 52Z" fill="#dfe3ff"/></svg></div>
+      <div class="gcloud c2"><svg viewBox="0 0 100 56"><path d="M18 52 C6 52 2 38 14 33 C13 19 33 13 40 23 C46 8 72 9 74 27 C88 24 96 44 83 52Z" fill="#dfe3ff"/></svg></div>
+      <div class="gcloud c3"><svg viewBox="0 0 100 56"><path d="M18 52 C6 52 2 38 14 33 C13 19 33 13 40 23 C46 8 72 9 74 27 C88 24 96 44 83 52Z" fill="#dfe3ff"/></svg></div>
+      <div class="gate-dawn"></div>
+      <div class="gate-ground"></div>
+      <svg class="gate-scene" viewBox="0 0 400 170">
+        <defs>
+          <radialGradient id="gpg" cx="38%" cy="34%" r="72%"><stop offset="0" stop-color="#ffd684"/><stop offset="1" stop-color="#e3951f"/></radialGradient>
+          <radialGradient id="gbg" cx="40%" cy="35%" r="75%"><stop offset="0" stop-color="#ffd684"/><stop offset="1" stop-color="#e3951f"/></radialGradient>
+        </defs>
+        <path class="hill1" d="M-20 175 C70 116 330 116 420 175Z"/>
+        <path class="hill2" d="M70 175 C150 148 250 148 330 175Z"/>
+        <g transform="translate(158 36) scale(.85)"><g class="gp-breathe">
+          <path d="M50 45 C50 37 51.5 30 50 21" stroke="#4fc3b0" stroke-width="3.2" fill="none" stroke-linecap="round"/>
+          <path d="M50 35 C42 26 31 27 30 33 C36 40 45 39 50 35Z" fill="#4fc3b0"/>
+          <ellipse cx="37" cy="112" rx="7.5" ry="3.8" fill="#c27a12"/>
+          <ellipse cx="63" cy="112" rx="7.5" ry="3.8" fill="#c27a12"/>
+          <path d="M50 42 C74 42 83 62 81 82 C79 102 66 111 50 111 C34 111 21 102 19 82 C17 62 26 42 50 42Z" fill="url(#gpg)"/>
+          <path d="M28 60 C31 52 37 48 43 47" stroke="#fff3cf" stroke-width="3" fill="none" stroke-linecap="round" opacity=".6"/>
+          <ellipse cx="31" cy="85" rx="5.5" ry="3.2" fill="#ef6f7f" opacity=".45"/>
+          <ellipse cx="69" cy="85" rx="5.5" ry="3.2" fill="#ef6f7f" opacity=".45"/>
+          <circle cx="40" cy="72" r="8.5" fill="#fff"/><circle cx="60" cy="72" r="8.5" fill="#fff"/>
+          <circle cx="40" cy="72" r="4" fill="#1a1d3a"/><circle cx="60" cy="72" r="4" fill="#1a1d3a"/>
+          <circle cx="41.4" cy="70.4" r="1.3" fill="#fff"/><circle cx="61.4" cy="70.4" r="1.3" fill="#fff"/>
+          <g id="gp-lids">
+            <circle cx="40" cy="72" r="9" fill="#eea734"/><circle cx="60" cy="72" r="9" fill="#eea734"/>
+            <path d="M33.5 73 Q40 77.5 46.5 73 M53.5 73 Q60 77.5 66.5 73" stroke="#7a4a10" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+          </g>
+          <path id="gp-mouth" d="M46.5 86 Q50 88.5 53.5 86" stroke="#5a2e0c" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </g></g>
+        <g id="gb-walk"><g transform="translate(294.5 104)"><g id="gb-hop"><g id="gb-face"><g transform="scale(-.5 .5) translate(-55 0)"><g class="gb-idle">
+          <path class="gw-b" d="M56 34 C46 14 30 6 20 8 C30 18 40 30 52 38Z" fill="#cf8416"/>
+          <path d="M24 40 L5 31 L9 42 L3 51 L25 46Z" fill="#e3951f"/>
+          <path d="M45 56 L43 68 M56 56 L58 68" stroke="#c27a12" stroke-width="3.2" stroke-linecap="round"/>
+          <ellipse cx="50" cy="42" rx="28" ry="17" fill="url(#gbg)"/>
+          <ellipse cx="55" cy="49" rx="17" ry="8" fill="#ffe9b0" opacity=".65"/>
+          <circle cx="76" cy="31" r="13" fill="url(#gbg)"/>
+          <path d="M87.5 28.5 L99 33 L87.5 37.5Z" fill="#e0701f"/>
+          <circle cx="80" cy="28.5" r="2.7" fill="#1a1d3a"/><circle cx="81" cy="27.6" r=".9" fill="#fff"/>
+          <ellipse cx="78.5" cy="35.5" rx="3.2" ry="2" fill="#ef6f7f" opacity=".55"/>
+          <path class="gw-f" d="M52 36 C44 12 26 2 14 4 C24 16 34 32 50 44Z" fill="#ffc55a"/>
+        </g></g></g></g></g></g>
+      </svg>
+    </div>
+
+    <button type="button" class="gate-snd" id="gate-snd" onclick="gateSound()"></button>
+    <div class="gate-main">
+      <div class="gate-greet" id="gate-greet"></div>
+      <form id="gate-form" class="gate-card" onsubmit="checkPassword(event)">
+        <h2>Welcome back</h2>
+        <p>Your day is waiting. Enter your password to open it.</p>
+        <div class="pw">
+          <input type="password" id="password-input" class="field" placeholder="Password" autocomplete="current-password" oninput="gateTyping(this)">
+          <button type="button" class="pw-eye" id="pw-eye" onclick="togglePw()" aria-label="Show password">Show</button>
+        </div>
+        <label class="remember"><input type="checkbox" id="remember-me" checked><span class="sw" aria-hidden="true"></span><span>Remember this device for 30 days</span></label>
+        <button type="submit" class="btn accent gate-go">Open my day <span aria-hidden="true">→</span></button>
+        <p id="auth-error" class="gate-err" role="alert" hidden>That password didn't match. Try again.</p>
+      </form>
+      <div id="gate-quick" class="gate-card" hidden>
+        <h2 id="quick-name">Welcome back</h2>
+        <p>This device is remembered. Ready when you are.</p>
+        <button type="button" id="quick-go" class="btn accent gate-go" onclick="quickBegin()">Begin my day <span aria-hidden="true">→</span></button>
+        <button type="button" class="linkish" onclick="useOtherPassword()">Use a different password</button>
+      </div>
+    </div>
   </div>
 
   <div id="loader" class="loader" style="display:none">
@@ -509,7 +677,7 @@
         <button class="btn accent" onclick="openCoach()">✦ AI coach</button>
         <button class="round" id="snd-btn" onclick="toggleSound()" aria-label="Toggle sounds">🔊</button>
         <button class="round" onclick="promptBg()" title="Set background image" aria-label="Set background image">🖼</button>
-        <button class="round" onclick="lockApp()" title="Lock dashboard" aria-label="Lock dashboard">🔒</button>
+        <button class="round" onclick="lockApp()" title="Lock and forget this device" aria-label="Lock and forget this device">🔒</button>
       </div>
     </header>
 
@@ -765,31 +933,111 @@
     const RULE_TEXT = { more: 'More is better', less: 'Less is better', exact: 'Hit it exactly' };
 
     // ============ auth ============
+    // ============ login gate ============
+    const DEVICE_KEY = 'tracker_device', REMEMBER_DAYS = 30;
+    let rememberThis = false;
+    let gateDone = Promise.resolve();
+    const PIP_MOUTH = { sleepy: 'M46.5 86 Q50 88.5 53.5 86', smile: 'M41.5 83 Q50 94 58.5 83', frown: 'M43 88 Q50 82.5 57 88' };
+    function readDevice() {
+      try { const d = JSON.parse(localStorage.getItem(DEVICE_KEY) || 'null'); if (d && d.doc && d.until > Date.now()) return d; } catch { }
+      return null;
+    }
+    function writeDevice(docId, name) {
+      try { localStorage.setItem(DEVICE_KEY, JSON.stringify({ doc: docId, name: name || '', until: Date.now() + REMEMBER_DAYS * 864e5 })); } catch { }
+    }
+    function forgetDevice() { try { localStorage.removeItem(DEVICE_KEY); } catch { } }
+    function gateWake(level) { const l = $('gp-lids'); if (l) l.style.opacity = String(1 - level); }
+    function gateMouth(k) { $('gp-mouth')?.setAttribute('d', PIP_MOUTH[k]); }
+    function setupGate() {
+      const g = $('auth-gate');
+      g.classList.remove('go', 'out'); g.style.display = 'flex';
+      const h = new Date().getHours();
+      gateTheme = h >= 5 && h < 11 ? 'morning' : h >= 11 && h < 17 ? 'afternoon' : h >= 17 && h < 20 ? 'evening' : 'night';
+      g.classList.remove('t-morning', 't-afternoon', 't-evening', 't-night'); g.classList.add('t-' + gateTheme);
+      renderGateSnd();
+      const hi = h < 5 ? 'Still up?' : h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : h < 22 ? 'Good evening' : 'Late night';
+      $('gate-greet').innerHTML = `<span>${hi}</span><small>${new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}</small>`;
+      const stars = $('stars');
+      if (!stars.childElementCount) {
+        let html = '';
+        for (let i = 0; i < 70; i++) {
+          const s = (Math.random() * 1.8 + .8).toFixed(1);
+          html += `<i style="left:${(Math.random() * 100).toFixed(1)}%;top:${(Math.random() * 68).toFixed(1)}%;width:${s}px;height:${s}px;--d:${(2 + Math.random() * 4).toFixed(1)}s;--dl:${(-Math.random() * 5).toFixed(1)}s"></i>`;
+        }
+        stars.innerHTML = html;
+      }
+      gateWake(0); gateMouth('sleepy');
+      birdReset();
+      $('password-input').value = ''; $('password-input').type = 'password'; $('pw-eye').textContent = 'Show';
+      $('auth-error').hidden = true;
+      const dev = readDevice();
+      $('gate-form').hidden = !!dev; $('gate-quick').hidden = !dev;
+      if (dev) { $('quick-name').textContent = dev.name ? `Welcome back, ${dev.name}` : 'Welcome back'; gateWake(.6); setTimeout(() => $('quick-go').focus(), 60); }
+      else setTimeout(() => $('password-input').focus(), 60);
+    }
+    window.gateTyping = function (el) {
+      $('auth-error').hidden = true;
+      gateWake(Math.min(1, el.value.length / 5));
+      const stars = $('stars').children;
+      if (stars.length) { const s = stars[Math.floor(Math.random() * stars.length)]; s.classList.remove('flash'); void s.offsetWidth; s.classList.add('flash'); }
+      if (el.value.length) sfx('key');
+      if (Math.random() < .22 && !reducedMotion()) { birdFace(false); birdPulse($('gb-hop'), 'hop', 340); }
+    };
+    window.togglePw = function () {
+      const i = $('password-input'), show = i.type === 'password';
+      i.type = show ? 'text' : 'password';
+      $('pw-eye').textContent = show ? 'Hide' : 'Show';
+      $('pw-eye').setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+      i.focus();
+    };
+    function gateWrong() {
+      const c = $('gate-form');
+      c.classList.remove('shake'); void c.offsetWidth; c.classList.add('shake');
+      $('auth-error').hidden = false; $('password-input').value = '';
+      gateWake(.3); gateMouth('frown'); sfx('nope');
+      setTimeout(() => { gateMouth('sleepy'); gateWake(0); }, 1100);
+    }
+    function beginSession(docId) {
+      activeDocId = docId;
+      docRef = doc(db, "tracker_data", activeDocId);
+      audio(); stopAmbience(1.3); sfx('anticipate');
+      const g = $('auth-gate');
+      gateWake(1); gateMouth('smile');
+      g.classList.add('go');
+      $('loader-text').innerText = `Opening ${activeDocId === 'soham_dashboard' ? "Soham's" : 'your'} day…`;
+      gateDone = new Promise(res => setTimeout(() => {
+        $('loader').style.display = 'flex'; $('loader').style.opacity = '1';
+        g.classList.add('out');
+        setTimeout(() => { g.style.display = 'none'; res(); }, 550);
+      }, 1250));
+      initApp();
+    }
     window.checkPassword = function (event) {
       event.preventDefault();
-      const inputVal = $('password-input').value;
-      if (inputVal === "what's up") activeDocId = "my_dashboard";
-      else if (inputVal === "soham") activeDocId = "soham_dashboard";
-      else { $('auth-error').hidden = false; $('password-input').value = ''; return; }
-
-      docRef = doc(db, "tracker_data", activeDocId);
-      audio();   // unlock sound while we still have the tap
-      $('auth-gate').style.display = 'none';
-      $('loader').style.display = 'flex';
-      $('loader').style.opacity = '1';
-      $('loader-text').innerText = `Loading ${activeDocId === 'soham_dashboard' ? "Soham's" : 'your'} dashboard…`;
-      initApp();
+      const v = $('password-input').value;
+      const docId = v === "what's up" ? 'my_dashboard' : v === 'soham' ? 'soham_dashboard' : null;
+      if (!docId) { gateWrong(); return; }
+      rememberThis = $('remember-me').checked;
+      if (!rememberThis) forgetDevice();
+      beginSession(docId);
     };
-
+    window.quickBegin = function () {
+      const dev = readDevice();
+      if (!dev) { setupGate(); return; }
+      rememberThis = true;
+      beginSession(dev.doc);
+    };
+    window.useOtherPassword = function () {
+      $('gate-quick').hidden = true; $('gate-form').hidden = false; gateWake(0);
+      setTimeout(() => $('password-input').focus(), 30);
+    };
     window.lockApp = function () {
       closeAll();
+      forgetDevice();   // locking also forgets this device, so the password is needed next time
       $('main-app').classList.add('is-hidden');
       $('buddy').hidden = true;
       nowPicking = false; document.title = baseTitle;
-      $('password-input').value = '';
-      $('auth-error').hidden = true;
-      $('auth-gate').style.display = 'flex';
-      $('password-input').focus();
+      setupGate();
     };
 
     // ============ cloud ============
@@ -840,11 +1088,13 @@
         toast("Couldn't reach the cloud. Changes may not save.");
       }
 
+      if (rememberThis) writeDevice(activeDocId, state.profile?.name || (activeDocId === 'soham_dashboard' ? 'Soham' : ''));
       selectedDate = state.allDates.includes(todayStr) ? todayStr : state.allDates[state.allDates.length - 1];
       renderHeader(); renderBg(); updateViewButtons(); updateEditModeButton(); updateCompact();
       renderDay(true); renderTiles(); renderHeatmap(); renderStreak(); renderInsightCard(); renderGoals();
       renderTable(true);
 
+      await gateDone;
       $('loader').style.opacity = '0';
       setTimeout(() => { $('loader').style.display = 'none'; $('main-app').classList.remove('is-hidden'); $('buddy').hidden = false; renderBuddy(); buddyGreet(); playIntro(); }, 350);
     }
@@ -1364,13 +1614,15 @@
       o.start(t0); o.stop(t0 + dur + 0.05);
     }
     const PENTA = [659.25, 783.99, 880, 1046.5, 1174.66];   // E G A C D: any order sounds pleasant
+    const BUBBLE = [196, 220, 246.94, 261.63, 293.66];   // G3 A3 B3 C4 D4
     let lastNote = -1;
     function sfx(kind) {
       const ctx = audio(); if (!ctx) return;
       const t = ctx.currentTime + 0.005;
       if (kind === 'tap') {
-        let i; do { i = Math.floor(Math.random() * PENTA.length); } while (i === lastNote); lastNote = i;
-        tone(PENTA[i], t, 0.32, 0.08); tone(PENTA[i] * 2, t, 0.16, 0.02, 'triangle');
+        // "Bubble": a low, soft upward pop; the pitch changes each tap
+        let i; do { i = Math.floor(Math.random() * BUBBLE.length); } while (i === lastNote); lastNote = i;
+        tone(BUBBLE[i], t, 0.18, 0.15, 'sine', BUBBLE[i] * 1.9);
       } else if (kind === 'done') {
         tone(783.99, t, 0.7, 0.09); tone(1174.66, t + 0.09, 0.9, 0.08); tone(1567.98, t + 0.18, 1.0, 0.045, 'triangle');
       } else if (kind === 'bloom') {
@@ -1379,6 +1631,23 @@
         tone(587.33, t, 0.35, 0.08); tone(880, t + 0.08, 0.6, 0.08);
       } else if (kind === 'end') {
         tone(880, t, 0.45, 0.08); tone(659.25, t + 0.1, 0.6, 0.07); tone(1318.51, t + 0.2, 0.9, 0.04, 'triangle');
+      } else if (kind === 'key') {
+        const f = BUBBLE[Math.floor(Math.random() * BUBBLE.length)] * 1.5;
+        tone(f, t, 0.12, 0.05, 'sine', f * 1.6);
+      } else if (kind === 'nope') {
+        tone(329.63, t, 0.25, 0.07); tone(261.63, t + 0.13, 0.4, 0.07);
+      } else if (kind === 'anticipate') {
+        // a warm pad that swells open like a sunrise, then a rising shimmer
+        const lp = actx.createBiquadFilter(); lp.type = 'lowpass'; lp.Q.value = .8;
+        lp.frequency.setValueAtTime(320, t); lp.frequency.exponentialRampToValueAtTime(2600, t + 1.5);
+        const g = actx.createGain();
+        g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.032, t + 0.75); g.gain.exponentialRampToValueAtTime(0.0001, t + 2.8);
+        lp.connect(g); g.connect(master); g.connect(echoIn);
+        [130.81, 196, 261.63, 329.63, 392].forEach(f => ['sine', 'triangle'].forEach((ty, j) => {
+          const o = actx.createOscillator(); o.type = ty; o.frequency.value = f * (j ? 1.004 : 1);
+          o.connect(lp); o.start(t); o.stop(t + 2.9);
+        }));
+        [523.25, 659.25, 783.99, 1046.5, 1318.51].forEach((f, i) => tone(f, t + 0.5 + i * 0.12, 0.9, 0.032));
       } else if (kind === 'chirp') {
         tone(2300, t, 0.09, 0.03, 'sine', 3100); tone(2550, t + 0.14, 0.1, 0.03, 'sine', 3450);
       }
@@ -1528,6 +1797,171 @@
         document.title = `⏱ ${t} ${r.col}`;
       } else if (document.title !== baseTitle) document.title = baseTitle;
     }, 1000);
+
+    // ============ login ambience: wind, rustling leaves, birds or crickets, and a soft pad ============
+    // Browsers only allow sound after a tap or key press, so this starts on the first interaction.
+    let amb = null, gateTheme = 'night';
+    function noiseBuffer(ctx, type) {
+      const len = ctx.sampleRate * 4, b = ctx.createBuffer(1, len, ctx.sampleRate), d = b.getChannelData(0);
+      let last = 0;
+      for (let i = 0; i < len; i++) {
+        const w = Math.random() * 2 - 1;
+        if (type === 'brown') { last = (last + 0.02 * w) / 1.02; d[i] = last * 3.5; } else d[i] = w;
+      }
+      return b;
+    }
+    function panned(ctx, out) {
+      if (!ctx.createStereoPanner) return out;
+      const p = ctx.createStereoPanner(); p.pan.value = Math.random() * 1.6 - 0.8; p.connect(out); return p;
+    }
+    function birdSong(ctx, out) {
+      if (!amb) return;
+      const t = ctx.currentTime + 0.05, dest = panned(ctx, out);
+      const base = 2600 + Math.random() * 1400, notes = 3 + Math.floor(Math.random() * 4), up = Math.random() < .5;
+      for (let i = 0; i < notes; i++) {
+        const st = t + i * (0.11 + Math.random() * 0.05), f0 = base * (0.9 + Math.random() * 0.25);
+        const o = ctx.createOscillator(); o.type = 'sine';
+        o.frequency.setValueAtTime(up ? f0 : f0 * 1.3, st);
+        o.frequency.exponentialRampToValueAtTime(up ? f0 * 1.35 : f0 * 0.85, st + 0.065);
+        const g = ctx.createGain();
+        g.gain.setValueAtTime(0.0001, st); g.gain.exponentialRampToValueAtTime(0.016, st + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, st + 0.085);
+        o.connect(g); g.connect(dest); o.start(st); o.stop(st + 0.1);
+      }
+    }
+    function cricketTrain(ctx, out, vol = 0.005) {
+      if (!amb) return;
+      const t = ctx.currentTime + 0.02, f = 4200 + Math.random() * 500, dest = panned(ctx, out);
+      const pulses = 3 + Math.floor(Math.random() * 2);
+      for (let i = 0; i < pulses; i++) {
+        const st = t + i * 0.055, o = ctx.createOscillator(); o.frequency.value = f;
+        const g = ctx.createGain();
+        g.gain.setValueAtTime(0.0001, st); g.gain.exponentialRampToValueAtTime(vol, st + 0.008); g.gain.exponentialRampToValueAtTime(0.0001, st + 0.04);
+        o.connect(g); g.connect(dest); o.start(st); o.stop(st + 0.05);
+      }
+    }
+    function owlHoot(ctx, out) {
+      if (!amb) return;
+      const t = ctx.currentTime + 0.05;
+      [[0, 0.35], [0.5, 0.22], [0.8, 0.6]].forEach(([d, len]) => {
+        const o = ctx.createOscillator(); o.type = 'sine';
+        o.frequency.setValueAtTime(390, t + d); o.frequency.linearRampToValueAtTime(355, t + d + len);
+        const g = ctx.createGain();
+        g.gain.setValueAtTime(0.0001, t + d); g.gain.exponentialRampToValueAtTime(0.018, t + d + 0.06); g.gain.exponentialRampToValueAtTime(0.0001, t + d + len);
+        o.connect(g); g.connect(out); o.start(t + d); o.stop(t + d + len + 0.05);
+      });
+    }
+    function startAmbience() {
+      if (amb || !soundOn) return;
+      const ctx = audio(); if (!ctx) return;
+      const theme = gateTheme, t = ctx.currentTime, nodes = [], timers = [];
+      const out = ctx.createGain();
+      out.gain.setValueAtTime(0.0001, t); out.gain.exponentialRampToValueAtTime(0.9, t + 2.5);
+      out.connect(ctx.destination);
+      amb = { out, nodes, timers };
+      const later = (fn, ms) => timers.push(setTimeout(fn, ms));
+
+      // wind: brown noise through a slowly wandering band-pass, with gusts
+      const w = ctx.createBufferSource(); w.buffer = noiseBuffer(ctx, 'brown'); w.loop = true;
+      const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 480; bp.Q.value = .6;
+      const wg = ctx.createGain(); wg.gain.value = theme === 'night' ? 0.05 : 0.07;
+      const l1 = ctx.createOscillator(); l1.frequency.value = 0.08; const l1g = ctx.createGain(); l1g.gain.value = 240; l1.connect(l1g); l1g.connect(bp.frequency);
+      const l2 = ctx.createOscillator(); l2.frequency.value = 0.13; const l2g = ctx.createGain(); l2g.gain.value = 0.03; l2.connect(l2g); l2g.connect(wg.gain);
+      w.connect(bp); bp.connect(wg); wg.connect(out); w.start(); l1.start(); l2.start(); nodes.push(w, l1, l2);
+
+      // leaves: bright noise that swells in short rustles
+      const r = ctx.createBufferSource(); r.buffer = noiseBuffer(ctx, 'white'); r.loop = true;
+      const rbp = ctx.createBiquadFilter(); rbp.type = 'bandpass'; rbp.frequency.value = 3200; rbp.Q.value = .5;
+      const rg = ctx.createGain(); rg.gain.value = 0.0001;
+      r.connect(rbp); rbp.connect(rg); rg.connect(out); r.start(); nodes.push(r);
+      const rustle = () => {
+        if (!amb) return;
+        const n = ctx.currentTime, peak = (theme === 'night' ? 0.006 : 0.012) * (0.6 + Math.random() * 0.8), dur = 1.2 + Math.random() * 2;
+        rg.gain.cancelScheduledValues(n); rg.gain.setValueAtTime(0.0001, n);
+        rg.gain.linearRampToValueAtTime(peak, n + dur * 0.4); rg.gain.linearRampToValueAtTime(0.0001, n + dur);
+        later(rustle, (dur + 1.5 + Math.random() * 4) * 1000);
+      };
+      later(rustle, 900);
+
+      // a quiet, slowly breathing chord that sets the mood for the time of day
+      const chord = theme === 'night' ? [110, 164.81, 220, 261.63] : theme === 'evening' ? [130.81, 196, 246.94, 329.63] : [146.83, 220, 293.66, 369.99];
+      const plp = ctx.createBiquadFilter(); plp.type = 'lowpass'; plp.frequency.value = 700;
+      const pg = ctx.createGain(); pg.gain.value = 0.012; plp.connect(pg); pg.connect(out);
+      const pl = ctx.createOscillator(); pl.frequency.value = 0.07; const plg = ctx.createGain(); plg.gain.value = 0.006; pl.connect(plg); plg.connect(pg.gain); pl.start(); nodes.push(pl);
+      chord.forEach((f, i) => { const o = ctx.createOscillator(); o.type = i % 2 ? 'triangle' : 'sine'; o.frequency.value = f; o.detune.value = Math.random() * 8 - 4; o.connect(plp); o.start(); nodes.push(o); });
+
+      // creatures
+      if (theme === 'night') {
+        const cr = () => { cricketTrain(ctx, out); later(cr, 900 + Math.random() * 1400); }; later(cr, 1500);
+        const ow = () => { owlHoot(ctx, out); later(ow, 16000 + Math.random() * 12000); }; later(ow, 7000);
+      } else {
+        const gap = theme === 'morning' ? 2200 : theme === 'afternoon' ? 5000 : 7000;
+        const bd = () => { birdSong(ctx, out); later(bd, gap + Math.random() * 4000); }; later(bd, 1200);
+        if (theme === 'evening') { const cr = () => { cricketTrain(ctx, out, 0.003); later(cr, 2500 + Math.random() * 3000); }; later(cr, 4000); }
+      }
+      renderGateSnd();
+    }
+    function stopAmbience(fade = 1.4) {
+      if (!amb) return;
+      const a = amb; amb = null;
+      a.timers.forEach(clearTimeout);
+      const n = actx.currentTime;
+      a.out.gain.cancelScheduledValues(n); a.out.gain.setValueAtTime(Math.max(0.0001, a.out.gain.value), n);
+      a.out.gain.exponentialRampToValueAtTime(0.0001, n + fade);
+      setTimeout(() => { a.nodes.forEach(x => { try { x.stop(); } catch { } }); a.out.disconnect(); }, (fade + 0.2) * 1000);
+      renderGateSnd();
+    }
+    const THEME_WORD = { morning: 'the morning', afternoon: 'the afternoon', evening: 'the evening', night: 'the night' };
+    function renderGateSnd() {
+      const b = $('gate-snd'); if (!b) return;
+      b.innerHTML = !soundOn ? '🔈 <span>Sound off</span>' : amb ? '🔊 <span>Sound on</span>' : `▶ <span>Hear ${THEME_WORD[gateTheme]}</span>`;
+      b.setAttribute('aria-pressed', String(!!amb));
+    }
+    window.gateSound = function () {
+      if (!soundOn) { soundOn = true; try { localStorage.setItem(SND_KEY, '1'); } catch { } startAmbience(); }
+      else if (!amb) startAmbience();
+      else { soundOn = false; try { localStorage.setItem(SND_KEY, '0'); } catch { } stopAmbience(.6); }
+      renderGateSnd(); renderSoundBtn();
+    };
+    // ============ the little bird wanders around the login hill ============
+    const HILL = [[-20, 175], [70, 116], [330, 116], [420, 175]], BIRD_HOME = 294.5;
+    let birdX = BIRD_HOME, birdRight = false, birdT = null;
+    function hillPt(t) { const u = 1 - t, b = [u * u * u, 3 * u * u * t, 3 * u * t * t, t * t * t]; return [b.reduce((s, w, i) => s + w * HILL[i][0], 0), b.reduce((s, w, i) => s + w * HILL[i][1], 0)]; }
+    function hillY(x) { let lo = 0, hi = 1; for (let i = 0; i < 28; i++) { const m = (lo + hi) / 2; if (hillPt(m)[0] < x) lo = m; else hi = m; } return hillPt((lo + hi) / 2)[1]; }
+    const gateIdle = () => { const g = $('auth-gate'); return g && g.style.display !== 'none' && !g.classList.contains('go'); };
+    function birdPlace(x) { birdX = x; const w = $('gb-walk'); if (w) w.style.transform = `translate(${(x - BIRD_HOME).toFixed(1)}px, ${(hillY(x) - hillY(BIRD_HOME)).toFixed(1)}px)`; }
+    function birdFace(right) { birdRight = right; $('gb-face')?.classList.toggle('right', right); }
+    function birdPulse(el, cls, ms) { if (!el) return; el.classList.remove(cls); el.getBoundingClientRect(); el.classList.add(cls); setTimeout(() => el.classList.remove(cls), ms); }
+    function birdHops(target) {
+      const steps = Math.max(1, Math.min(4, Math.round(Math.abs(target - birdX) / 11)));
+      const step = (target - birdX) / steps;
+      if (step) birdFace(step > 0);
+      let i = 0;
+      const one = () => { if (!gateIdle()) return; birdPlace(birdX + step); birdPulse($('gb-hop'), 'hop', 340); if (++i < steps) setTimeout(one, 350); };
+      one();
+      return steps * 350;
+    }
+    function birdAct() {
+      clearTimeout(birdT);
+      if (!gateIdle() || reducedMotion()) { birdT = setTimeout(birdAct, 3000); return; }
+      const r = Math.random(); let busy = 300;
+      if (r < .38) {   // hop somewhere nearby on the hill, sometimes over towards Pip
+        const t = Math.max(258, Math.min(352, birdX + (Math.random() < .5 ? -1 : 1) * (12 + Math.random() * 32)));
+        busy = birdHops(t);
+      } else if (r < .62) { birdPulse(document.querySelector('.gb-idle'), 'peck', 760); busy = 800; }   // peck at the grass
+      else if (r < .8) { birdFace(!birdRight); busy = 400; }                                            // look the other way
+      else if (r < .92) { birdPulse(document.querySelector('.gb-idle'), 'flutter', 650); birdPulse($('gb-hop'), 'hop', 340); busy = 700; }   // stretch its wings
+      birdT = setTimeout(birdAct, busy + 1100 + Math.random() * 2600);
+    }
+    function birdReset() { birdPlace(BIRD_HOME); birdFace(false); clearTimeout(birdT); birdT = setTimeout(birdAct, 1400); }
+
+    const gateKick = e => {
+      const g = $('auth-gate');
+      if (!g || g.style.display === 'none' || g.classList.contains('go') || e.target.closest?.('#gate-snd')) return;
+      startAmbience();
+    };
+    document.addEventListener('pointerdown', gateKick, true);
+    document.addEventListener('keydown', gateKick, true);
+    setupGate();   // runs once everything it needs is defined
 
     function renderStreak() {
       const { cur, best } = dayStreak();
