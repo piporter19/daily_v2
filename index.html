@@ -532,6 +532,14 @@
     /* ---------- check-in card ---------- */
     .nudge { position: fixed; right: 18px; bottom: 176px; z-index: 35; width: min(310px, calc(100vw - 20px)); background: #1e2346; border: 1px solid color-mix(in srgb, var(--mari) 45%, var(--line)); border-radius: 20px; padding: 14px 16px 12px; box-shadow: 0 18px 40px rgba(0, 0, 0, .45); display: flex; flex-direction: column; gap: 6px; opacity: 0; transform: translateY(14px) scale(.98); transition: opacity .3s, transform .35s cubic-bezier(.3, 1.3, .5, 1); }
     .nudge.show { opacity: 1; transform: none; }
+    .phone-box { border: 1px solid var(--line); border-radius: 16px; padding: 14px; background: var(--well); display: flex; flex-direction: column; gap: 10px; }
+    .phone-box .lbl { margin: 0; }
+    .steps { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; font-size: 13.5px; color: var(--muted); }
+    .steps a { color: var(--mari); }
+    .steps b { color: var(--ink); }
+    .topic { display: flex; gap: 8px; align-items: center; margin-top: 6px; }
+    .topic code { flex: 1; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; font-size: 13px; color: var(--ink); overflow-wrap: anywhere; user-select: all; }
+    .gate-greet small.gate-next { display: block; margin-top: 6px; color: var(--mari); font-weight: 600; }
     .form .remember { flex-direction: row; font-size: 14px; }
     .nudge-top { display: flex; justify-content: space-between; align-items: center; }
     .nudge-from { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--mari); font-weight: 700; }
@@ -978,6 +986,13 @@
     function forgetDevice() { try { localStorage.removeItem(DEVICE_KEY); } catch { } }
     function gateWake(level) { const l = $('gp-lids'); if (l) l.style.opacity = String(1 - level); }
     function gateMouth(k) { $('gp-mouth')?.setAttribute('d', PIP_MOUTH[k]); }
+    let pendingUrlAct = (() => {
+      const q = new URLSearchParams(location.search);
+      const a = { go: q.get('go'), act: q.get('act'), nudge: q.get('nudge'), doc: q.get('d') };
+      if (!a.go && !a.act && !a.nudge) return null;
+      history.replaceState(null, '', location.pathname);
+      return a;
+    })();
     function setupGate() {
       const g = $('auth-gate');
       g.classList.remove('go', 'out'); g.style.display = 'flex';
@@ -986,7 +1001,7 @@
       g.classList.remove('t-morning', 't-afternoon', 't-evening', 't-night'); g.classList.add('t-' + gateTheme);
       renderGateSnd();
       const hi = h < 5 ? 'Still up?' : h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : h < 22 ? 'Good evening' : 'Late night';
-      $('gate-greet').innerHTML = `<span>${hi}</span><small>${new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}</small>`;
+      $('gate-greet').innerHTML = `<span>${hi}</span><small>${new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}</small>${pendingUrlAct?.go ? `<small class="gate-next">Open your day and I'll start timing ${esc(pendingUrlAct.go)}.</small>` : ''}`;
       const stars = $('stars');
       if (!stars.childElementCount) {
         let html = '';
@@ -1127,7 +1142,7 @@
 
       await gateDone;
       $('loader').style.opacity = '0';
-      setTimeout(() => { $('loader').style.display = 'none'; $('main-app').classList.remove('is-hidden'); $('buddy').hidden = false; renderBuddy(); buddyGreet(); playIntro(); nudgeBoot(); }, 350);
+      setTimeout(() => { $('loader').style.display = 'none'; $('main-app').classList.remove('is-hidden'); $('buddy').hidden = false; renderBuddy(); buddyGreet(); playIntro(); nudgeBoot(); applyUrlAct(); }, 350);
     }
 
     // ============ header / bg / modes ============
@@ -2160,6 +2175,7 @@
       }
       showNudgeCard(n);
       if (document.hidden) osNotify(n);
+      notePageNudge(kind);
     }
     window.nudgeClose = function () { const el = $('nudge'); el.classList.remove('show'); setTimeout(() => { if (!el.classList.contains('show')) el.hidden = true; }, 300); currentNudge = null; };
     window.nudgeAnswer = function (i) {
@@ -2209,6 +2225,85 @@
       });
     }
 
+    // ============ phone check-ins via the ntfy app (sent by a GitHub Actions job) ============
+    const NTFY = 'https://ntfy.sh';
+    function phoneCfg() { const c = nudgeCfg(); if (!c.phone) c.phone = { on: false, topic: '', url: '' }; return c.phone; }
+    function newTopic() {
+      const a = new Uint8Array(9); (crypto || window.crypto).getRandomValues(a);
+      return `pip-${activeDocId === 'soham_dashboard' ? 'sm' : 'me'}-` + Array.from(a, b => 'abcdefghjkmnpqrstuvwxyz23456789'[b % 31]).join('');
+    }
+    function siteUrl() { return location.origin + location.pathname; }
+    window.phoneSetup = function () {
+      const p = phoneCfg(), c = nudgeCfg();
+      if (!p.topic) p.topic = newTopic();
+      p.on = true; p.url = siteUrl();
+      c.tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Kolkata';
+      if (!state.lastLogAt) state.lastLogAt = Date.now();
+      saveStateToCloud(); renderNudgeSettings();
+    };
+    window.phoneToggle = function (on) { const p = phoneCfg(); p.on = on; p.url = siteUrl(); nudgeCfg().tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Kolkata'; saveStateToCloud(); renderNudgeSettings(); };
+    window.phoneNewTopic = function () {
+      if (!confirm('Make a new private topic? You will need to subscribe to the new name in the ntfy app.')) return;
+      phoneCfg().topic = newTopic(); saveStateToCloud(); renderNudgeSettings();
+    };
+    window.copyTopic = async function () {
+      try { await navigator.clipboard.writeText(phoneCfg().topic); toast('Topic copied. Paste it into the ntfy app.'); } catch { toast('Select the topic name and copy it manually.'); }
+    };
+    window.phoneTest = async function () {
+      const p = phoneCfg(); if (!p.topic) return;
+      try {
+        const r = await fetch(NTFY, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            topic: p.topic, title: 'Pip is connected 🌱', tags: ['seedling'],
+            message: "Phone check-ins are working. From now on I'll nudge you here, even when your browser is closed.",
+            click: siteUrl(), actions: [{ action: 'view', label: 'Open my tracker', url: siteUrl(), clear: true }]
+          })
+        });
+        toast(r.ok ? 'Test sent. Check your phone.' : `ntfy replied ${r.status}. Try again in a minute.`);
+      } catch { toast("Couldn't reach ntfy.sh. Check your connection."); }
+    };
+    function phoneSettingsHtml() {
+      const p = phoneCfg();
+      if (!p.topic) return `<div class="phone-box"><span class="lbl">Phone check-ins, even when your browser is closed</span>
+        <p class="hint">Uses the free ntfy app on Android or iPhone. Takes about 3 minutes.</p>
+        <div><button class="btn small accent" onclick="phoneSetup()">Set up phone check-ins</button></div></div>`;
+      return `<div class="phone-box">
+        <label class="remember" style="justify-content:flex-start"><input type="checkbox" ${p.on ? 'checked' : ''} onchange="phoneToggle(this.checked)"><span class="sw" aria-hidden="true"></span><span style="color:var(--ink);font-weight:600">Phone check-ins</span></label>
+        <ol class="steps">
+          <li>Install <b>ntfy</b>: <a href="https://play.google.com/store/apps/details?id=io.heckel.ntfy" target="_blank" rel="noopener">Android</a> or <a href="https://apps.apple.com/app/ntfy/id1625396347" target="_blank" rel="noopener">iPhone</a>.</li>
+          <li>In ntfy, tap <b>+</b>, and subscribe to this topic (leave the server as ntfy.sh):
+            <div class="topic"><code>${esc(p.topic)}</code><button class="btn small" onclick="copyTopic()">Copy</button></div></li>
+          <li><button class="linkish" onclick="phoneTest()">Send a test to my phone</button></li>
+        </ol>
+        <p class="hint">Keep this name private: anyone who knows it can read these notifications. <button class="linkish" onclick="phoneNewTopic()">Make a new one</button></p>
+      </div>`;
+    }
+
+    // --- remember what the page itself already sent, so the phone job doesn't repeat it
+    function notePageNudge(kind) {
+      if (!['idle', 'bed', 'morning'].includes(kind)) return;
+      const c = nudgeCfg(), pf = c.pageFlags && c.pageFlags.date === todayStr ? c.pageFlags : { date: todayStr, lastAt: 0, bed: false, morning: false };
+      pf.lastAt = Date.now(); if (kind === 'bed') pf.bed = true; if (kind === 'morning') pf.morning = true;
+      c.pageFlags = pf; saveStateToCloud();
+    }
+
+    // --- a tap on a phone notification opens the site with ?go=… or ?act=…
+    function applyUrlAct() {
+      const a = pendingUrlAct; if (!a) return;
+      pendingUrlAct = null;
+      if (a.doc && a.doc !== activeDocId) { toast('That check-in was for the other dashboard.'); return; }
+      setTimeout(() => {
+        if (a.go) {
+          if (!allColumns().includes(a.go)) { toast(`"${a.go}" isn't one of your habits anymore.`); return; }
+          if (state.running && state.running.col === a.go) toast(`Already timing ${a.go}.`); else startNow(R(a.go));
+        } else if (a.act === 'end') endNow();
+        else if (a.act === 'pick') { window.scrollTo({ top: 0, behavior: 'smooth' }); nowPick(true); }
+        else if (a.act === 'plan') runCoach('plan');
+        else if (a.nudge) { const n = buildNudge(a.nudge); if (n && n.options.length) showNudgeCard(n); }
+      }, 900);
+    }
+
     // --- settings
     function renderBell() { const b = $('bell-btn'); if (b && state) { const on = nudgeCfg().on; b.textContent = on ? '🔔' : '🔕'; b.title = on ? 'Check-ins on' : 'Check-ins off'; } }
     async function enableNudges(fromOffer) {
@@ -2242,6 +2337,7 @@
           </div>
           <p class="hint" style="margin-top:6px">No nudges from ${esc(sw.sleep)} until ${esc(fromMin(toMin(sw.wake) + 30))}. A bedtime check-in comes about 10 minutes before you usually sleep, and a good-morning one after you wake.${cfg.sleep || cfg.wake ? ' <button class="linkish" onclick="setNudge(\'reset\')">Use my sleep log instead</button>' : ''}</p></div>
         <p class="hint">${perm === 'granted' ? 'Browser notifications are allowed, so check-ins also appear when this tab is in the background.' : perm === 'denied' ? 'Browser notifications are blocked for this site. Check-ins still appear inside the app; allow notifications in the site settings to get them in the background.' : perm === 'unsupported' ? 'This browser has no notifications, so check-ins appear inside the app only.' : 'Turn check-ins on and allow notifications to get them when this tab is in the background.'} They work while the site is open in a tab.</p>
+        ${phoneSettingsHtml()}
         <div class="sheet-foot"><button class="btn small" onclick="closeAll();setTimeout(()=>fireNudge('idle'),350)">Send a test check-in</button><button class="btn accent" onclick="closeAll()">Done</button></div>
       </div>`;
     }
