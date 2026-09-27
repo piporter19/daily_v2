@@ -505,7 +505,7 @@
     .now-what b { font-family: var(--display); font-size: 22px; line-height: 1.15; font-weight: 700; }
     .now-what small { font-size: 12.5px; color: var(--muted); }
     .now-icon { font-size: 22px; opacity: .8; }
-    .now.live { background: color-mix(in srgb, var(--mari) 11%, #12152c); }
+    .now.is-live { background: color-mix(in srgb, var(--mari) 11%, #12152c); }
     .now-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--mari); animation: ping 1.6s ease-out infinite; flex-shrink: 0; }
     @keyframes ping { 0% { box-shadow: 0 0 0 0 rgba(244, 183, 64, .55); } 100% { box-shadow: 0 0 0 13px rgba(244, 183, 64, 0); } }
     .now-clock { font-family: var(--display); font-size: 36px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--mari); letter-spacing: -.01em; min-width: 130px; text-align: right; }
@@ -516,6 +516,34 @@
     .np-group > span { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--muted); margin-bottom: 6px; }
     .np-group > span::before { content: ''; width: 9px; height: 9px; border-radius: 3px; background: var(--hue); }
     @media (max-width: 560px) { .now-clock { font-size: 30px; min-width: 0; text-align: left; } }
+
+    /* ---------- daily vs optional ---------- */
+    .ring small.bonus { color: var(--mari); font-weight: 700; margin-top: 1px; }
+    .opt-row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 10px 4px 0; }
+    .opt-row > span { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--dim); font-weight: 700; margin-right: 4px; }
+    .opt-chip { border: 1px dashed var(--line); background: none; border-radius: 999px; padding: 5px 12px; font-size: 12.5px; font-weight: 600; color: var(--muted); }
+    .opt-chip:hover { border-color: var(--hue); color: var(--ink); border-style: solid; }
+    .opt-chip.ghosty { color: var(--dim); }
+    .opt-tag { font-style: normal; font-size: 10px; font-weight: 700; color: var(--mari); letter-spacing: .04em; text-transform: uppercase; margin-left: 4px; }
+    .daily-hint { display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap; padding: 14px 16px; border-radius: 16px; background: color-mix(in srgb, var(--teal) 10%, var(--panel)); border: 1px solid color-mix(in srgb, var(--teal) 35%, var(--line)); font-size: 14px; }
+    .daily-hint > div { display: flex; gap: 12px; align-items: center; }
+    .daily-chip.on { background: var(--teal); border-color: var(--teal); color: #06231e; }
+
+    /* ---------- check-in card ---------- */
+    .nudge { position: fixed; right: 18px; bottom: 176px; z-index: 35; width: min(310px, calc(100vw - 20px)); background: #1e2346; border: 1px solid color-mix(in srgb, var(--mari) 45%, var(--line)); border-radius: 20px; padding: 14px 16px 12px; box-shadow: 0 18px 40px rgba(0, 0, 0, .45); display: flex; flex-direction: column; gap: 6px; opacity: 0; transform: translateY(14px) scale(.98); transition: opacity .3s, transform .35s cubic-bezier(.3, 1.3, .5, 1); }
+    .nudge.show { opacity: 1; transform: none; }
+    .form .remember { flex-direction: row; font-size: 14px; }
+    .nudge-top { display: flex; justify-content: space-between; align-items: center; }
+    .nudge-from { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--mari); font-weight: 700; }
+    .nudge-x { background: none; border: 0; color: var(--dim); font-size: 20px; line-height: 1; padding: 0 2px; }
+    .nudge b { font-family: var(--display); font-size: 18px; line-height: 1.25; }
+    .nudge p { margin: 0 0 4px; font-size: 13px; color: var(--muted); }
+    .nudge-opts { display: flex; flex-direction: column; gap: 7px; }
+    .nudge-opt { text-align: left; background: var(--panel2); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; font-size: 14px; font-weight: 600; transition: border-color .15s, background .15s; }
+    .nudge-opt:hover { border-color: var(--mari); background: #2b3257; }
+    .nudge-foot { display: flex; justify-content: space-between; margin-top: 4px; }
+    .nudge-foot .linkish { color: var(--muted); font-weight: 600; }
+    @media (max-width: 560px) { .nudge { right: 10px; bottom: 150px; } }
 
     /* ---------- Pip, the progress buddy ---------- */
     .buddy { position: fixed; right: 18px; bottom: 18px; z-index: 30; width: 270px; background: rgba(23, 26, 51, .95); border: 1px solid var(--line); border-radius: 22px; padding: 8px 14px 11px; box-shadow: 0 14px 34px rgba(0, 0, 0, .38); }
@@ -675,6 +703,7 @@
         <span id="save-status" aria-live="polite"></span>
         <div id="streak-pill" class="streak"></div>
         <button class="btn accent" onclick="openCoach()">✦ AI coach</button>
+        <button class="round" id="bell-btn" onclick="openNudgeSettings()" aria-label="Check-in settings">🔕</button>
         <button class="round" id="snd-btn" onclick="toggleSound()" aria-label="Toggle sounds">🔊</button>
         <button class="round" onclick="promptBg()" title="Set background image" aria-label="Set background image">🖼</button>
         <button class="round" onclick="lockApp()" title="Lock and forget this device" aria-label="Lock and forget this device">🔒</button>
@@ -867,6 +896,7 @@
     </div>
   </aside>
 
+  <div id="nudge" class="nudge" role="dialog" aria-live="polite" hidden></div>
   <div id="toast" class="toast" role="status"></div>
 
   <script type="module">
@@ -1035,7 +1065,7 @@
       closeAll();
       forgetDevice();   // locking also forgets this device, so the password is needed next time
       $('main-app').classList.add('is-hidden');
-      $('buddy').hidden = true;
+      $('buddy').hidden = true; nudgeClose(); clearInterval(nudgeTimer);
       nowPicking = false; document.title = baseTitle;
       setupGate();
     };
@@ -1075,6 +1105,7 @@
           if (!state.profile) state.profile = { name: '', about: '' };
           if (!state.chat) state.chat = [];
           if (!state.habitMeta) state.habitMeta = {};
+          if (state.dailyChosen === undefined) state.dailyChosen = Object.values(state.habitMeta).some(m => typeof m.daily === 'boolean');
           if (state.layoutBackup === undefined) state.layoutBackup = null;
           if (!state.viewMode) state.viewMode = '5';
         } else {
@@ -1096,7 +1127,7 @@
 
       await gateDone;
       $('loader').style.opacity = '0';
-      setTimeout(() => { $('loader').style.display = 'none'; $('main-app').classList.remove('is-hidden'); $('buddy').hidden = false; renderBuddy(); buddyGreet(); playIntro(); }, 350);
+      setTimeout(() => { $('loader').style.display = 'none'; $('main-app').classList.remove('is-hidden'); $('buddy').hidden = false; renderBuddy(); buddyGreet(); playIntro(); nudgeBoot(); }, 350);
     }
 
     // ============ header / bg / modes ============
@@ -1314,7 +1345,15 @@
       return { fill: 1, tone: 'good' };
     }
     const hasCheckin = d => { const c = state.checkins?.[d]; return !!(c && (c.mood || c.energy || (c.win && c.win.trim()))); };
-    function dayScore(d) { const cols = allColumns(); return cols.length ? cols.filter(c => isDone(d, c)).length / cols.length : 0; }
+    // Daily habits count towards a "full" day; optional ones are bonus
+    function isCore(col) { const m = state.habitMeta?.[col]; return m && typeof m.daily === 'boolean' ? m.daily : true; }
+    function coreCols() { const all = allColumns(), c = all.filter(isCore); return c.length ? c : all; }
+    function dayProgress(d) {
+      const core = coreCols(), done = core.filter(c => isDone(d, c)).length;
+      const bonus = allColumns().filter(c => !isCore(c) && isDone(d, c)).length;
+      return { done, total: core.length, bonus, pct: core.length ? done / core.length : 0 };
+    }
+    function dayScore(d) { const p = dayProgress(d); return p.pct || (p.bonus ? 0.1 : 0); }
     function anchorIdx() { const i = state.allDates.indexOf(todayStr); return i >= 0 ? i : state.allDates.length - 1; }
 
     function streakFor(test) {
@@ -1354,8 +1393,7 @@
       if (withCheckin) $('checkin').innerHTML = checkinHtml(selectedDate);
       renderBuddy(); renderNow();
 
-      const cols = allColumns(); const done = cols.filter(c => isDone(selectedDate, c)).length;
-      const pct = cols.length ? done / cols.length : 0;
+      const { done, total, bonus, pct } = dayProgress(selectedDate);
       const C = 2 * Math.PI * 42;
       $('ring').className = 'ring' + (pct === 1 ? ' full' : '');
       $('ring').innerHTML = `
@@ -1363,7 +1401,7 @@
           <circle class="track" cx="52" cy="52" r="42" fill="none" stroke-width="9"/>
           <circle class="bar" cx="52" cy="52" r="42" fill="none" stroke-width="9" stroke-dasharray="${C}" stroke-dashoffset="${C * (1 - pct)}"/>
         </svg>
-        <div class="ring-text"><b>${done}/${cols.length}</b><small>logged</small></div>`;
+        <div class="ring-text"><b>${done}/${total}</b><small>daily done</small>${bonus ? `<small class="bonus">+${bonus} bonus</small>` : ''}</div>`;
     }
     function checkinHtml(date) {
       const c = state.checkins?.[date] || {}; const di = R(date);
@@ -1382,6 +1420,7 @@
       const date = V(di);
       if (!state.checkins) state.checkins = {};
       const c = state.checkins[date] || (state.checkins[date] = {});
+      touchLog();
       if (key !== 'win' && c[key] === val) c[key] = 0; else c[key] = val;
       saveStateToCloud();
       if (key !== 'win') {
@@ -1402,16 +1441,22 @@
     // ============ tiles ============
     function renderTiles() {
       const d = selectedDate;
-      $('tiles').innerHTML = state.groups.map((g, gi) => {
-        const done = g.columns.filter(c => isDone(d, c)).length;
+      const hint = !state.dailyChosen ? `<div class="daily-hint"><span>🌱 Not everything is an every-day habit. Pick your daily ones, so a full day really shows as full. The rest become optional bonus habits.</span><div><button class="btn small accent" onclick="openDailyPicker()">Choose daily habits</button><button class="linkish" onclick="dismissDailyHint()">Later</button></div></div>` : '';
+      $('tiles').innerHTML = hint + state.groups.map((g, gi) => {
+        const core = g.columns.filter(isCore), opt = g.columns.filter(c => !isCore(c));
+        const done = core.filter(c => isDone(d, c)).length, bonus = opt.filter(c => isDone(d, c)).length;
         const hrs = calculateGroupHours(d, g.columns);
+        const shown = [...core, ...opt.filter(c => isDone(d, c))];
+        const waiting = opt.filter(c => !isDone(d, c));
+        const status = [core.length ? `${done} of ${core.length} daily done` : '', bonus ? `+${bonus} bonus` : '', hrs !== '-' ? hrs : ''].filter(Boolean).join(', ');
         return `
           <div class="tile-group" style="--hue:${groupHue(g, gi)}">
-            <div class="tg-head"><h3>${esc(g.name)}</h3><span>${done} of ${g.columns.length} logged${hrs !== '-' ? `, ${hrs}` : ''}</span></div>
+            <div class="tg-head"><h3>${esc(g.name)}</h3><span>${status || 'Optional habits only'}</span></div>
             <div class="tile-grid">
-              ${g.columns.map(col => tileHtml(d, col)).join('')}
-              <button class="tile ghost" onclick="addColumnToGroup(${gi})">+ Add habit</button>
+              ${shown.map(col => tileHtml(d, col)).join('')}
+              ${!waiting.length ? `<button class="tile ghost" onclick="addColumnToGroup(${gi})">+ Add habit</button>` : ''}
             </div>
+            ${waiting.length ? `<div class="opt-row"><span>Optional</span>${waiting.map(c => `<button class="opt-chip" onclick="openSheet(${R(c)})">+ ${esc(c)}</button>`).join('')}<button class="opt-chip ghosty" onclick="addColumnToGroup(${gi})">+ New habit</button></div>` : ''}
           </div>`;
       }).join('');
     }
@@ -1423,7 +1468,7 @@
       return `
         <button class="tile tone-${p.tone}" style="--fill:${p.fill}${p.bg ? `;--fillbg:${p.bg}` : ''}" onclick="openSheet(${R(col)})">
           <span class="fill"></span>
-          <span class="t-name">${esc(col)}</span>
+          <span class="t-name">${esc(col)}${isCore(col) ? '' : ' <em class="opt-tag">bonus</em>'}</span>
           <span class="t-val">${val}</span>
           <span class="t-meta">
             ${p.over ? `<span class="over-tag">+${p.over} over</span>` : ''}
@@ -1465,15 +1510,14 @@
     };
     const STAGE_NAMES = ['Seed', 'Sprout', 'Two leaves', 'Budding', 'In bloom'];
     function buddyNumbers() {
-      const cols = allColumns();
-      const done = cols.filter(c => isDone(selectedDate, c)).length;
-      const over = cols.filter(c => progressOf(selectedDate, c).tone === 'over').length;
-      return { total: cols.length, done, over, pct: cols.length ? done / cols.length : 0 };
+      const p = dayProgress(selectedDate);
+      const over = allColumns().filter(c => progressOf(selectedDate, c).tone === 'over').length;
+      return { total: p.total, done: p.done, over, pct: p.pct };
     }
     function buddyLine({ total, done, over, pct }) {
       const left = total - done;
       if (!total) return 'Add a habit and I will start growing.';
-      if (done === total) return over ? 'Full bloom, even with a bit too much screen time. 🌼' : 'Full bloom! Every habit logged. 🌼';
+      if (done === total) return over ? 'Full bloom, even with a bit too much screen time. 🌼' : 'Full bloom! Every daily habit done. 🌼';
       if (over) return `Too much screen time. I'm wilting a little. ${left} still to log.`;
       if (!done) return 'Still asleep. Tap me to log your first habit.';
       if (pct < .25) return `${done} down. I'm waking up.`;
@@ -1536,7 +1580,7 @@
     }
     window.buddyClick = function () {
       buddyHop();
-      const next = allColumns().find(c => !isDone(selectedDate, c));
+      const next = coreCols().find(c => !isDone(selectedDate, c));
       if (next) { buddySay(`Let's do ${next}.`, 1800); setTimeout(() => openSheet(R(next)), 280); }
       else { buddySay('All done for the day. Look at me bloom!'); if (!reducedMotion()) confetti(); }
     };
@@ -1724,6 +1768,7 @@
       if (idx < 0) { slots.push({ from: now, to: '' }); idx = slots.length - 1; } else slots[idx] = { from: now, to: '' };
       c.timeSlots = slots;
       state.running = { date, col, idx, from: now, startAt: Date.now() };
+      touchLog();
       saveStateToCloud(); scheduleRefresh();
     }
     function endSession() {
@@ -1740,6 +1785,7 @@
         if (saved && metaOf(r.col).type === 'check' && !(cell.actual && String(cell.actual).trim())) cell.actual = '✓';
       }
       state.running = null;
+      touchLog();
       document.title = baseTitle;
       saveStateToCloud(); scheduleRefresh();
       return { col: r.col, date: r.date, from, to, mins, saved };
@@ -1756,7 +1802,7 @@
       }
       if (r) {
         const since = r.from || cellOf(r.date, r.col).timeSlots?.[r.idx]?.from || '';
-        el.className = 'now live';
+        el.className = 'now is-live';
         el.innerHTML = `<span class="now-dot" aria-hidden="true"></span>
           <div class="now-what"><span class="now-label">Now doing</span><b>${esc(r.col)}</b><small>Started at ${esc(since)}${r.date !== todayStr ? `, ${esc(niceDate(r.date))}` : ''}</small></div>
           <div class="now-clock" id="now-clock" aria-label="Elapsed time">${fmtClock(elapsedMs(r))}</div>
@@ -1962,6 +2008,251 @@
     document.addEventListener('pointerdown', gateKick, true);
     document.addEventListener('keydown', gateKick, true);
     setupGate();   // runs once everything it needs is defined
+
+    // ============ check-ins: friendly one-tap nudges ============
+    // They run while the site is open in a tab (even in the background). No server needed.
+    const NUDGE_RT_KEY = 'tracker_nudge_rt';
+    let appOpenedAt = Date.now(), currentNudge = null, swReg = null, nudgeTimer = null;
+    const toMin = hm => { const [h, m] = String(hm || '0:0').split(':').map(Number); return (h || 0) * 60 + (m || 0); };
+    const fromMin = m => { m = ((m % 1440) + 1440) % 1440; return `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`; };
+    const within = (nm, start, len) => ((nm - start) % 1440 + 1440) % 1440 < len;
+    function nudgeRT() {
+      let rt = null; try { rt = JSON.parse(localStorage.getItem(NUDGE_RT_KEY) || 'null'); } catch { }
+      if (!rt || rt.date !== todayStr) rt = { date: todayStr, count: 0, ignored: 0, pending: false, lastAt: 0, snoozeUntil: 0, bed: false, bedAgainAt: 0, morning: false };
+      return rt;
+    }
+    function saveRT(rt) { try { localStorage.setItem(NUDGE_RT_KEY, JSON.stringify(rt)); } catch { } }
+    function nudgeCfg() { if (!state.nudge) state.nudge = { on: false, asked: false, every: 3, max: 4, sleep: '', wake: '' }; return state.nudge; }
+    function touchLog() {
+      if (!state) return;
+      state.lastLogAt = Date.now();
+      const rt = nudgeRT(); if (rt.pending) { rt.pending = false; rt.ignored = 0; saveRT(rt); }
+    }
+    const sleepCol = () => allColumns().find(c => /sleep/i.test(c)) || null;
+    function sleepWake() {
+      const cfg = nudgeCfg(); let found = null;
+      const sc = sleepCol();
+      if (sc) {
+        const i = anchorIdx();
+        for (let k = i; k >= Math.max(0, i - 4) && !found; k--) {
+          const sl = (cellOf(state.allDates[k], sc).timeSlots || []).filter(s => s.from && s.to);
+          if (sl.length) found = sl.find(s => { const m = toMin(s.from); return m >= 18 * 60 || m < 5 * 60; }) || sl[sl.length - 1];
+        }
+      }
+      return {
+        sleep: cfg.sleep || found?.from || '23:30',
+        wake: cfg.wake || found?.to || '07:30',
+        src: cfg.sleep || cfg.wake ? 'set by you' : found ? 'from your sleep log' : 'a default until you log sleep'
+      };
+    }
+    function inQuiet(nm, sleep, wake) { const s = toMin(sleep), w = (toMin(wake) + 30) % 1440; return s <= w ? nm >= s && nm < w : nm >= s || nm < w; }
+
+    // --- what to offer: yesterday at this time, what you usually do now, and an honest break
+    function yesterdayAt(nm) {
+      const y = state.allDates[anchorIdx() - 1]; if (!y) return null;
+      let best = null, bd = 1e9; const sc = sleepCol();
+      allColumns().forEach(c => {
+        if (c === sc) return;
+        (cellOf(y, c).timeSlots || []).forEach(s => {
+          if (!s.from) return;
+          const a = toMin(s.from), b = s.to ? toMin(s.to) : a + 30;
+          const inside = a <= b ? nm >= a && nm <= b : nm >= a || nm <= b;
+          const d = inside ? 0 : Math.min(Math.abs(nm - a), Math.abs(nm - b));
+          if (d < bd && d <= 60) { bd = d; best = c; }
+        });
+      });
+      return best;
+    }
+    function usualAt(nm, exclude) {
+      const i = anchorIdx(), days = state.allDates.slice(Math.max(0, i - 14), i), sc = sleepCol(), score = {};
+      days.forEach(d => allColumns().forEach(c => (cellOf(d, c).timeSlots || []).forEach(s => {
+        if (!s.from || c === sc) return;
+        const dd = Math.abs(nm - toMin(s.from)); if (Math.min(dd, 1440 - dd) <= 90) score[c] = (score[c] || 0) + 1;
+      })));
+      let ranked = Object.keys(score).sort((a, b) => score[b] - score[a]).filter(c => !exclude.includes(c));
+      if (ranked.length) return ranked[0];
+      const freq = {};
+      state.allDates.slice(Math.max(0, i - 14), i + 1).forEach(d => allColumns().forEach(c => { if (c !== sc && isDone(d, c)) freq[c] = (freq[c] || 0) + 1; }));
+      ranked = Object.keys(freq).sort((a, b) => freq[b] - freq[a]).filter(c => !exclude.includes(c));
+      return ranked[0] || coreCols().find(c => c !== sc && !exclude.includes(c)) || null;
+    }
+    function restOption(nm, sleep, exclude) {
+      const sc = sleepCol();
+      if (sc && !exclude.includes(sc) && within(nm, toMin(sleep) - 90, 150)) return { col: sc, label: 'Going to sleep 😴' };
+      const media = allColumns().filter(c => ruleOf(c) === 'less' && !exclude.includes(c));
+      if (!media.length) return null;
+      const i = anchorIdx(), used = c => state.allDates.slice(Math.max(0, i - 14), i + 1).filter(d => isDone(d, c)).length;
+      const m = media.sort((a, b) => used(b) - used(a))[0];
+      return { col: m, label: `Taking a break (${m})` };
+    }
+    const pickOne = arr => arr[Math.floor(Math.random() * arr.length)];
+    function buildNudge(kind) {
+      const now = new Date(), nm = now.getHours() * 60 + now.getMinutes();
+      const { sleep } = sleepWake();
+      const name = state.profile?.name ? ` ${state.profile.name}` : '';
+      const r = state.running;
+      if (kind === 'long') return {
+        kind, title: `Still on ${r.col}? ⏱`, body: `${fmtH(elapsedMs(r) / 3600000)} so far. Nice focus.`,
+        options: [{ label: 'Keep going', act: 'dismiss' }, { label: 'End session', act: 'end' }, { label: 'Switch to something else', act: 'pick' }]
+      };
+      if (kind === 'bed') {
+        const sc = sleepCol(), opts = [];
+        if (sc) opts.push({ label: 'Going to sleep now 😴', col: sc });
+        opts.push({ label: '30 more minutes', act: 'bedAgain' });
+        const cur = r ? r.col : yesterdayAt(nm);
+        if (cur && cur !== sc) opts.push({ label: `Still on ${cur}`, act: r ? 'dismiss' : undefined, col: r ? undefined : cur });
+        return { kind, title: `Winding down${name}? 🌙`, body: `Yesterday you went to bed around ${sleep}. Tap when you head off and I'll time your sleep.`, options: opts };
+      }
+      if (kind === 'morning') {
+        const sc = sleepCol();
+        if (r && r.col === sc) return { kind, title: `Good morning${name} ☀️`, body: "Pip's awake too. Shall I end your sleep session?", options: [{ label: "I'm awake", act: 'end' }, { label: 'Plan my day with the coach', act: 'plan' }] };
+        const first = usualAt(nm, []);
+        return { kind, title: `Good morning${name} ☀️`, body: `${coreCols().length} daily habits for Pip to grow today.`, options: [first ? { label: `Start with ${first}`, col: first } : null, { label: 'Plan my day with the coach', act: 'plan' }].filter(Boolean) };
+      }
+      if (kind === 'offer') return {
+        kind, title: 'Can I check in on you? 🌱', body: "Now and then I'll ask what you're up to, so logging takes one tap. I stay quiet while you sleep.",
+        options: [{ label: 'Yes, check in on me', act: 'enable' }, { label: 'Maybe later', act: 'decline' }]
+      };
+      // idle
+      const o1 = yesterdayAt(nm), o2 = usualAt(nm, o1 ? [o1] : []), o3 = restOption(nm, sleep, [o1, o2].filter(Boolean));
+      const hrs = Math.max(1, Math.round((Date.now() - Math.max(state.lastLogAt || 0, appOpenedAt)) / 3600000));
+      const opts = [];
+      if (o1) opts.push({ label: `${o1} (like yesterday)`, col: o1 });
+      if (o2) opts.push({ label: o2, col: o2 });
+      if (o3) opts.push(o3);
+      return {
+        kind,
+        title: pickOne([`Hey${name} 👋 what are you up to?`, 'Quick check-in from Pip 🌱', "What's happening right now?", 'Pip is curious 👀 what are you doing?']),
+        body: `${hrs}h since your last log. One tap is enough.`,
+        options: opts, more: true
+      };
+    }
+
+    // --- showing it: an in-app card, plus a system notification if the tab is in the background
+    function showNudgeCard(n) {
+      currentNudge = n;
+      const el = $('nudge');
+      el.innerHTML = `<div class="nudge-top"><span class="nudge-from">🌱 Pip</span><button class="nudge-x" onclick="nudgeClose()" aria-label="Dismiss">×</button></div>
+        <b>${esc(n.title)}</b><p>${esc(n.body)}</p>
+        <div class="nudge-opts">${n.options.map((o, i) => `<button class="nudge-opt" onclick="nudgeAnswer(${i})">${esc(o.label)}</button>`).join('')}</div>
+        ${n.kind === 'idle' ? `<div class="nudge-foot"><button class="linkish" onclick="nudgeAnswer('pick')">Something else</button><button class="linkish" onclick="nudgeAnswer('snooze')">Not now</button></div>` : ''}`;
+      el.hidden = false; el.getBoundingClientRect(); el.classList.add('show');
+      if (!document.hidden) { sfx('chirp'); if (typeof buddyHop === 'function') buddyHop(); }
+    }
+    async function osNotify(n) {
+      if (!('Notification' in window) || Notification.permission !== 'granted') return;
+      const opts = { body: n.body, tag: 'tracker-nudge', renotify: true, requireInteraction: false, data: { kind: n.kind } };
+      try {
+        if (swReg) {
+          const acts = n.options.slice(0, 2).map((o, i) => ({ action: 'o' + i, title: o.label.slice(0, 40) }));
+          await swReg.showNotification(n.title, { ...opts, actions: acts });
+        } else {
+          const note = new Notification(n.title, opts);
+          note.onclick = () => { window.focus(); note.close(); };
+        }
+      } catch (e) { console.warn('Notification failed', e); }
+    }
+    function fireNudge(kind) {
+      const n = buildNudge(kind);
+      if (!n || !n.options.length) return;
+      if (kind === 'idle' || kind === 'bed') {
+        const rt = nudgeRT(); rt.count++; rt.lastAt = Date.now(); rt.pending = true; saveRT(rt);
+      }
+      showNudgeCard(n);
+      if (document.hidden) osNotify(n);
+    }
+    window.nudgeClose = function () { const el = $('nudge'); el.classList.remove('show'); setTimeout(() => { if (!el.classList.contains('show')) el.hidden = true; }, 300); currentNudge = null; };
+    window.nudgeAnswer = function (i) {
+      const n = currentNudge; nudgeClose();
+      const rt = nudgeRT(); rt.pending = false; rt.ignored = 0;
+      if (i === 'snooze') { rt.snoozeUntil = Date.now() + 3600000; saveRT(rt); toast("Okay, I'll check back in an hour."); return; }
+      if (i === 'pick') { saveRT(rt); window.scrollTo({ top: 0, behavior: 'smooth' }); nowPick(true); return; }
+      saveRT(rt);
+      const o = n?.options?.[i]; if (!o) return;
+      if (o.col) { if (!state.running || state.running.col !== o.col) startNow(R(o.col)); else toast(`Already timing ${o.col}.`); return; }
+      if (o.act === 'end') endNow();
+      else if (o.act === 'pick') nowPick(true);
+      else if (o.act === 'plan') runCoach('plan');
+      else if (o.act === 'bedAgain') { const r2 = nudgeRT(); r2.bedAgainAt = Date.now() + 30 * 60000; saveRT(r2); toast("Got it. I'll ask again in 30 minutes."); }
+      else if (o.act === 'enable') enableNudges(true);
+      else if (o.act === 'decline') { nudgeCfg().asked = true; saveStateToCloud(); toast('No problem. You can turn check-ins on from the 🔔 button anytime.'); }
+    };
+
+    // --- the scheduler: once a minute
+    function nudgeTick() {
+      if (!state || $('auth-gate').style.display !== 'none') return;
+      const cfg = nudgeCfg(); if (!cfg.on) return;
+      const rt = nudgeRT(), now = Date.now(), d = new Date(), nm = d.getHours() * 60 + d.getMinutes();
+      const { sleep, wake } = sleepWake(), s = toMin(sleep), w = toMin(wake), r = state.running, sc = sleepCol();
+      if (r && !r.checked && r.col !== sc && elapsedMs(r) > 150 * 60000) { r.checked = true; saveStateToCloud(); return fireNudge('long'); }
+      if (!rt.morning && within(nm, w + 30, 90)) { rt.morning = true; saveRT(rt); return fireNudge('morning'); }
+      if (rt.snoozeUntil > now) return;
+      if (!rt.bed && within(nm, s - 10, 20)) { rt.bed = true; saveRT(rt); return fireNudge('bed'); }
+      if (rt.bedAgainAt && now >= rt.bedAgainAt) { rt.bedAgainAt = 0; saveRT(rt); return fireNudge('bed'); }
+      if (r || inQuiet(nm, sleep, wake) || rt.count >= (cfg.max || 4)) return;
+      const gap = (cfg.every || 3) * 3600000 * (rt.ignored >= 2 ? 2 : 1);   // back off if the last two were ignored
+      const last = Math.max(state.lastLogAt || 0, rt.lastAt || 0, appOpenedAt);
+      if (now - last >= gap) { if (rt.pending) { rt.ignored++; saveRT(rt); } fireNudge('idle'); }
+    }
+    function nudgeBoot() {
+      appOpenedAt = Date.now();
+      clearInterval(nudgeTimer); nudgeTimer = setInterval(nudgeTick, 60000);
+      renderBell();
+      const cfg = nudgeCfg();
+      if (!cfg.on && !cfg.asked) setTimeout(() => { if (!openPanel && !currentNudge && !nudgeCfg().on && !nudgeCfg().asked) fireNudge('offer'); }, 9000);
+    }
+    if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+      navigator.serviceWorker.register('sw.js').then(r => { swReg = r; }).catch(() => { swReg = null; });
+      navigator.serviceWorker.addEventListener('message', e => {
+        if (e.data?.type !== 'nudge-action' || !currentNudge) return;
+        const m = /^o(\d)$/.exec(e.data.action || ''); if (m) nudgeAnswer(+m[1]);
+      });
+    }
+
+    // --- settings
+    function renderBell() { const b = $('bell-btn'); if (b && state) { const on = nudgeCfg().on; b.textContent = on ? '🔔' : '🔕'; b.title = on ? 'Check-ins on' : 'Check-ins off'; } }
+    async function enableNudges(fromOffer) {
+      const cfg = nudgeCfg(); cfg.on = true; cfg.asked = true;
+      if (!state.lastLogAt) state.lastLogAt = Date.now();
+      let perm = 'default';
+      if ('Notification' in window) { try { perm = Notification.permission === 'default' ? await Notification.requestPermission() : Notification.permission; } catch { } }
+      saveStateToCloud(); renderBell();
+      toast(perm === 'granted' ? "Check-ins are on. I'll stay quiet while you sleep." : "Check-ins are on inside the app. Browser notifications are blocked, so allow them in site settings to get them in the background.");
+      if (openPanel === 'sheet' && $('nudge-settings')) renderNudgeSettings();
+    }
+    window.openNudgeSettings = function () {
+      sheetCol = null; openLayer('sheet');
+      $('sheet-head').innerHTML = `<div><h2>Check-ins</h2><p>Friendly one-tap nudges from Pip, so logging never slips.</p></div>
+        <button class="round" onclick="closeAll()" aria-label="Close">×</button>`;
+      renderNudgeSettings();
+    };
+    function renderNudgeSettings() {
+      const cfg = nudgeCfg(), sw = sleepWake();
+      const perm = 'Notification' in window ? Notification.permission : 'unsupported';
+      $('sheet-body').innerHTML = `<div class="form" id="nudge-settings">
+        <label class="remember" style="justify-content:flex-start"><input type="checkbox" ${cfg.on ? 'checked' : ''} onchange="setNudge('on', this.checked)"><span class="sw" aria-hidden="true"></span><span style="color:var(--ink);font-weight:600">Check in on me</span></label>
+        <div><span class="lbl">Nudge me after this long without a log</span>
+          <div class="chipset">${[2, 3, 4].map(h => `<button type="button" class="chip ${cfg.every === h ? 'on' : ''}" onclick="setNudge('every',${h})">${h} hours</button>`).join('')}</div></div>
+        <div><span class="lbl">At most this many a day</span>
+          <div class="chipset">${[2, 4, 6].map(h => `<button type="button" class="chip ${cfg.max === h ? 'on' : ''}" onclick="setNudge('max',${h})">${h}</button>`).join('')}</div></div>
+        <div><span class="lbl">Quiet hours, ${esc(sw.src)}</span>
+          <div class="two">
+            <label>I sleep around<input type="time" class="field" value="${esc(sw.sleep)}" onchange="setNudge('sleep', this.value)"></label>
+            <label>I wake around<input type="time" class="field" value="${esc(sw.wake)}" onchange="setNudge('wake', this.value)"></label>
+          </div>
+          <p class="hint" style="margin-top:6px">No nudges from ${esc(sw.sleep)} until ${esc(fromMin(toMin(sw.wake) + 30))}. A bedtime check-in comes about 10 minutes before you usually sleep, and a good-morning one after you wake.${cfg.sleep || cfg.wake ? ' <button class="linkish" onclick="setNudge(\'reset\')">Use my sleep log instead</button>' : ''}</p></div>
+        <p class="hint">${perm === 'granted' ? 'Browser notifications are allowed, so check-ins also appear when this tab is in the background.' : perm === 'denied' ? 'Browser notifications are blocked for this site. Check-ins still appear inside the app; allow notifications in the site settings to get them in the background.' : perm === 'unsupported' ? 'This browser has no notifications, so check-ins appear inside the app only.' : 'Turn check-ins on and allow notifications to get them when this tab is in the background.'} They work while the site is open in a tab.</p>
+        <div class="sheet-foot"><button class="btn small" onclick="closeAll();setTimeout(()=>fireNudge('idle'),350)">Send a test check-in</button><button class="btn accent" onclick="closeAll()">Done</button></div>
+      </div>`;
+    }
+    window.fireNudge = fireNudge;
+    window.setNudge = function (key, val) {
+      const cfg = nudgeCfg();
+      if (key === 'on') { if (val) { enableNudges(); return; } cfg.on = false; }
+      else if (key === 'reset') { cfg.sleep = ''; cfg.wake = ''; }
+      else cfg[key] = val;
+      saveStateToCloud(); renderBell(); renderNudgeSettings();
+    };
 
     function renderStreak() {
       const { cur, best } = dayStreak();
@@ -2175,8 +2466,10 @@
           </div>
         </details>`;
       const setup = `<details class="fold" ${openSetupCol === col ? 'open' : ''} ontoggle="foldToggle('setup',${ci},this.open)">
-          <summary>Habit settings <em>${TYPES[m.type]}${m.type === 'count' && m.unit ? `, ${esc(m.unit)}` : ''}${(m.type === 'count' || m.type === 'time') ? (t ? `, target ${esc(targetLabel(col, t))}` : ', no target yet') : ''}${(m.type === 'count' || m.type === 'time') ? `, ${RULE_TEXT[rule].toLowerCase()}` : ''}</em></summary>
+          <summary>Habit settings <em>${isCore(col) ? 'Daily' : 'Optional'}, ${TYPES[m.type].toLowerCase()}${m.type === 'count' && m.unit ? `, ${esc(m.unit)}` : ''}${(m.type === 'count' || m.type === 'time') ? (t ? `, target ${esc(targetLabel(col, t))}` : ', no target yet') : ''}${(m.type === 'count' || m.type === 'time') ? `, ${RULE_TEXT[rule].toLowerCase()}` : ''}</em></summary>
           <div class="setup-body">
+            <div><span class="lbl">How often</span>
+              <div class="chipset"><button type="button" class="chip ${isCore(col) ? 'on' : ''}" onclick="setDaily(${ci},true)">Every day</button><button type="button" class="chip ${!isCore(col) ? 'on' : ''}" onclick="setDaily(${ci},false)">Optional, a bonus when I do it</button></div></div>
             <div><span class="lbl">Track it as</span>
               <div class="chipset">${Object.entries(TYPES).map(([k, v]) => `<button type="button" class="chip ${m.type === k ? 'on' : ''}" onclick="setMeta(${ci},'type','${k}')">${v}</button>`).join('')}</div>
               <p class="hint" style="margin-top:6px">${TYPE_HINT[m.type]}</p></div>
@@ -2221,6 +2514,7 @@
       return state.logs[activeDate][col];
     }
     function afterEdit(col, structural) {
+      touchLog();
       saveStateToCloud();
       if (structural) rerenderEditor(col);
       scheduleRefresh();
@@ -2300,7 +2594,7 @@
       const col = V(ci);
       if (!state.habitMeta) state.habitMeta = {};
       const m = { ...metaOf(col), [key]: val };
-      state.habitMeta[col] = { type: m.type, unit: m.unit || '' };
+      state.habitMeta[col] = { type: m.type, unit: m.unit || '', daily: isCore(col) };
       if (key === 'type' && val === 'time' && state.logs[activeDate]?.[col]) syncTimeFromSlots(col, state.logs[activeDate][col]);
       openSetupCol = col;
       saveStateToCloud(); rerenderEditor(col); scheduleRefresh();
@@ -2309,15 +2603,60 @@
       const col = V(ci); state.columnRules[col] = r; openSetupCol = col;
       saveStateToCloud(); rerenderEditor(col); scheduleRefresh();
     };
+    window.setDaily = function (ci, daily) {
+      const col = V(ci);
+      if (!state.habitMeta) state.habitMeta = {};
+      state.habitMeta[col] = { ...metaOf(col), daily };
+      state.dailyChosen = true; openSetupCol = col;
+      saveStateToCloud(); rerenderEditor(col); scheduleRefresh();
+    };
+    window.dismissDailyHint = function () { state.dailyChosen = true; saveStateToCloud(); renderTiles(); };
+    function suggestDaily() {
+      const i = anchorIdx(), days = state.allDates.slice(Math.max(0, i - 13), i + 1).filter(d => allColumns().some(c => isDone(d, c)));
+      if (days.length < 3) return null;
+      return allColumns().filter(c => days.filter(d => isDone(d, c)).length / days.length >= 0.5);
+    }
+    window.openDailyPicker = function () {
+      sheetCol = null; openLayer('sheet');
+      $('sheet-head').innerHTML = `<div><h2>Your daily habits</h2><p>Tap to switch. Daily habits make up a full day; optional ones show as bonus when you do them.</p></div>
+        <button class="round" onclick="closeAll()" aria-label="Close">×</button>`;
+      renderDailyPicker();
+    };
+    function renderDailyPicker() {
+      const sug = suggestDaily();
+      $('sheet-body').innerHTML = `<div class="form">
+        ${state.groups.map((g, gi) => g.columns.length ? `<div class="np-group" style="--hue:${groupHue(g, gi)}"><span>${esc(g.name)}</span>
+          <div class="chipset">${g.columns.map(c => `<button type="button" class="chip daily-chip ${isCore(c) ? 'on' : ''}" onclick="flipDaily(${R(c)})">${isCore(c) ? '✓ ' : ''}${esc(c)}</button>`).join('')}</div></div>` : '').join('')}
+        <p class="hint">${coreCols().length} daily, ${allColumns().length - allColumns().filter(isCore).length} optional.</p>
+        <div class="sheet-foot">
+          ${sug ? `<button class="btn small" onclick="applyDailySuggestion()">Suggest from my last 2 weeks</button>` : '<span class="hint">After a few days of logging, I can suggest these for you.</span>'}
+          <button class="btn accent" onclick="closeAll()">Done</button>
+        </div></div>`;
+    }
+    window.flipDaily = function (ci) {
+      const col = V(ci);
+      if (!state.habitMeta) state.habitMeta = {};
+      state.habitMeta[col] = { ...metaOf(col), daily: !isCore(col) };
+      state.dailyChosen = true;
+      saveStateToCloud(); renderDailyPicker(); scheduleRefresh();
+    };
+    window.applyDailySuggestion = function () {
+      const sug = suggestDaily(); if (!sug || !sug.length) return;
+      if (!state.habitMeta) state.habitMeta = {};
+      allColumns().forEach(c => { state.habitMeta[c] = { ...metaOf(c), daily: sug.includes(c) }; });
+      state.dailyChosen = true;
+      saveStateToCloud(); renderDailyPicker(); scheduleRefresh();
+      toast(`${sug.length} habits you did on at least half of your logged days are now daily.`);
+    };
     window.setTarget = function (ci, v) { const col = V(ci); ensureCell(col).target = v; openSetupCol = col; afterEdit(col, true); };
 
     // ============ AI habit setup: apply a proposed setup from the chat ============
     const SETUP_RULES = `## Changing habits
 When the user wants to set up, add, remove, rename or retune their habits, write your explanation first, then end the reply with a fenced code block whose language tag is habits, containing JSON for the COMPLETE setup (not a diff):
 \`\`\`habits
-{"groups":[{"name":"📚 Academics","habits":[{"name":"DSA","type":"count","unit":"questions","target":5,"rule":"more"},{"name":"Instagram","type":"time","target":0.5,"rule":"less"}]}]}
+{"groups":[{"name":"📚 Academics","habits":[{"name":"DSA","type":"count","unit":"questions","target":5,"rule":"more","daily":true},{"name":"Instagram","type":"time","target":0.5,"rule":"less"}]}]}
 \`\`\`
-type is count, time (target in hours), check (done or not, no target) or text. rule is more, less or exact. Keep an existing habit's exact name when it stays, so its history is kept. Keep it lean, usually 8 to 14 habits in 2 to 4 groups with an emoji at the start of each group name, because logging should take under two minutes a day. The app shows the block as an "Apply this setup" card, so don't mention JSON or code in your prose. Only include the block when proposing or revising a setup.`;
+daily is true for habits done every day and false for optional ones that only count as a bonus when done; mark only the genuine every-day habits as daily. type is count, time (target in hours), check (done or not, no target) or text. rule is more, less or exact. Keep an existing habit's exact name when it stays, so its history is kept. Keep it lean, usually 8 to 14 habits in 2 to 4 groups with an emoji at the start of each group name, because logging should take under two minutes a day. The app shows the block as an "Apply this setup" card, so don't mention JSON or code in your prose. Only include the block when proposing or revising a setup.`;
     const SETUP_PROMPT = `Help me set up the habits I track. Look at my profile, my goals and my current habits.
 If you know too little about me (no profile and no goals), don't propose yet: ask me 3 or 4 short questions first, about what I'm working towards, my daily routine, what usually derails me, and how much time I'm willing to spend logging.
 Otherwise propose the habits I should track daily, grouped, each with a one-line reason and a realistic starting target based on my recent logs. Say which of my current habits to drop or merge and why. Then ask what I'd like to change, and include the habits block.`;
@@ -2343,7 +2682,7 @@ Otherwise propose the habits I should track daily, grouped, each with a one-line
           if (!name || seen.has(name)) return; seen.add(name);
           const type = TYPES[h.type] ? h.type : 'count';
           const target = (type === 'count' || type === 'time') && h.target !== undefined && h.target !== null && h.target !== '' ? String(h.target) : '';
-          habits.push({ name, type, unit: type === 'count' ? String(h.unit || '').slice(0, 20) : '', target, rule: ['more', 'less', 'exact'].includes(h.rule) ? h.rule : 'more' });
+          habits.push({ name, type, unit: type === 'count' ? String(h.unit || '').slice(0, 20) : '', target, rule: ['more', 'less', 'exact'].includes(h.rule) ? h.rule : 'more', daily: h.daily !== false });
         });
         if (habits.length) groups.push({ name: String(g.name).slice(0, 60), habits });
       });
@@ -2356,8 +2695,8 @@ Otherwise propose the habits I should track daily, grouped, each with a one-line
       const proposed = new Set(groups.flatMap(g => g.habits.map(h => h.name)));
       const added = [...proposed].filter(n => !current.has(n));
       const removed = [...current].filter(n => !proposed.has(n));
-      const hdesc = h => h.type === 'check' ? 'done or not' : h.type === 'text' ? 'short text'
-        : h.target ? (h.type === 'time' ? `${fmtH(numOf(h.target))}${h.rule === 'less' ? ' max' : ''}` : `${h.target}${h.unit ? ' ' + h.unit : ''}`) : (h.unit || (h.type === 'time' ? 'time' : 'count'));
+      const hdesc = h => (h.daily ? '' : 'optional, ') + (h.type === 'check' ? 'done or not' : h.type === 'text' ? 'short text'
+        : h.target ? (h.type === 'time' ? `${fmtH(numOf(h.target))}${h.rule === 'less' ? ' max' : ''}` : `${h.target}${h.unit ? ' ' + h.unit : ''}`) : (h.unit || (h.type === 'time' ? 'time' : 'count')));
       return `<div class="setup-card">
           ${groups.map(g => `<div><h5>${esc(g.name)}</h5><div class="chips">${g.habits.map(h => `<span><b>${esc(h.name)}</b> ${esc(hdesc(h))}</span>`).join('')}</div></div>`).join('')}
           <p class="diff">${added.length ? `New: ${esc(added.join(', '))}. ` : ''}${removed.length ? `Leaving out: ${esc(removed.join(', '))}. ` : ''}${!added.length && !removed.length ? 'Same habits, updated settings. ' : ''}Past entries are kept either way.</p>
@@ -2384,7 +2723,8 @@ Otherwise propose the habits I should track daily, grouped, each with a one-line
       const anchor = state.allDates.includes(todayStr) ? todayStr : selectedDate;
       state.groups = groups.map(g => ({ name: g.name, color: 'bg-amber-950/40 text-amber-300 border-amber-900/50', columns: g.habits.map(h => h.name) }));
       groups.forEach(g => g.habits.forEach(h => {
-        state.habitMeta[h.name] = { type: h.type, unit: h.unit };
+        state.habitMeta[h.name] = { type: h.type, unit: h.unit, daily: h.daily };
+        state.dailyChosen = true;
         state.columnRules[h.name] = h.rule;
         if (h.target) { if (!state.logs[anchor]) state.logs[anchor] = {}; if (!state.logs[anchor][h.name]) state.logs[anchor][h.name] = {}; state.logs[anchor][h.name].target = h.target; }
       }));
@@ -2462,11 +2802,11 @@ Otherwise propose the habits I should track daily, grouped, each with a one-line
 
     // ============ celebration + toast ============
     function checkCelebrate(date) {
-      const cols = allColumns();
+      const cols = coreCols();
       if (!cols.length || celebrated.has(date)) return;
       if (cols.every(c => isDone(date, c))) {
         celebrated.add(date);
-        toast(`Every habit logged for ${niceDate(date)}. That's a full day.`);
+        toast(`Every daily habit done for ${niceDate(date)}. That's a full day.`);
         if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) confetti();
       }
     }
@@ -2636,7 +2976,7 @@ Otherwise propose the habits I should track daily, grouped, each with a one-line
       return state.groups.map(g => `${g.name}: ` + g.columns.map(c => {
         const t = activeTargetOf(selectedDate, c);
         const m = metaOf(c);
-        return `${c} [${m.type}${m.unit ? ' in ' + m.unit : ''}${m.type === 'time' ? ' (hours)' : ''}, ${RULE_TEXT[ruleOf(c)].toLowerCase()}${t ? `, current target ${targetLabel(c, t)}` : ''}]`;
+        return `${c} [${isCore(c) ? 'daily' : 'optional'}, ${m.type}${m.unit ? ' in ' + m.unit : ''}${m.type === 'time' ? ' (hours)' : ''}, ${RULE_TEXT[ruleOf(c)].toLowerCase()}${t ? `, current target ${targetLabel(c, t)}` : ''}]`;
       }).join('; ')).join('\n');
     }
     function dayText(date) {
