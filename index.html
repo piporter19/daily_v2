@@ -91,7 +91,7 @@
     .energy { display: flex; gap: 4px; align-items: flex-end; height: 28px; }
     .energy button { width: 11px; border-radius: 3px; border: 0; background: var(--line); padding: 0; transition: background .15s; }
     .energy button.sel { background: var(--teal); }
-    .ring { position: relative; width: 104px; height: 104px; }
+    .ring { position: relative; width: 104px; height: 104px; cursor: pointer; border-radius: 50%; }
     .ring svg { transform: rotate(-90deg); }
     .ring .track { stroke: var(--line); }
     .ring .bar { stroke: var(--mari); transition: stroke-dashoffset .6s cubic-bezier(.2, .8, .2, 1); stroke-linecap: round; }
@@ -728,7 +728,7 @@
         <button class="round" onclick="shiftDay(1)" aria-label="Next day">›</button>
       </div>
       <div class="checkin" id="checkin"></div>
-      <div class="ring" id="ring"></div>
+      <div class="ring" id="ring" role="button" tabindex="0" title="Choose which habits are daily" onclick="openDailyPicker()" onkeydown="if(event.key==='Enter')openDailyPicker()"></div>
       <div class="now" id="now"></div>
     </section>
 
@@ -771,6 +771,7 @@
           <button class="btn small" onclick="addDateRow()">+ Date</button>
           <button class="btn small" onclick="addColumnModal()">+ Column</button>
           <button class="btn small" onclick="addCategoryModal()">+ Subcategory</button>
+          <button class="btn small" onclick="openDailyPicker()">Daily habits</button>
           <button class="btn small" onclick="runCoach('setup')">✦ Redesign with AI</button>
           <button class="btn small" id="edit-mode-btn" onclick="toggleEditMode()">Edit layout</button>
           <button class="btn small" id="compact-btn" onclick="toggleCompactMode()">Compact</button>
