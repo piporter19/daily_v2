@@ -10,7 +10,7 @@ on:
         required: false
         default: ''
         type: choice
-        options: ['', 'idle', 'bed', 'morning']
+        options: ['', 'idle', 'leaves', 'bed', 'morning']
 
 jobs:
   checkin:
@@ -25,3 +25,7 @@ jobs:
         env:
           DASHBOARDS: my_dashboard,soham_dashboard
           FORCE_KIND: ${{ inputs.kind }}
+          # Optional: add an AI_KEY repository secret to get 3-day AI reviews on your phone
+          AI_KEY: ${{ secrets.AI_KEY }}
+          AI_BASE: https://aicredits.in/v1
+          AI_MODEL: google/gemini-2.5-flash-lite
