@@ -553,6 +553,159 @@
     .nudge-foot .linkish { color: var(--muted); font-weight: 600; }
     @media (max-width: 560px) { .nudge { right: 10px; bottom: 150px; } }
 
+    /* ---------- tree ---------- */
+    .tree-row { display: grid; grid-template-columns: 1.25fr 1fr; gap: 16px; }
+    .tree-panel { display: grid; grid-template-columns: minmax(220px, 340px) 1fr; gap: 18px; align-items: center; background: linear-gradient(180deg, rgba(36, 44, 92, .92), rgba(26, 30, 58, .92)); }
+    .tree-wrap { background: none; border: 0; padding: 0; display: block; width: 100%; border-radius: 18px; }
+    .tree-wrap.big { aspect-ratio: 300 / 260; }
+    .tree-svg { width: 100%; height: 100%; display: block; overflow: visible; }
+    .canopy-sway { transform-box: view-box; transform-origin: 150px 236px; animation: tsway 6s ease-in-out infinite; }
+    @keyframes tsway { 0%, 100% { transform: rotate(-.8deg); } 50% { transform: rotate(.8deg); } }
+    .tree-wrap.rustle .canopy-sway { animation: rustle .65s ease-in-out; }
+    @keyframes rustle { 20% { transform: rotate(-2.5deg) scale(1.02); } 50% { transform: rotate(2deg) scale(1.03); } 80% { transform: rotate(-1deg); } }
+    .tree-eyes { transform-box: fill-box; transform-origin: 50% 50%; transition: transform .08s; }
+    .tree-wrap.blink .tree-eyes { transform: scaleY(.1); }
+    .tree-pupils { transition: transform .18s ease-out; }
+    .blossom { animation: bloomIn .6s cubic-bezier(.3, 1.6, .5, 1) both; transform-box: fill-box; transform-origin: center; }
+    @keyframes bloomIn { from { transform: scale(0); opacity: 0; } }
+    .fall { animation: leafFall 6.5s ease-in infinite; opacity: 0; }
+    @keyframes leafFall { 0% { opacity: 0; transform: translate(0, 0) rotate(0); } 10% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--dx), 120px) rotate(220deg); } }
+    .perch { animation: perch 5s ease-in-out infinite; transform-box: fill-box; }
+    @keyframes perch { 0%, 88%, 100% { translate: 0 0; } 92% { translate: 0 -2px; } }
+    .drop { animation: drop 1s linear infinite; }
+    @keyframes drop { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(10px); } }
+    .tree-info h2 { font-size: 30px; letter-spacing: -.02em; margin-top: 2px; }
+    .tree-sub { margin: 2px 0 10px; color: var(--muted); font-size: 13.5px; }
+    .grow-dots { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 12px; }
+    .grow-dots i { width: 11px; height: 11px; border-radius: 50%; background: var(--well); border: 1px solid var(--line); }
+    .grow-dots i.on { background: #5fbf6a; border-color: #5fbf6a; }
+    .gbar.hp i { transition: width .6s; }
+    .tree-say { font-family: var(--display); font-size: 17px; margin: 12px 0 8px; color: var(--ink); }
+    .tree-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .buddy { width: 230px; padding: 8px 12px 10px; }
+    .tree-wrap.mini { height: 150px; }
+    .buddy-rail { position: relative; bottom: auto; height: 6px; border-radius: 3px; background: var(--well); overflow: hidden; margin-top: 2px; }
+    .buddy.min { width: auto; padding: 6px; }
+    .buddy.min .tree-wrap.mini { width: 92px; height: 82px; }
+    .buddy.min .buddy-toggle { top: -8px; right: -8px; }
+
+    /* ---------- today so far ---------- */
+    .today-panel { display: flex; flex-direction: column; gap: 10px; }
+    .tp-row { display: flex; justify-content: space-between; align-items: baseline; }
+    .ts-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .ts-stats b { font-family: var(--display); font-size: 26px; display: block; line-height: 1.1; }
+    .ts-stats b.low { color: var(--rose); } .ts-stats b.high { color: var(--teal); }
+    .ts-stats span { font-size: 12px; color: var(--muted); }
+    .timeline { position: relative; height: 26px; border-radius: 8px; background: var(--well); overflow: hidden; border: 1px solid var(--line); }
+    .timeline .seg { position: absolute; top: 3px; bottom: 3px; border-radius: 4px; }
+    .timeline .seg.sleep { background: #2f3570; }
+    .timeline .seg.gap { background: repeating-linear-gradient(45deg, rgba(239, 111, 127, .28) 0 5px, rgba(239, 111, 127, .1) 5px 10px); }
+    .timeline .seg.live { animation: pulse 1.6s ease-in-out infinite; }
+    .now-mark { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--mari); box-shadow: 0 0 8px var(--mari); }
+    .tl-axis { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--dim); margin-top: -4px; }
+    .tl-legend { display: flex; flex-wrap: wrap; gap: 10px; font-size: 11.5px; color: var(--muted); }
+    .tl-legend i { display: inline-block; width: 9px; height: 9px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+    .tl-legend i.gapkey { background: repeating-linear-gradient(45deg, rgba(239, 111, 127, .5) 0 3px, transparent 3px 6px); }
+    .gap-box { background: var(--well); border: 1px dashed color-mix(in srgb, var(--rose) 45%, var(--line)); border-radius: 14px; padding: 11px 12px; }
+    .gap-box p { margin: 0 0 8px; font-size: 13.5px; }
+
+    /* ---------- insights row with records ---------- */
+    .insights { grid-template-columns: 1.1fr 1fr 1fr; }
+    #records-panel .foot { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .podium { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; align-items: end; }
+    .pod { background: var(--well); border: 1px solid var(--line); border-radius: 14px; padding: 10px 6px; text-align: center; display: flex; flex-direction: column; gap: 2px; }
+    .pod.p1 { padding-top: 16px; border-color: color-mix(in srgb, #f4b740 50%, var(--line)); }
+    .pod .pm { font-size: 26px; line-height: 1; }
+    .pod b { font-family: var(--display); font-size: 18px; }
+    .pod small { font-size: 11px; color: var(--muted); }
+    .rec-list { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; font-size: 13px; }
+    .rec-list div { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+    .rec-list span { color: var(--muted); } .rec-list b { font-family: var(--display); } .rec-list small { color: var(--dim); font-size: 11.5px; }
+
+    /* ---------- overlays ---------- */
+    .overlay { position: fixed; inset: 0; z-index: 90; background: rgba(8, 9, 22, .7); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; padding: 18px; opacity: 0; transition: opacity .3s; }
+    .overlay.open { opacity: 1; }
+    .ov-card { background: #171a33; border: 1px solid var(--line); border-radius: 24px; width: min(560px, 100%); max-height: 92vh; display: flex; flex-direction: column; overflow: hidden; transform: translateY(14px) scale(.98); transition: transform .35s cubic-bezier(.3, 1.3, .5, 1); }
+    .overlay.open .ov-card { transform: none; }
+    .ov-card.wide { width: min(1100px, 100%); }
+    .ov-head { display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; border-bottom: 1px solid var(--line); }
+    .ov-head h2 { font-size: 24px; }
+    .ov-body { padding: 18px 22px 24px; overflow-y: auto; }
+    .r-ins ul { margin: 0 0 16px; padding-left: 18px; display: flex; flex-direction: column; gap: 5px; font-size: 14.5px; }
+    .r-ins b { color: var(--mari); }
+    .r-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .r-card { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 14px 16px; min-width: 0; }
+    .r-card.wide { grid-column: 1 / -1; }
+    .r-card h3 { font-size: 16px; margin-bottom: 2px; }
+    .r-card .hint { margin-bottom: 8px; }
+    .chart { width: 100%; height: auto; display: block; }
+    .chart .grid { stroke: var(--line); stroke-width: 1; }
+    .chart .ax { fill: var(--dim); font-size: 10.5px; font-family: var(--body); }
+    .cmp { display: flex; flex-direction: column; gap: 10px; margin-top: 6px; }
+    .cmp-row { display: grid; grid-template-columns: 110px 1fr 56px; gap: 10px; align-items: center; font-size: 13px; }
+    .cmp-row span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--muted); }
+    .cmp-bar { position: relative; height: 14px; background: var(--well); border-radius: 7px; }
+    .cmp-bar i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 7px; }
+    .cmp-bar b { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--ink); }
+    .cmp-row em { font-style: normal; font-weight: 600; text-align: right; }
+    .trend-table { display: flex; flex-direction: column; }
+    .tr { display: grid; grid-template-columns: 1fr 100px 90px 70px; gap: 10px; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(46, 53, 99, .6); font-size: 13.5px; }
+    .tr-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .spark { width: 96px; height: 26px; }
+    .tr-v { text-align: right; font-weight: 600; }
+    .tr-ch { text-align: right; color: var(--muted); font-weight: 700; }
+    .tr-ch.up { color: var(--teal); } .tr-ch.down { color: var(--rose); }
+    .medal-card { padding: 30px 26px 24px; text-align: center; align-items: center; gap: 8px; }
+    .medal-big { font-size: 84px; line-height: 1; animation: medalIn .8s cubic-bezier(.3, 1.6, .5, 1) both; filter: drop-shadow(0 8px 24px rgba(244, 183, 64, .45)); }
+    @keyframes medalIn { from { transform: scale(.2) rotate(-30deg); opacity: 0; } }
+    .medal-card h2 { font-size: 28px; }
+    .medal-actions { display: flex; flex-direction: column; gap: 10px; align-items: center; width: 100%; margin-top: 10px; }
+    .medal-actions > .btn { min-width: 220px; justify-content: center; }
+    .file-btn { position: relative; overflow: hidden; cursor: pointer; }
+    .file-btn input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+    .mem-preview { max-width: 100%; max-height: 280px; border-radius: 14px; }
+    .overlay.dark { background: rgba(4, 5, 12, .94); }
+    .ov-x { position: absolute; top: 16px; right: 16px; z-index: 2; }
+    .ov-prev, .ov-next { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; }
+    .ov-prev { left: 14px; } .ov-next { right: 14px; }
+    .slide-stage { width: min(900px, 100%); display: flex; flex-direction: column; align-items: center; gap: 14px; }
+    .slide { position: relative; width: 100%; aspect-ratio: 4 / 3; border-radius: 22px; overflow: hidden; background: #000; }
+    .slide img { width: 100%; height: 100%; object-fit: cover; animation: kenburns 5.2s ease-out both; }
+    @keyframes kenburns { from { transform: scale(1.12) translate(2%, 1%); opacity: 0; } 12% { opacity: 1; } to { transform: scale(1) translate(0, 0); } }
+    .slide-cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 40px 22px 18px; background: linear-gradient(transparent, rgba(0, 0, 0, .75)); display: flex; flex-direction: column; gap: 2px; animation: capIn .8s .4s both; }
+    @keyframes capIn { from { opacity: 0; transform: translateY(10px); } }
+    .slide-cap b { font-family: var(--display); font-size: 24px; }
+    .slide-cap small { color: #d6d8ec; }
+    .slide-cap .pm { font-size: 30px; }
+    .slide-dots { display: flex; gap: 6px; } .slide-dots i { width: 8px; height: 8px; border-radius: 50%; background: #3a3f6a; } .slide-dots i.on { background: var(--mari); }
+    .overlay.calm { background: radial-gradient(ellipse at 50% 40%, rgba(80, 110, 160, .55), rgba(10, 12, 30, .96) 70%); }
+    .reset-stage { width: min(560px, 100%); text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .reset-stage h2 { font-size: clamp(24px, 4vw, 32px); line-height: 1.2; }
+    .reset-stage p { color: #c9cde8; margin: 0; font-size: 15.5px; line-height: 1.6; }
+    .reset-kicker { color: var(--mari) !important; font-weight: 700; letter-spacing: .04em; }
+    .reset-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
+    .breath { display: flex; flex-direction: column; align-items: center; gap: 14px; margin: 10px 0; }
+    .breath-orb { width: 120px; height: 120px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #c9f1e6, #4fc3b0 60%, #2a7f73); box-shadow: 0 0 60px rgba(79, 195, 176, .45); transform: scale(.65); transition-property: transform; transition-timing-function: ease-in-out; }
+    .breath-orb.in, .breath-orb.hold { transform: scale(1.25); }
+    .breath-orb.out { transform: scale(.65); }
+    .breath-txt { font-family: var(--display); font-size: 24px; color: var(--ink) !important; }
+    .tiny-steps { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; margin-top: 6px; }
+    .tiny { display: flex; align-items: center; gap: 10px; text-align: left; background: rgba(26, 30, 58, .85); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; font-size: 14px; font-weight: 600; }
+    .tiny:hover { border-color: var(--teal); }
+    .tiny span { font-size: 22px; }
+    .count-ring { position: relative; width: 150px; height: 150px; }
+    .count-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+    .cr-track { fill: none; stroke: rgba(255, 255, 255, .1); stroke-width: 8; }
+    .cr-bar { fill: none; stroke: var(--teal); stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset .5s linear; }
+    .count-ring b { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--display); font-size: 30px; }
+    .nt-row { display: flex; justify-content: space-between; align-items: center; font-size: 13.5px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 7px 10px; }
+    .nt-row em { color: var(--dim); font-style: normal; }
+    .nt-add { display: grid; grid-template-columns: 1fr 110px; gap: 8px; }
+    .nt-add select, .nt-add .btn { grid-column: span 1; }
+    .now-stuck { font-size: 12.5px; color: var(--muted) !important; }
+    @media (max-width: 1000px) { .tree-row, .insights { grid-template-columns: 1fr; } .r-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 640px) { .tree-panel { grid-template-columns: 1fr; } .tiny-steps { grid-template-columns: 1fr; } .tr { grid-template-columns: 1fr 70px 60px; } .tr .spark { display: none; } }
+
     /* ---------- Pip, the progress buddy ---------- */
     .buddy { position: fixed; right: 18px; bottom: 18px; z-index: 30; width: 270px; background: rgba(23, 26, 51, .95); border: 1px solid var(--line); border-radius: 22px; padding: 8px 14px 11px; box-shadow: 0 14px 34px rgba(0, 0, 0, .38); }
     .buddy-track { position: relative; height: 104px; }
@@ -711,6 +864,7 @@
         <span id="save-status" aria-live="polite"></span>
         <div id="streak-pill" class="streak"></div>
         <button class="btn accent" onclick="openCoach()">✦ AI coach</button>
+        <button class="round" onclick="openReport()" title="Your day in charts" aria-label="Your day in charts">📊</button>
         <button class="round" id="bell-btn" onclick="openNudgeSettings()" aria-label="Check-in settings">🔕</button>
         <button class="round" id="snd-btn" onclick="toggleSound()" aria-label="Toggle sounds">🔊</button>
         <button class="round" onclick="promptBg()" title="Set background image" aria-label="Set background image">🖼</button>
@@ -730,6 +884,11 @@
       <div class="checkin" id="checkin"></div>
       <div class="ring" id="ring" role="button" tabindex="0" title="Choose which habits are daily" onclick="openDailyPicker()" onkeydown="if(event.key==='Enter')openDailyPicker()"></div>
       <div class="now" id="now"></div>
+    </section>
+
+    <section class="tree-row">
+      <div class="panel tree-panel"><button class="tree-wrap big" onclick="buddyClick()" aria-label="Your tree. Tap to log the next habit."><div id="big-tree"></div></button><div class="tree-info" id="tree-info"></div></div>
+      <div class="panel today-panel" id="today-panel"></div>
     </section>
 
     <section id="tiles"></section>
@@ -757,6 +916,7 @@
         <div class="stats" id="stats"></div>
       </div>
       <div class="panel insight-card" id="insight-card"></div>
+      <div class="panel" id="records-panel"></div>
     </section>
 
     <section class="panel table-panel">
@@ -789,59 +949,12 @@
     </section>
   </div>
 
-  <!-- Pip: walks along the day's progress, grows leaves, then blooms -->
-  <div id="buddy" class="buddy sleepy" data-stage="0" hidden>
-    <button class="buddy-toggle" onclick="toggleBuddy()" aria-label="Shrink or expand Pip" title="Shrink or expand">−</button>
+  <!-- Your tree, small and always there: tap it to log the next habit -->
+  <div id="buddy" class="buddy" hidden>
+    <button class="buddy-toggle" onclick="toggleBuddy()" aria-label="Shrink or expand your tree" title="Shrink or expand">−</button>
     <div id="buddy-say" class="buddy-say" aria-live="polite"></div>
-    <div class="buddy-track" id="buddy-track">
-      <div class="buddy-rail"><div id="buddy-fill"></div></div>
-      <div id="buddy-mover">
-        <button id="buddy-btn" onclick="buddyClick()" title="Tap to log the next habit" aria-label="Pip. Tap to log the next habit">
-          <svg id="buddy-svg" viewBox="0 0 100 120" aria-hidden="true">
-            <defs>
-              <radialGradient id="pip-body" cx="38%" cy="34%" r="72%"><stop offset="0" stop-color="#ffd684"/><stop offset="1" stop-color="#e3951f"/></radialGradient>
-            </defs>
-            <ellipse cx="50" cy="115" rx="24" ry="4" fill="rgba(0,0,0,.35)"/>
-            <g id="b-top">
-              <path d="M50 45 C50 37 51.5 30 50 21" stroke="#4fc3b0" stroke-width="3.2" fill="none" stroke-linecap="round"/>
-              <path class="leaf l1" d="M50 35 C42 26 31 27 30 33 C36 40 45 39 50 35Z" fill="#4fc3b0"/>
-              <path class="leaf l2" d="M50 29 C58 20 69 21 70 27 C64 34 55 33 50 29Z" fill="#35a594"/>
-              <ellipse class="bud" cx="50" cy="17" rx="4.5" ry="6" fill="#ef6f7f"/>
-              <g class="flower">
-                <ellipse cx="50" cy="10" rx="4" ry="6.5" fill="#ef6f7f"/>
-                <ellipse cx="50" cy="10" rx="4" ry="6.5" fill="#ef6f7f" transform="rotate(60 50 17)"/>
-                <ellipse cx="50" cy="10" rx="4" ry="6.5" fill="#ef6f7f" transform="rotate(120 50 17)"/>
-                <ellipse cx="50" cy="10" rx="4" ry="6.5" fill="#ef6f7f" transform="rotate(180 50 17)"/>
-                <ellipse cx="50" cy="10" rx="4" ry="6.5" fill="#ef6f7f" transform="rotate(240 50 17)"/>
-                <ellipse cx="50" cy="10" rx="4" ry="6.5" fill="#ef6f7f" transform="rotate(300 50 17)"/>
-                <circle cx="50" cy="17" r="4.2" fill="#f4b740"/>
-              </g>
-            </g>
-            <g class="b-body">
-              <ellipse cx="37" cy="112" rx="7.5" ry="3.8" fill="#c27a12"/>
-              <ellipse cx="63" cy="112" rx="7.5" ry="3.8" fill="#c27a12"/>
-              <path d="M50 42 C74 42 83 62 81 82 C79 102 66 111 50 111 C34 111 21 102 19 82 C17 62 26 42 50 42Z" fill="url(#pip-body)"/>
-              <path d="M28 60 C31 52 37 48 43 47" stroke="#fff3cf" stroke-width="3" fill="none" stroke-linecap="round" opacity=".6"/>
-              <ellipse cx="31" cy="85" rx="5.5" ry="3.2" fill="#ef6f7f" opacity=".45"/>
-              <ellipse cx="69" cy="85" rx="5.5" ry="3.2" fill="#ef6f7f" opacity=".45"/>
-              <g class="eyes">
-                <circle cx="40" cy="72" r="8.5" fill="#fff"/>
-                <circle cx="60" cy="72" r="8.5" fill="#fff"/>
-                <g id="b-pupils">
-                  <circle cx="40" cy="72" r="4" fill="#1a1d3a"/>
-                  <circle cx="60" cy="72" r="4" fill="#1a1d3a"/>
-                  <circle cx="41.4" cy="70.4" r="1.3" fill="#fff"/>
-                  <circle cx="61.4" cy="70.4" r="1.3" fill="#fff"/>
-                </g>
-                <path class="lids" d="M31.3 73 A8.7 8.7 0 0 1 48.7 73Z M51.3 73 A8.7 8.7 0 0 1 68.7 73Z" fill="#eea734"/>
-              </g>
-              <path id="b-mouth" d="M44 85 Q50 89 56 85" stroke="#5a2e0c" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-            </g>
-            <text class="zz" x="72" y="50">z</text>
-          </svg>
-        </button>
-      </div>
-    </div>
+    <button id="buddy-btn" class="tree-wrap mini" onclick="buddyClick()" title="Tap to log the next habit"><div id="mini-tree"></div></button>
+    <div class="buddy-rail"><div id="buddy-fill"></div></div>
     <div class="buddy-foot"><span id="buddy-count"></span><span id="buddy-stage"></span></div>
   </div>
 
@@ -906,11 +1019,39 @@
   </aside>
 
   <div id="nudge" class="nudge" role="dialog" aria-live="polite" hidden></div>
+  <!-- Report -->
+  <div id="report" class="overlay" hidden>
+    <div class="ov-card wide">
+      <div class="ov-head"><h2 id="report-title">Your day in charts</h2><button class="round" onclick="closeReport()" aria-label="Close">×</button></div>
+      <div id="report-body" class="ov-body"></div>
+    </div>
+  </div>
+  <!-- Medal + memory -->
+  <div id="medal" class="overlay" hidden>
+    <div class="ov-card medal-card">
+      <div class="medal-big" id="medal-icon">🥇</div>
+      <h2 id="medal-title">New personal best!</h2>
+      <p id="medal-sub" class="muted"></p>
+      <div id="medal-actions" class="medal-actions"></div>
+    </div>
+  </div>
+  <!-- Memories slideshow -->
+  <div id="slides" class="overlay dark" hidden>
+    <button class="round ov-x" onclick="closeSlides()" aria-label="Close">×</button>
+    <button class="round ov-prev" onclick="slideStep(-1)" aria-label="Previous">‹</button>
+    <button class="round ov-next" onclick="slideStep(1)" aria-label="Next">›</button>
+    <div id="slide-stage" class="slide-stage"></div>
+  </div>
+  <!-- I'm stuck -->
+  <div id="reset" class="overlay calm" hidden>
+    <button class="round ov-x" onclick="closeReset()" aria-label="Close">×</button>
+    <div id="reset-stage" class="reset-stage"></div>
+  </div>
   <div id="toast" class="toast" role="status"></div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
-    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, setDoc, updateDoc, deleteField } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
 
     // ==========================================
     // Firebase config (unchanged)
@@ -946,7 +1087,7 @@
       bgUrl: '', logs: {}, groups: defaultGroups, columnRules: {}, allDates: defaultDates,
       isCompact: false, isEditLayout: false, viewMode: '5',
       checkins: {}, lastInsight: null, running: null,
-      goals: [], profile: { name: '', about: '' }, chat: [], habitMeta: {}, layoutBackup: null
+      goals: [], profile: { name: '', about: '' }, chat: [], habitMeta: {}, layoutBackup: null, restDays: {}, medals: {}, memories: [], reviews: [], nightTasks: [], nightLog: {}
     };
 
     let state;
@@ -968,7 +1109,7 @@
     const HUES = ['#a09dff', '#4fc3b0', '#ef6f7f', '#f4b740', '#86b7ff', '#d69cf2'];
     const groupHue = (g, i) => HUES[i % HUES.length];
     const MOODS = [['😣', 'Rough'], ['😕', 'Low'], ['😐', 'Okay'], ['🙂', 'Good'], ['😄', 'Great']];
-    const REACTIONS = ['😄', '😢', '😡', '🔥'];
+    const REACTIONS = ['😄', '🔥', '😌', '😴', '😢', '😡'];
     const RULE_TEXT = { more: 'More is better', less: 'Less is better', exact: 'Hit it exactly' };
 
     // ============ auth ============
@@ -1081,7 +1222,7 @@
       closeAll();
       forgetDevice();   // locking also forgets this device, so the password is needed next time
       $('main-app').classList.add('is-hidden');
-      $('buddy').hidden = true; nudgeClose(); clearInterval(nudgeTimer);
+      $('buddy').hidden = true; nudgeClose(); clearInterval(nudgeTimer); ['report', 'medal', 'slides', 'reset'].forEach(id => { $(id).hidden = true; $(id).classList.remove('open'); }); calmPad(false);
       nowPicking = false; document.title = baseTitle;
       setupGate();
     };
@@ -1123,6 +1264,7 @@
           if (!state.habitMeta) state.habitMeta = {};
           if (state.dailyChosen === undefined) state.dailyChosen = Object.values(state.habitMeta).some(m => typeof m.daily === 'boolean');
           if (state.layoutBackup === undefined) state.layoutBackup = null;
+          for (const [k, v] of [['restDays', {}], ['medals', {}], ['memories', []], ['reviews', []], ['nightTasks', []], ['nightLog', {}]]) if (!state[k]) state[k] = v;
           if (!state.viewMode) state.viewMode = '5';
         } else {
           state = JSON.parse(JSON.stringify(defaultState));
@@ -1138,12 +1280,12 @@
       if (rememberThis) writeDevice(activeDocId, state.profile?.name || (activeDocId === 'soham_dashboard' ? 'Soham' : ''));
       selectedDate = state.allDates.includes(todayStr) ? todayStr : state.allDates[state.allDates.length - 1];
       renderHeader(); renderBg(); updateViewButtons(); updateEditModeButton(); updateCompact();
-      renderDay(true); renderTiles(); renderHeatmap(); renderStreak(); renderInsightCard(); renderGoals();
+      renderDay(true); renderTiles(); renderHeatmap(); renderStreak(); renderInsightCard(); renderGoals(); renderToday(); renderRecords();
       renderTable(true);
 
       await gateDone;
       $('loader').style.opacity = '0';
-      setTimeout(() => { $('loader').style.display = 'none'; $('main-app').classList.remove('is-hidden'); $('buddy').hidden = false; renderBuddy(); buddyGreet(); playIntro(); nudgeBoot(); applyUrlAct(); }, 350);
+      setTimeout(() => { $('loader').style.display = 'none'; $('main-app').classList.remove('is-hidden'); $('buddy').hidden = false; renderBuddy(); buddyGreet(); playIntro(); nudgeBoot(); syncPush().finally(applyUrlAct); }, 350);
     }
 
     // ============ header / bg / modes ============
@@ -1437,6 +1579,7 @@
       if (!state.checkins) state.checkins = {};
       const c = state.checkins[date] || (state.checkins[date] = {});
       touchLog();
+      if (key === 'mood' && val && val <= 2 && c.mood !== val && date === todayStr && !isRest(todayStr)) { try { if (localStorage.getItem('tracker_rough') !== activeDocId + todayStr) { localStorage.setItem('tracker_rough', activeDocId + todayStr); setTimeout(() => fireNudge('rough'), 700); } } catch { } }
       if (key !== 'win' && c[key] === val) c[key] = 0; else c[key] = val;
       saveStateToCloud();
       if (key !== 'win') {
@@ -1449,7 +1592,7 @@
     };
     window.shiftDay = function (dir) {
       const i = state.allDates.indexOf(selectedDate) + dir;
-      if (i >= 0 && i < state.allDates.length) { selectedDate = state.allDates[i]; renderDay(true); renderTiles(); renderHeatmap(); }
+      if (i >= 0 && i < state.allDates.length) { selectedDate = state.allDates[i]; renderDay(true); renderTiles(); renderHeatmap(); renderToday(); }
     };
     window.goToday = function () { if (state.allDates.includes(todayStr)) { selectedDate = todayStr; renderDay(true); renderTiles(); renderHeatmap(); } };
     window.selectDay = function (di) { selectedDate = V(di); renderDay(true); renderTiles(); renderHeatmap(); window.scrollTo({ top: 0, behavior: 'smooth' }); };
@@ -1514,85 +1657,237 @@
         <div class="stat"><b>${avg}%</b><span>logged, last 7 days</span></div>
         <div class="stat"><b>${hrs.toFixed(1)}</b><span>hours tracked, last 7 days</span></div>`;
     }
-    // ============ Pip, the progress buddy ============
+    // ============ Your tree: grows over 21 good days, wilts when a day goes unlogged ============
     const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let buddyPrev = null, sayT = null, lookBackT = null, lastMouse = null;
-    const MOUTHS = {
-      sleepy: 'M46.5 86 Q50 88.5 53.5 86',
-      calm: 'M44 85 Q50 89 56 85',
-      smile: 'M41.5 83 Q50 93 58.5 83',
-      grin: 'M40 82 Q50 97 60 82 Q50 87 40 82Z',
-      wilt: 'M43 88 Q50 82.5 57 88'
-    };
-    const STAGE_NAMES = ['Seed', 'Sprout', 'Two leaves', 'Budding', 'In bloom'];
-    function buddyNumbers() {
-      const p = dayProgress(selectedDate);
-      const over = allColumns().filter(c => progressOf(selectedDate, c).tone === 'over').length;
-      return { total: p.total, done: p.done, over, pct: p.pct };
-    }
-    function buddyLine({ total, done, over, pct }) {
-      const left = total - done;
-      if (!total) return 'Add a habit and I will start growing.';
-      if (done === total) return over ? 'Full bloom, even with a bit too much screen time. 🌼' : 'Full bloom! Every daily habit done. 🌼';
-      if (over) return `Too much screen time. I'm wilting a little. ${left} still to log.`;
-      if (!done) return 'Still asleep. Tap me to log your first habit.';
-      if (pct < .25) return `${done} down. I'm waking up.`;
-      if (pct < .5) return `A leaf! ${left} to go.`;
-      if (pct < .75) return `Two leaves now. ${left} more and I bloom.`;
-      return `I can see a bud! Just ${left} left.`;
-    }
-    function renderBuddy() {
-      const dock = $('buddy'); if (!dock || !state) return;
-      const n = buddyNumbers();
-      const stage = n.pct >= 1 ? 4 : n.pct >= .75 ? 3 : n.pct >= .5 ? 2 : n.pct >= .25 ? 1 : 0;
-      dock.dataset.stage = stage;
-      dock.classList.toggle('sleepy', n.done === 0);
-      dock.classList.toggle('wilt', n.over > 0 && n.pct < 1);
-      dock.classList.toggle('bloom', n.pct >= 1 && n.total > 0);
-      const mood = n.done === 0 ? 'sleepy' : n.pct >= 1 ? 'grin' : n.over ? 'wilt' : n.pct >= .4 ? 'smile' : 'calm';
-      const mouth = $('b-mouth');
-      mouth.setAttribute('d', MOUTHS[mood]);
-      mouth.setAttribute('fill', mood === 'grin' ? '#7a2c1c' : 'none');
-
-      const w = $('buddy-track').clientWidth;
-      $('buddy-mover').style.transform = `translateX(${(n.pct * Math.max(0, w - 64)).toFixed(1)}px)`;
-      $('buddy-svg').style.transform = `scale(${(0.8 + 0.4 * n.pct).toFixed(3)})`;
-      $('buddy-fill').style.width = (n.pct * 100) + '%';
-      $('buddy-count').innerHTML = `<b>${n.done}</b> of ${n.total} logged${selectedDate === todayStr ? ' today' : `, ${esc(niceDate(selectedDate))}`}`;
-      $('buddy-stage').textContent = STAGE_NAMES[stage];
-      $('buddy-btn').setAttribute('aria-label', `Pip: ${n.done} of ${n.total} habits logged, ${STAGE_NAMES[stage].toLowerCase()}. Tap to log the next habit.`);
-
-      const p = buddyPrev;
-      if (p && p.date === selectedDate && p.done !== n.done) {
-        buddyWalk();
-        if (n.done > p.done) { buddyHop(); sfx(n.pct >= 1 ? 'bloom' : 'done'); }
-        buddySay(buddyLine(n));
-      } else if (p && p.date === selectedDate && n.over > p.over) {
-        buddySay(buddyLine(n));
-      } else if (p && p.date !== selectedDate) {
-        buddyWalk();
+    let buddyPrev = null, sayT = null, lookBackT = null, lastMouse = null, pupilXY = [0, 0];
+    const treeKeys = {};
+    const TREE_STAGES = [[0, 'Sprout'], [3, 'Sapling'], [7, 'Young tree'], [12, 'Tree'], [17, 'Tall tree'], [21, 'Grand tree']];
+    const stageName = g => TREE_STAGES.filter(([n]) => g >= n).pop()[1];
+    const dayLogged = d => allColumns().some(c => isDone(d, c)) || hasCheckin(d);
+    const isRest = d => !!state.restDays?.[d];
+    function treeState(d = selectedDate) {
+      const di = state.allDates.indexOf(d), upto = di >= 0 ? di : anchorIdx();
+      let growth = 0, dry = 0, extra = 0, started = false, goodRun = 0;
+      for (let k = 0; k < upto; k++) {
+        const day = state.allDates[k];
+        if (!started) { if (dayLogged(day)) started = true; else continue; }
+        if (isRest(day)) continue;
+        const p = dayProgress(day);
+        if (p.pct >= 0.5) { if (growth >= 21) extra++; growth = Math.min(21, growth + 1); dry = 0; goodRun++; }
+        else if (dayLogged(day)) { dry = 0; goodRun = 0; }
+        else { growth = Math.max(0, growth - 1); dry++; goodRun = 0; }
       }
-      buddyPrev = { date: selectedDate, done: n.done, over: n.over };
+      const p = dayProgress(d), logged = dayLogged(d), rest = isRest(d), isToday = d === todayStr;
+      const now = new Date(), h = now.getHours() + now.getMinutes() / 60;
+      let wilt = 0;
+      if (isToday && !logged && !rest && h >= 15) wilt = Math.min(1, 0.35 + (h - 15) / 8);
+      if (!isToday && di >= 0 && di < anchorIdx() && !logged && !rest && started) wilt = 1;
+      let dryness = Math.min(1, dry / 3);
+      if (logged) dryness *= 0.4;          // logging starts the recovery straight away
+      const over = allColumns().some(c => progressOf(d, c).tone === 'over');
+      let health = Math.max(0, Math.min(1, 1 - Math.max(dryness, wilt) - (over ? 0.08 : 0)));
+      if (rest) health = Math.max(health, 0.6);
+      return { growth, extra, dry, wilt, health, pct: p.pct, done: p.done, total: p.total, bonus: p.bonus, logged, rest, over, started, goodRun, isToday };
     }
-    function buddyWalk() {
-      if (reducedMotion()) return;
-      const d = $('buddy'); d.classList.add('walking');
-      clearTimeout(buddyWalk.t); buddyWalk.t = setTimeout(() => d.classList.remove('walking'), 900);
+    function healthLabel(T) {
+      if (T.rest) return 'Resting 🌧';
+      return T.health > .85 ? 'Thriving' : T.health > .65 ? 'Healthy' : T.health > .45 ? 'Thirsty' : T.health > .2 ? 'Wilting' : 'Drying out';
     }
+    function treeMood(T) {
+      if (T.rest) return 'calm';
+      if (T.pct >= 1 && T.total) return 'grin';
+      if (T.wilt > .3 || T.health < .45) return 'sad';
+      if (!T.logged) return 'sleepy';
+      return T.pct >= .4 ? 'smile' : 'calm';
+    }
+    function treeLine(T) {
+      if (T.rest) return "Resting today 🌧 I'm safe. Take it easy.";
+      if (!T.total) return 'Add a habit and I will start growing.';
+      if (T.pct >= 1) return T.over ? 'Full bloom, even with a bit much screen time 🌸' : 'Full bloom! Every daily habit done 🌸';
+      if (T.wilt > .3 && !T.logged) return "My leaves are dropping 🍂 Log anything and I'll perk up.";
+      if (T.dry >= 2 && T.logged) return 'Thank you, I can feel the water 💧';
+      if (T.over) return "Too much screen time, I'm drooping a little.";
+      if (!T.done) return T.logged ? 'A start! Now one daily habit?' : 'Log your first habit and watch me grow 🌱';
+      const left = T.total - T.done;
+      return T.pct < .5 ? `${T.done} done, ${left} to go. Every log is water 💧` : `Blossoming! Just ${left} left 🌸`;
+    }
+
+    // --- drawing
+    function hashRand(str) { let h = 2166136261; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return ((h >>> 0) % 10000) / 10000; }
+    function mixHex(a, b, t) {
+      const pa = a.replace('#', '').match(/\w\w/g).map(x => parseInt(x, 16)), pb = b.replace('#', '').match(/\w\w/g).map(x => parseInt(x, 16));
+      return '#' + pa.map((v, i) => Math.round(v + (pb[i] - v) * Math.max(0, Math.min(1, t))).toString(16).padStart(2, '0')).join('');
+    }
+    function leafColor(h, j) {
+      const base = h > .5 ? mixHex('#e2c04a', '#5fbf6a', (h - .5) * 2) : mixHex('#9c6b3a', '#e2c04a', h * 2);
+      return j % 3 === 0 ? mixHex(base, '#ffffff', .14) : j % 3 === 1 ? mixHex(base, '#1f3d2a', .16) : base;
+    }
+    function grow(x, y, ang, len, w, depth, maxDepth, id, segs, tips) {
+      const x2 = x + Math.cos(ang) * len, y2 = y - Math.sin(ang) * len;
+      segs.push({ x, y, x2, y2, w, len, id, depth });
+      if (depth >= maxDepth) { tips.push({ x: x2, y: y2, depth, id }); return; }
+      const n = depth === 0 ? 2 + (hashRand(id + 'n') < .5 ? 1 : 0) : (hashRand(id + 'n') < .3 ? 3 : 2);
+      for (let i = 0; i < n; i++) {
+        const spread = 0.5 + hashRand(id + i + 's') * 0.35;
+        const a = ang + (i - (n - 1) / 2) * spread + (hashRand(id + i + 'j') - .5) * .3;
+        grow(x2, y2, a, len * (0.66 + hashRand(id + i + 'l') * 0.14), Math.max(1.4, w * 0.62), depth + 1, maxDepth, id + i, segs, tips);
+      }
+      if (depth >= 1) tips.push({ x: x2, y: y2, depth, id: id + 'm' });
+    }
+    function birdMini(x, y, flip, k = 1) {
+      return `<g class="perch" transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${flip ? -.24 * k : .24 * k} ${.24 * k}) translate(-55 -60)">
+        <path d="M24 40 L5 31 L9 42 L3 51 L25 46Z" fill="#e3951f"/><ellipse cx="50" cy="42" rx="28" ry="17" fill="#f4b740"/>
+        <ellipse cx="55" cy="49" rx="17" ry="8" fill="#ffe9b0" opacity=".7"/><circle cx="76" cy="31" r="13" fill="#f4b740"/>
+        <path d="M87.5 28.5 L99 33 L87.5 37.5Z" fill="#e0701f"/><circle cx="80" cy="28.5" r="2.7" fill="#1a1d3a"/>
+        <path d="M52 36 C44 18 30 12 22 14 C30 24 38 34 50 44Z" fill="#ffc55a"/></g>`;
+    }
+    function mouthPath(m, x, y, k) {
+      const f = n => (n).toFixed(1);
+      if (m === 'grin') return `M${f(x - 7 * k)} ${f(y - k)} Q ${f(x)} ${f(y + 10 * k)} ${f(x + 7 * k)} ${f(y - k)} Q ${f(x)} ${f(y + 3 * k)} ${f(x - 7 * k)} ${f(y - k)}Z`;
+      if (m === 'smile') return `M${f(x - 6 * k)} ${f(y)} Q ${f(x)} ${f(y + 7 * k)} ${f(x + 6 * k)} ${f(y)}`;
+      if (m === 'sad') return `M${f(x - 5 * k)} ${f(y + 4 * k)} Q ${f(x)} ${f(y - k)} ${f(x + 5 * k)} ${f(y + 4 * k)}`;
+      if (m === 'sleepy') return `M${f(x - 2.5 * k)} ${f(y + 2 * k)} Q ${f(x)} ${f(y + 3.5 * k)} ${f(x + 2.5 * k)} ${f(y + 2 * k)}`;
+      return `M${f(x - 4 * k)} ${f(y + k)} Q ${f(x)} ${f(y + 4 * k)} ${f(x + 4 * k)} ${f(y + k)}`;
+    }
+    function faceSvg(x, y, k, mood, skin) {
+      const ex = 7 * k, er = 4.4 * k, pr = 2.2 * k;
+      const lidOp = mood === 'sleepy' ? 1 : mood === 'sad' ? .45 : 0;
+      return `<g class="tree-face">
+        <g class="tree-eyes">
+          <circle cx="${x - ex}" cy="${y}" r="${er}" fill="#fff"/><circle cx="${x + ex}" cy="${y}" r="${er}" fill="#fff"/>
+          <g class="tree-pupils" style="transform:translate(${pupilXY[0] * k}px,${pupilXY[1] * k}px)">
+            <circle cx="${x - ex}" cy="${y}" r="${pr}" fill="#1a1d3a"/><circle cx="${x + ex}" cy="${y}" r="${pr}" fill="#1a1d3a"/>
+            <circle cx="${x - ex + .8 * k}" cy="${y - .9 * k}" r="${.7 * k}" fill="#fff"/><circle cx="${x + ex + .8 * k}" cy="${y - .9 * k}" r="${.7 * k}" fill="#fff"/>
+          </g>
+          <g opacity="${lidOp}"><path d="M${x - ex - er} ${y} A${er} ${er} 0 0 1 ${x - ex + er} ${y}Z M${x + ex - er} ${y} A${er} ${er} 0 0 1 ${x + ex + er} ${y}Z" fill="${skin}"/></g>
+        </g>
+        ${mood === 'smile' || mood === 'grin' ? `<ellipse cx="${x - ex - 2 * k}" cy="${y + 6 * k}" rx="${3 * k}" ry="${1.8 * k}" fill="#ef6f7f" opacity=".5"/><ellipse cx="${x + ex + 2 * k}" cy="${y + 6 * k}" rx="${3 * k}" ry="${1.8 * k}" fill="#ef6f7f" opacity=".5"/>` : ''}
+        <path class="tree-mouth" d="${mouthPath(mood, x, y + 7 * k, k)}" stroke="#3a220e" stroke-width="${1.5 * k}" fill="${mood === 'grin' ? '#7a2c1c' : 'none'}" stroke-linecap="round"/>
+      </g>`;
+    }
+    function treeSvg(T, uid) {
+      const gx = 150, gy = 236, g = T.growth, s = 0.38 + 0.62 * (g / 21), h = T.health;
+      const mood = treeMood(T), loss = 1 - h;
+      let back = '', trunk = '', leaves = '', extras = '', face = '', fall = '';
+      back += `<ellipse cx="${gx}" cy="${gy + 8}" rx="128" ry="16" fill="${mixHex('#356146', '#6b5a3a', 1 - h)}"/>`;
+      back += `<ellipse cx="${gx}" cy="${gy + 3}" rx="74" ry="8" fill="${mixHex('#4f8a5f', '#7d6a45', 1 - h)}" opacity=".85"/>`;
+      if (T.pct >= 1 && T.total) back += `<circle cx="${gx}" cy="${gy - 110 * s - 20}" r="${80 + 40 * s}" fill="url(#${uid}-glow)"/>`;
+      let tips = [], canopyTop = gy - 40;
+      if (g < 3) {
+        // Pip the seed, with a sprout growing from its head
+        const sy = gy - 18, stemH = 26 + g * 14;
+        trunk += `<path d="M${gx} ${sy - 18} C ${gx - 4} ${sy - 18 - stemH * .4}, ${gx + 4} ${sy - 18 - stemH * .7}, ${gx} ${sy - 18 - stemH}" stroke="${mixHex('#4fae7e', '#9c8a4a', 1 - h)}" stroke-width="4" fill="none" stroke-linecap="round"/>`;
+        trunk += `<ellipse cx="${gx}" cy="${sy}" rx="20" ry="22" fill="url(#${uid}-seed)"/><path d="M${gx - 11} ${sy - 10} C ${gx - 9} ${sy - 16}, ${gx - 4} ${sy - 19}, ${gx + 1} ${sy - 19}" stroke="#fff3cf" stroke-width="2.4" fill="none" stroke-linecap="round" opacity=".6"/>`;
+        for (let i = 0; i < 2 + g; i++) {
+          if (hashRand('sp' + i) < loss * .9) continue;
+          const yy = sy - 18 - stemH * (0.5 + i * 0.2), dir = i % 2 ? 1 : -1;
+          leaves += `<path d="M${gx} ${yy} c ${dir * 9} -11, ${dir * 22} -9, ${dir * 26} -2 c ${dir * -7} 7, ${dir * -19} 9, ${dir * -26} 2z" fill="${leafColor(h, i)}"/>`;
+        }
+        tips = [{ x: gx, y: sy - 18 - stemH, depth: 9, id: 'top' }];
+        face = faceSvg(gx, sy + 1, 1.05, mood, '#eea734');
+        canopyTop = sy - 18 - stemH;
+      } else {
+        const maxDepth = Math.min(5, 2 + Math.floor((g - 3) / 5));
+        const trunkLen = 44 * s + 14, trunkW = 7 + 14 * s, segs = [];
+        const trunkCol = mixHex('#8a5a34', '#7c6d60', Math.min(1, T.dry / 3));
+        grow(gx, gy, Math.PI / 2, trunkLen, trunkW, 0, maxDepth, 'r', segs, tips);
+        segs.forEach(b => {
+          const bend = (hashRand(b.id + 'b') - .5) * b.len * .25;
+          trunk += `<path d="M${b.x.toFixed(1)} ${b.y.toFixed(1)} Q ${((b.x + b.x2) / 2 + bend).toFixed(1)} ${((b.y + b.y2) / 2).toFixed(1)} ${b.x2.toFixed(1)} ${b.y2.toFixed(1)}" stroke="${trunkCol}" stroke-width="${b.w.toFixed(1)}" fill="none" stroke-linecap="round"/>`;
+        });
+        tips.forEach((t, ti) => {
+          const n = 4 + Math.floor(hashRand('n' + t.id) * 3), rad = (8 + 7 * s) * (t.depth >= maxDepth ? 1 : .8);
+          for (let j = 0; j < n; j++) {
+            if (hashRand(t.id + 'L' + j) < loss * .95) continue;
+            const a = hashRand(t.id + 'a' + j) * Math.PI * 2, dd = hashRand(t.id + 'd' + j) * rad * 1.1;
+            leaves += `<circle cx="${(t.x + Math.cos(a) * dd).toFixed(1)}" cy="${(t.y - Math.abs(Math.sin(a)) * dd * .8).toFixed(1)}" r="${(rad * (0.55 + hashRand(t.id + 'r' + j) * .5)).toFixed(1)}" fill="${leafColor(h, j + ti)}"/>`;
+          }
+          canopyTop = Math.min(canopyTop, t.y - rad);
+        });
+        face = faceSvg(gx, gy - trunkLen * .42, .8 + .7 * s, mood, trunkCol);
+      }
+      // blossoms: one for each daily habit done today, all of them when the day is complete
+      const order = [...tips].sort((a, b) => hashRand(a.id + 'o') - hashRand(b.id + 'o'));
+      const nBloom = T.total ? (T.pct >= 1 ? order.length : Math.round(order.length * T.pct)) : 0;
+      order.slice(0, nBloom).forEach((t, i) => {
+        const ox = (hashRand(t.id + 'bx') - .5) * 10, oy = -4 - hashRand(t.id + 'by') * 6;
+        extras += `<g class="blossom" style="animation-delay:${(i * .05).toFixed(2)}s"><circle cx="${(t.x + ox).toFixed(1)}" cy="${(t.y + oy).toFixed(1)}" r="3.6" fill="#ef8fa0"/><circle cx="${(t.x + ox).toFixed(1)}" cy="${(t.y + oy).toFixed(1)}" r="1.5" fill="#ffe08a"/></g>`;
+      });
+      // fruit after the tree is fully grown
+      if (g >= 21 && T.extra > 0) order.slice(-Math.min(8, T.extra)).forEach(t => { extras += `<circle cx="${(t.x + 3).toFixed(1)}" cy="${(t.y + 6).toFixed(1)}" r="4.2" fill="#f08a3c" stroke="#c45f1c" stroke-width=".8"/>`; });
+      // birds come to stay once the tree is big and healthy
+      if (g >= 17 && h > .45 && tips.length) {
+        const top = [...tips].sort((a, b) => a.y - b.y);
+        const t1 = top[Math.min(2, top.length - 1)];
+        extras += birdMini(t1.x + 6, t1.y - 2, false);
+        if (g >= 21 && top.length > 4) {
+          const t2 = top[Math.floor(top.length / 2)];
+          extras += `<path d="M${t2.x - 9} ${t2.y + 2} Q ${t2.x} ${t2.y + 10} ${t2.x + 9} ${t2.y + 2}" fill="#8a5a34" stroke="#6b4426" stroke-width="1.5"/>`;
+          extras += birdMini(t2.x - 2, t2.y - 1, true, .9);
+        }
+      }
+      // falling leaves when it's thirsty
+      if (loss > .2 || T.wilt > 0) for (let i = 0; i < 6; i++) {
+        const x = gx + (hashRand('f' + i) - .5) * 120 * s, y = canopyTop + 30 + hashRand('fy' + i) * 40;
+        fall += `<g class="fall" style="--dx:${((hashRand('fd' + i) - .5) * 60).toFixed(0)}px;animation-delay:${(i * 1.1).toFixed(1)}s"><ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="3.6" ry="2" fill="${leafColor(Math.min(.45, h), i)}"/></g>`;
+      }
+      // a little rain cloud on rest days
+      const rain = T.rest ? `<g class="rest-cloud"><path d="M${gx + 40} ${canopyTop - 6} c -12 0 -14 -14 -3 -16 c 1 -10 16 -12 20 -4 c 8 -6 20 0 17 9 c 8 1 8 11 -1 11z" fill="#c9cfee" opacity=".9"/>${[0, 1, 2].map(i => `<line class="drop" x1="${gx + 46 + i * 10}" y1="${canopyTop + 8}" x2="${gx + 44 + i * 10}" y2="${canopyTop + 15}" stroke="#86b7ff" stroke-width="2" stroke-linecap="round" style="animation-delay:${i * .3}s"/>`).join('')}</g>` : '';
+      return `<svg class="tree-svg" viewBox="0 0 300 260" aria-hidden="true">
+        <defs><radialGradient id="${uid}-glow"><stop offset="0" stop-color="#ffe9a8" stop-opacity=".55"/><stop offset="1" stop-color="#ffe9a8" stop-opacity="0"/></radialGradient>
+        <radialGradient id="${uid}-seed" cx="38%" cy="34%" r="72%"><stop offset="0" stop-color="#ffd684"/><stop offset="1" stop-color="#e3951f"/></radialGradient></defs>
+        ${back}<g class="canopy-sway">${trunk}${leaves}${extras}${face}</g>${fall}${rain}</svg>`;
+    }
+    function treeHtmlKey(T) { return [T.growth, Math.round(T.health * 10), T.done, T.total, T.pct >= 1, T.rest, treeMood(T), T.extra > 0 ? Math.min(8, T.extra) : 0, T.wilt > 0].join('|'); }
+
+    // --- the big tree panel and the small floating one
+    function renderTree() {
+      if (!state) return;
+      const T = treeState(selectedDate);
+      const key = treeHtmlKey(T);
+      const mini = $('mini-tree');
+      if (mini && treeKeys.mini !== key) { mini.innerHTML = treeSvg(T, 'm'); treeKeys.mini = key; }
+      const big = $('big-tree');
+      if (big && treeKeys.big !== key) { big.innerHTML = treeSvg(T, 'b'); treeKeys.big = key; }
+      const info = $('tree-info');
+      if (info) {
+        const pctH = Math.round(T.health * 100);
+        info.innerHTML = `
+          <span class="now-label">Your tree</span>
+          <h2>${stageName(T.growth)}</h2>
+          <p class="tree-sub">${T.growth >= 21 ? `Fully grown${T.extra ? `, plus ${T.extra} bonus day${T.extra > 1 ? 's' : ''} of fruit` : ''}` : `Day ${T.growth} of 21 on the way to a grand tree`}</p>
+          <div class="grow-dots" aria-label="${T.growth} of 21 growth days">${Array.from({ length: 21 }, (_, i) => `<i class="${i < T.growth ? 'on' : ''}"></i>`).join('')}</div>
+          <div class="meter"><span>Health: <b>${healthLabel(T)}</b></span><div class="gbar hp"><i style="width:${pctH}%;background:${mixHex('#e2c04a', '#5fbf6a', T.health)}"></i></div></div>
+          <p class="tree-say">“${esc(treeLine(T))}”</p>
+          <p class="hint">It grows on days you finish at least half of your daily habits, and loses a little when a day goes unlogged. After 3 pm with nothing logged, its leaves start to yellow. Logging honestly counts, even screen time.</p>
+          <div class="tree-actions">${T.isToday ? (T.rest ? `<button class="btn small" onclick="toggleRest()">End rest day</button>` : `<button class="btn small" onclick="toggleRest()">🌧 Rough day? Rest your tree</button>`) : ''}<button class="btn small" onclick="openReset()">🫧 Feeling stuck?</button></div>`;
+      }
+      // the floating card
+      $('buddy-fill') && ($('buddy-fill').style.width = (T.pct * 100) + '%');
+      $('buddy') && $('buddy').classList.toggle('bloom', T.pct >= 1 && T.total > 0);
+      if ($('buddy-count')) $('buddy-count').innerHTML = `<b>${T.done}</b> of ${T.total} daily${T.bonus ? ` +${T.bonus}` : ''}`;
+      if ($('buddy-stage')) $('buddy-stage').textContent = T.rest ? 'Resting' : `${stageName(T.growth)}, ${healthLabel(T).toLowerCase()}`;
+      $('buddy-btn')?.setAttribute('aria-label', `Your tree: ${stageName(T.growth)}, ${healthLabel(T)}. ${T.done} of ${T.total} daily habits done. Tap to log the next habit.`);
+      const p = buddyPrev;
+      if (p && p.date === selectedDate && p.done !== T.done) { if (T.done > p.done) { buddyHop(); sfx(T.pct >= 1 ? 'bloom' : 'done'); } buddySay(treeLine(T)); }
+      else if (p && p.date === selectedDate && !p.logged && T.logged) { buddyHop(); buddySay(treeLine(T)); }
+      buddyPrev = { date: selectedDate, done: T.done, logged: T.logged };
+    }
+    const renderBuddy = renderTree;
+    function buddyWalk() { }
     function buddyHop() {
       if (reducedMotion()) return;
-      const d = $('buddy'); d.classList.remove('hop'); void d.offsetWidth; d.classList.add('hop');
-      setTimeout(() => d.classList.remove('hop'), 520);
+      document.querySelectorAll('.tree-wrap').forEach(w => { w.classList.remove('rustle'); w.getBoundingClientRect(); w.classList.add('rustle'); setTimeout(() => w.classList.remove('rustle'), 700); });
     }
-    function buddySay(text, ms = 3400) {
-      const b = $('buddy-say'); b.textContent = text; b.classList.add('show');
+    function buddySay(text, ms = 3600) {
+      const b = $('buddy-say'); if (!b) return; b.textContent = text; b.classList.add('show');
       clearTimeout(sayT); sayT = setTimeout(() => b.classList.remove('show'), ms);
     }
     function buddyGreet() {
       const h = new Date().getHours();
       const hi = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
       const name = state.profile?.name ? `, ${state.profile.name}` : '';
-      setTimeout(() => buddySay(`${hi}${name}! ${buddyLine(buddyNumbers())}`, 4200), 700);
+      setTimeout(() => buddySay(`${hi}${name}! ${treeLine(treeState(selectedDate))}`, 4600), 700);
     }
     window.buddyClick = function () {
       buddyHop();
@@ -1605,18 +1900,28 @@
       d.classList.toggle('min', min);
       d.querySelector('.buddy-toggle').textContent = min ? '+' : '−';
       try { localStorage.setItem('buddy_min', min ? '1' : '0'); } catch { }
-      renderBuddy();
     };
     try { if (localStorage.getItem('buddy_min') === '1') { $('buddy').classList.add('min'); $('buddy').querySelector('.buddy-toggle').textContent = '+'; } } catch { }
+    window.toggleRest = function () {
+      if (!state.restDays) state.restDays = {};
+      if (state.restDays[todayStr]) { delete state.restDays[todayStr]; toast('Rest day ended. Welcome back 🌱'); }
+      else {
+        const i = anchorIdx(), recent = state.allDates.slice(Math.max(0, i - 6), i).filter(isRest).length;
+        if (recent >= 2 && !confirm(`You've rested ${recent} times this week already. That's okay, but is today really a rest day?`)) return;
+        state.restDays[todayStr] = true;
+        toast("Rest day on. Your tree is safe and check-ins will stay gentle. Be kind to yourself today 🌧");
+      }
+      saveStateToCloud(); refreshAll();
+    };
 
     // eyes: follow the cursor, glance up/down while you scroll, blink now and then
-    function setPupils(x, y) { $('b-pupils').style.transform = `translate(${x.toFixed(2)}px, ${y.toFixed(2)}px)`; }
+    function setPupils(x, y) { pupilXY = [x, y]; document.querySelectorAll('.tree-pupils').forEach(p => { p.style.transform = `translate(${x.toFixed(2)}px, ${y.toFixed(2)}px)`; }); }
     function lookAt(x, y) {
-      const r = $('buddy-svg').getBoundingClientRect();
-      const dx = x - (r.left + r.width / 2), dy = y - (r.top + r.height * .6);
-      const dist = Math.hypot(dx, dy) || 1, m = Math.min(3.2, dist / 35);
-      // pupils move in SVG units; the svg is ~0.64px per unit, so scale up a touch
-      setPupils(dx / dist * m * 1.5, dy / dist * m * 1.5);
+      const el = document.querySelector('#mini-tree .tree-eyes') || document.querySelector('#big-tree .tree-eyes'); if (!el) return;
+      const r = el.getBoundingClientRect();
+      const dx = x - (r.left + r.width / 2), dy = y - (r.top + r.height / 2);
+      const dist = Math.hypot(dx, dy) || 1, m = Math.min(2.2, dist / 40);
+      setPupils(dx / dist * m, dy / dist * m);
     }
     window.addEventListener('mousemove', e => { lastMouse = [e.clientX, e.clientY]; if (!lookBackT) lookAt(e.clientX, e.clientY); }, { passive: true });
     const scrollPos = new WeakMap();
@@ -1627,18 +1932,17 @@
       const dy = el.scrollTop - prev;
       scrollPos.set(el, el.scrollTop);
       if (!dy) return;
-      setPupils(0, Math.sign(dy) * 4.6);
+      setPupils(0, Math.sign(dy) * 2);
       clearTimeout(lookBackT);
       lookBackT = setTimeout(() => { lookBackT = null; lastMouse ? lookAt(...lastMouse) : setPupils(0, 0); }, 650);
     }, { capture: true, passive: true });
     (function blinkLoop() {
       setTimeout(() => {
-        const d = $('buddy');
-        if (!reducedMotion() && d && !d.classList.contains('sleepy')) { d.classList.add('blink'); setTimeout(() => d.classList.remove('blink'), 130); }
+        if (!reducedMotion()) document.querySelectorAll('.tree-wrap').forEach(w => { w.classList.add('blink'); setTimeout(() => w.classList.remove('blink'), 140); });
         blinkLoop();
       }, 2600 + Math.random() * 3200);
     })();
-    window.addEventListener('resize', () => { if (state) renderBuddy(); });
+    window.addEventListener('resize', () => { if (state) renderTree(); });
 
     // ============ sound: soft, musical taps and chimes (synthesised, no files) ============
     const SND_KEY = 'tracker_sound';
@@ -1774,8 +2078,9 @@
       const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), x = s % 60;
       return `${h ? h + ':' : ''}${String(m).padStart(h ? 2 : 1, '0')}:${String(x).padStart(2, '0')}`;
     }
-    function startSession(col, date) {
-      const now = hhmm();
+    const hmOf = ts => { const d = new Date(ts); return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`; };
+    function startSession(col, date, ts = Date.now()) {
+      const now = hmOf(ts);
       if (!state.logs[date]) state.logs[date] = {};
       if (!state.logs[date][col]) state.logs[date][col] = {};
       const c = state.logs[date][col];
@@ -1783,15 +2088,15 @@
       let idx = slots.findIndex(s => !s.from && !s.to);
       if (idx < 0) { slots.push({ from: now, to: '' }); idx = slots.length - 1; } else slots[idx] = { from: now, to: '' };
       c.timeSlots = slots;
-      state.running = { date, col, idx, from: now, startAt: Date.now() };
+      state.running = { date, col, idx, from: now, startAt: ts };
       touchLog();
       saveStateToCloud(); scheduleRefresh();
     }
-    function endSession() {
+    function endSession(ts = Date.now()) {
       const r = state.running; if (!r) return null;
       const cell = state.logs[r.date]?.[r.col];
       const s = cell?.timeSlots?.[r.idx];
-      const to = hhmm(), mins = Math.round(elapsedMs(r) / 60000);
+      const to = hmOf(ts), mins = Math.round((r.startAt ? ts - r.startAt : elapsedMs(r) - (Date.now() - ts)) / 60000);
       const from = s?.from || r.from || '';
       let saved = false;
       if (s) {
@@ -1827,7 +2132,7 @@
         el.className = 'now idle';
         el.innerHTML = `<span class="now-icon" aria-hidden="true">⏱</span>
           <div class="now-what"><span class="now-label">Track your time</span><small>Pick what you're working on. When you end, the start time, end time and duration are saved to that habit.</small></div>
-          <button class="btn accent" onclick="nowPick(true)">▶ Start a session</button>`;
+          <div class="now-actions"><button class="linkish now-stuck" onclick="openReset()">🫧 Feeling stuck?</button><button class="btn accent" onclick="nowPick(true)">▶ Start a session</button></div>`;
       }
     }
     window.nowPick = function (on) { nowPicking = on; renderNow(); };
@@ -2102,44 +2407,61 @@
       return { col: m, label: `Taking a break (${m})` };
     }
     const pickOne = arr => arr[Math.floor(Math.random() * arr.length)];
-    function buildNudge(kind) {
+    const shuffle = arr => arr.map(v => [Math.random(), v]).sort((a, b) => a[0] - b[0]).map(x => x[1]);
+    const gentle = () => isRest(todayStr) || (state.checkins?.[todayStr]?.mood || 5) <= 2;
+    // three answers: what you did yesterday at this time, what's likely now, and an honest break
+    function pickOptions(nm, sleep) {
+      const sc = sleepCol(), o1 = yesterdayAt(nm), used = new Set(o1 ? [o1] : []), opts = [];
+      if (o1) opts.push({ label: `${o1} (like yesterday)`, col: o1 });
+      const rest = restOption(nm, sleep, [...used]);
+      const cands = [usualAt(nm, [...used]), ...shuffle(coreCols().filter(c => c !== sc && !isDone(todayStr, c))), ...shuffle(allColumns().filter(c => c !== sc))];
+      for (const c of cands) { if (opts.length >= (rest ? 2 : 3)) break; if (!c || used.has(c) || (rest && c === rest.col)) continue; used.add(c); opts.push({ label: c, col: c }); }
+      if (rest) opts.push(rest);
+      return opts;
+    }
+    function riskStart() {
+      const bins = {}, days = lastDays(15).slice(0, -1);
+      days.forEach(d => mediaCols().forEach(c => (cellOf(d, c).timeSlots || []).forEach(s => { if (!s.from) return; const b = Math.floor(toMin(s.from) / 30) * 30; (bins[b] = bins[b] || new Set()).add(d); })));
+      let best = null, n = 0; Object.entries(bins).forEach(([b, set]) => { if (set.size > n) { n = set.size; best = +b; } });
+      return n >= 3 ? best : null;
+    }
+    function staleLimitH(r) { return r.col === sleepCol() ? 14 : 6; }
+    function buildNudge(kind, arg) {
       const now = new Date(), nm = now.getHours() * 60 + now.getMinutes();
       const { sleep } = sleepWake();
       const name = state.profile?.name ? ` ${state.profile.name}` : '';
-      const r = state.running;
-      if (kind === 'long') return {
-        kind, title: `Still on ${r.col}? ⏱`, body: `${fmtH(elapsedMs(r) / 3600000)} so far. Nice focus.`,
-        options: [{ label: 'Keep going', act: 'dismiss' }, { label: 'End session', act: 'end' }, { label: 'Switch to something else', act: 'pick' }]
-      };
+      const r = state.running, sc = sleepCol();
+      if (kind === 'long') return { kind, title: `Still on ${r.col}? ⏱`, body: `${fmtH(elapsedMs(r) / 3600000)} so far. Nice focus.`, options: [{ label: 'Keep going', act: 'dismiss' }, { label: 'End session', act: 'end' }, { label: 'Switch to something else', act: 'pick' }] };
+      if (kind === 'stale') return { kind, title: `Is ${r.col} still going?`, body: `The timer has been running for ${fmtH(elapsedMs(r) / 3600000)}. Did you forget to stop it?`, options: [{ label: 'End it now', act: 'end' }, { label: 'It ended earlier…', act: 'endAt' }, { label: 'Delete this session', act: 'discard' }, { label: 'Yes, still going', act: 'dismiss' }] };
+      if (kind === 'scroll') return { kind, title: `${fmtH(elapsedMs(r) / 3600000)} on ${r.col} 🫧`, body: 'No judgement here. How are you feeling about it?', options: [{ label: "I'm good, 10 more minutes", act: 'scrollSnooze' }, { label: 'Help me stop', act: 'stopScroll' }, { label: "I'm stuck, I need a reset", act: 'reset' }] };
+      if (kind === 'risk') { const st = resetStudyHabit(); return { kind, title: 'Heads up 🫧', body: `Around ${fromMin(riskStart() ?? nm)} is usually when scrolling starts. Want to plan the next hour first?`, options: [st ? { label: `Start ${st}`, col: st } : null, { label: 'Wind down early tonight', act: 'winddown' }, { label: "I've got this", act: 'dismiss' }].filter(Boolean) }; }
+      if (kind === 'rough') return { kind, title: 'Sounds like a rough day 🌧', body: "That's okay. Want to make today a rest day? Your tree stays safe and I'll go easy on the check-ins.", options: [{ label: 'Yes, make it a rest day', act: 'rest' }, { label: 'Just one small step', act: 'resetStep2' }, { label: "I'm okay", act: 'dismiss' }] };
+      if (kind === 'review') { const rv = (state.reviews || []).slice(-1)[0]; const first = (rv?.text || '').replace(/[#*>_-]/g, '').split('\n').map(x => x.trim()).filter(Boolean).slice(1, 2).join(' '); return { kind, title: 'Your 3-day review is ready 🌳', body: first.slice(0, 140) || 'A look at your last three days, with two small experiments to try.', options: [{ label: 'Read it', act: 'review' }, { label: 'Later', act: 'dismiss' }] }; }
+      if (kind === 'report') return { kind, title: arg === todayStr ? 'Your day in charts 📊' : 'Yesterday in charts 📊', body: arg === todayStr ? 'Where your time went today, and how it compares with your usual.' : 'A quick look back before today starts.', options: [{ label: 'Show me', act: 'report', date: arg }, { label: 'Later', act: 'dismiss' }] };
+      if (kind === 'memories') return { kind, title: `Your ${arg.name} in memories 🎞`, body: `${arg.n} moment${arg.n > 1 ? 's' : ''} you saved last month.`, options: [{ label: 'Play the slideshow', act: 'memories', month: arg.mm }, { label: 'Later', act: 'dismiss' }] };
+      if (kind === 'night') return { kind, title: `🌙 ${arg.title}`, body: 'Your late-night reminder.', options: [{ label: 'Done ✓', act: 'nightDone', id: arg.id }, { label: 'In 20 minutes', act: 'nightAgain', id: arg.id }, { label: 'Skip tonight', act: 'nightSkip', id: arg.id }] };
+      if (kind === 'nightAsk') return { kind, title: 'Quick one about last night', body: `Did you do this: ${arg.title}?`, options: [{ label: 'Yes ✓', act: 'nightYes', id: arg.id }, { label: 'No', act: 'nightNo', id: arg.id }] };
       if (kind === 'bed') {
-        const sc = sleepCol(), opts = [];
+        const opts = [];
         if (sc) opts.push({ label: 'Going to sleep now 😴', col: sc });
         opts.push({ label: '30 more minutes', act: 'bedAgain' });
         const cur = r ? r.col : yesterdayAt(nm);
-        if (cur && cur !== sc) opts.push({ label: `Still on ${cur}`, act: r ? 'dismiss' : undefined, col: r ? undefined : cur });
+        if (cur && cur !== sc) opts.push(r ? { label: `Still on ${cur}`, act: 'dismiss' } : { label: `Still on ${cur}`, col: cur });
         return { kind, title: `Winding down${name}? 🌙`, body: `Yesterday you went to bed around ${sleep}. Tap when you head off and I'll time your sleep.`, options: opts };
       }
       if (kind === 'morning') {
-        const sc = sleepCol();
-        if (r && r.col === sc) return { kind, title: `Good morning${name} ☀️`, body: "Pip's awake too. Shall I end your sleep session?", options: [{ label: "I'm awake", act: 'end' }, { label: 'Plan my day with the coach', act: 'plan' }] };
+        if (r && r.col === sc) return { kind, title: `Good morning${name} ☀️`, body: 'Your tree is awake too. Shall I end your sleep session?', options: [{ label: "I'm awake", act: 'end' }, { label: 'Plan my day with the coach', act: 'plan' }] };
         const first = usualAt(nm, []);
-        return { kind, title: `Good morning${name} ☀️`, body: `${coreCols().length} daily habits for Pip to grow today.`, options: [first ? { label: `Start with ${first}`, col: first } : null, { label: 'Plan my day with the coach', act: 'plan' }].filter(Boolean) };
+        return { kind, title: `Good morning${name} ☀️`, body: `${coreCols().length} daily habits to water your tree today.`, options: [first ? { label: `Start with ${first}`, col: first } : null, { label: 'Plan my day with the coach', act: 'plan' }].filter(Boolean) };
       }
-      if (kind === 'offer') return {
-        kind, title: 'Can I check in on you? 🌱', body: "Now and then I'll ask what you're up to, so logging takes one tap. I stay quiet while you sleep.",
-        options: [{ label: 'Yes, check in on me', act: 'enable' }, { label: 'Maybe later', act: 'decline' }]
-      };
-      // idle
-      const o1 = yesterdayAt(nm), o2 = usualAt(nm, o1 ? [o1] : []), o3 = restOption(nm, sleep, [o1, o2].filter(Boolean));
+      if (kind === 'offer') return { kind, title: 'Can I check in on you? 🌱', body: "Now and then I'll ask what you're up to, so logging takes one tap. I stay quiet while you sleep.", options: [{ label: 'Yes, check in on me', act: 'enable' }, { label: 'Maybe later', act: 'decline' }] };
+      const opts = pickOptions(nm, sleep);
+      if (kind === 'leaves') return { kind, title: "Your tree's leaves are dropping 🍂", body: 'Nothing logged yet today. One tap is enough to water it.', options: opts, more: true };
       const hrs = Math.max(1, Math.round((Date.now() - Math.max(state.lastLogAt || 0, appOpenedAt)) / 3600000));
-      const opts = [];
-      if (o1) opts.push({ label: `${o1} (like yesterday)`, col: o1 });
-      if (o2) opts.push({ label: o2, col: o2 });
-      if (o3) opts.push(o3);
       return {
-        kind,
-        title: pickOne([`Hey${name} 👋 what are you up to?`, 'Quick check-in from Pip 🌱', "What's happening right now?", 'Pip is curious 👀 what are you doing?']),
-        body: `${hrs}h since your last log. One tap is enough.`,
+        kind: 'idle',
+        title: gentle() ? 'Hey, no pressure 🌧' : pickOne([`Hey${name} 👋 what are you up to?`, 'Quick check-in 🌱', "What's happening right now?", 'Your tree is curious 👀 what are you doing?']),
+        body: gentle() ? 'If you feel like it, tell me what you are doing. Any answer counts, even resting.' : `${hrs}h since your last log. One tap is enough.`,
         options: opts, more: true
       };
     }
@@ -2148,10 +2470,10 @@
     function showNudgeCard(n) {
       currentNudge = n;
       const el = $('nudge');
-      el.innerHTML = `<div class="nudge-top"><span class="nudge-from">🌱 Pip</span><button class="nudge-x" onclick="nudgeClose()" aria-label="Dismiss">×</button></div>
+      el.innerHTML = `<div class="nudge-top"><span class="nudge-from">🌳 Your tree</span><button class="nudge-x" onclick="nudgeClose()" aria-label="Dismiss">×</button></div>
         <b>${esc(n.title)}</b><p>${esc(n.body)}</p>
         <div class="nudge-opts">${n.options.map((o, i) => `<button class="nudge-opt" onclick="nudgeAnswer(${i})">${esc(o.label)}</button>`).join('')}</div>
-        ${n.kind === 'idle' ? `<div class="nudge-foot"><button class="linkish" onclick="nudgeAnswer('pick')">Something else</button><button class="linkish" onclick="nudgeAnswer('snooze')">Not now</button></div>` : ''}`;
+        ${n.more ? `<div class="nudge-foot"><button class="linkish" onclick="nudgeAnswer('pick')">Something else</button><button class="linkish" onclick="nudgeAnswer('snooze')">Not now</button></div>` : ''}`;
       el.hidden = false; el.getBoundingClientRect(); el.classList.add('show');
       if (!document.hidden) { sfx('chirp'); if (typeof buddyHop === 'function') buddyHop(); }
     }
@@ -2168,8 +2490,8 @@
         }
       } catch (e) { console.warn('Notification failed', e); }
     }
-    function fireNudge(kind) {
-      const n = buildNudge(kind);
+    function fireNudge(kind, arg) {
+      const n = buildNudge(kind, arg);
       if (!n || !n.options.length) return;
       if (kind === 'idle' || kind === 'bed') {
         const rt = nudgeRT(); rt.count++; rt.lastAt = Date.now(); rt.pending = true; saveRT(rt);
@@ -2187,27 +2509,92 @@
       saveRT(rt);
       const o = n?.options?.[i]; if (!o) return;
       if (o.col) { if (!state.running || state.running.col !== o.col) startNow(R(o.col)); else toast(`Already timing ${o.col}.`); return; }
-      if (o.act === 'end') endNow();
-      else if (o.act === 'pick') nowPick(true);
-      else if (o.act === 'plan') runCoach('plan');
-      else if (o.act === 'bedAgain') { const r2 = nudgeRT(); r2.bedAgainAt = Date.now() + 30 * 60000; saveRT(r2); toast("Got it. I'll ask again in 30 minutes."); }
-      else if (o.act === 'enable') enableNudges(true);
-      else if (o.act === 'decline') { nudgeCfg().asked = true; saveStateToCloud(); toast('No problem. You can turn check-ins on from the 🔔 button anytime.'); }
+      const nd = nightDateFor(), yd = state.allDates[anchorIdx() - 1];
+      switch (o.act) {
+        case 'end': endNow(); break;
+        case 'pick': nowPick(true); break;
+        case 'plan': runCoach('plan'); break;
+        case 'bedAgain': { const r2 = nudgeRT(); r2.bedAgainAt = Date.now() + 30 * 60000; saveRT(r2); toast("Got it. I'll ask again in 30 minutes."); break; }
+        case 'enable': enableNudges(true); break;
+        case 'decline': nudgeCfg().asked = true; saveStateToCloud(); toast('No problem. Turn check-ins on from the 🔔 button anytime.'); break;
+        case 'endAt': {
+          const r = state.running; if (!r) break;
+          const v = prompt('Roughly when did it end? (HH:MM, 24-hour)', fromMin(toMin(r.from || '00:00') + 60)); if (!v || !/^\d{1,2}:\d{2}$/.test(v.trim())) break;
+          const base = parseDM(r.date) || new Date(); let ts = base.getTime() + toMin(v.trim()) * 60000;
+          if (ts < (r.startAt || 0)) ts += 864e5;
+          const info = endSession(Math.min(ts, Date.now())); renderNow();
+          toast(info?.saved ? `Saved ${fmtH(info.mins / 60)} of ${info.col} (${info.from}–${info.to}).` : 'That was under a minute, so nothing was saved.');
+          break;
+        }
+        case 'discard': {
+          const r = state.running; if (!r) break;
+          const cell = state.logs[r.date]?.[r.col]; if (cell?.timeSlots) { cell.timeSlots.splice(r.idx, 1); syncTimeFromSlots(r.col, cell); }
+          state.running = null; document.title = baseTitle; saveStateToCloud(); refreshAll(); renderNow(); toast('Deleted that session.'); break;
+        }
+        case 'scrollSnooze': { const r2 = nudgeRT(); r2.scrollUntil = Date.now() + 10 * 60000; saveRT(r2); toast("Okay. I'll check in again in 10 minutes."); break; }
+        case 'stopScroll': if (state.running) endNow(); openReset(2); break;
+        case 'reset': openReset(1); break;
+        case 'resetStep2': openReset(2); break;
+        case 'rest': if (!isRest(todayStr)) toggleRest(); break;
+        case 'winddown': buddySay('Good call. Phone away, lights down 🌙', 5000); break;
+        case 'review': openReview(); break;
+        case 'report': openReport(o.date || todayStr); break;
+        case 'memories': openMemories(o.month); break;
+        case 'nightDone': setNight(o.id, 'done', nd); toast('Nice. Ticked off 🌙'); break;
+        case 'nightSkip': setNight(o.id, 'skip', nd); break;
+        case 'nightAgain': { const r2 = nudgeRT(); r2.nightAgain = { ...(r2.nightAgain || {}), [nd + '|' + o.id]: Date.now() + 20 * 60000 }; saveRT(r2); toast("I'll remind you again in 20 minutes."); break; }
+        case 'nightYes': if (yd) setNight(o.id, 'done', yd); setTimeout(askNightBacklog, 600); break;
+        case 'nightNo': if (yd) setNight(o.id, 'no', yd); setTimeout(askNightBacklog, 600); break;
+      }
     };
+    function askNightBacklog() {
+      const yd = state.allDates[anchorIdx() - 1]; if (!yd || currentNudge) return false;
+      const t = (state.nightTasks || []).find(x => !state.nightLog?.[yd]?.[x.id]);
+      if (!t) return false;
+      fireNudge('nightAsk', t); return true;
+    }
 
     // --- the scheduler: once a minute
     function nudgeTick() {
       if (!state || $('auth-gate').style.display !== 'none') return;
-      const cfg = nudgeCfg(); if (!cfg.on) return;
+      const cfg = nudgeCfg();
       const rt = nudgeRT(), now = Date.now(), d = new Date(), nm = d.getHours() * 60 + d.getMinutes();
       const { sleep, wake } = sleepWake(), s = toMin(sleep), w = toMin(wake), r = state.running, sc = sleepCol();
-      if (r && !r.checked && r.col !== sc && elapsedMs(r) > 150 * 60000) { r.checked = true; saveStateToCloud(); return fireNudge('long'); }
+      // late-night reminders and the morning question work even if idle check-ins are off
+      const nd = nightDateFor();
+      for (const t of state.nightTasks || []) {
+        if (state.nightLog?.[nd]?.[t.id]) continue;
+        const key = nd + '|' + t.id, again = rt.nightAgain?.[key];
+        if ((!rt.night?.[key] && within(nm, toMin(t.time), 25)) || (again && now >= again)) {
+          rt.night = { ...(rt.night || {}), [key]: true }; if (again) delete rt.nightAgain[key]; saveRT(rt);
+          return fireNudge('night', t);
+        }
+      }
+      if (!rt.askedNight && within(nm, w, 7 * 60) && !inQuiet(nm, sleep, wake)) { rt.askedNight = true; saveRT(rt); if (askNightBacklog()) return; }
+      if (!rt.report && nm >= 21 * 60 + 30 && dayLogged(todayStr) && !reportSeen(todayStr)) { rt.report = true; saveRT(rt); return fireNudge('report', todayStr); }
+      if (!cfg.on) return;
+      // sessions: forgotten timers, long focus, and screen time running long
+      if (r) {
+        const el = elapsedMs(r);
+        if (!r.staleAsked && el > staleLimitH(r) * 3600000) { r.staleAsked = true; saveStateToCloud(); return fireNudge('stale'); }
+        if (mediaCols().includes(r.col)) {
+          const lim = (numOf(activeTargetOf(r.date, r.col)) || .75) * 60;
+          if (el / 60000 >= lim && now >= (rt.scrollUntil || 0) && (!rt.scrollAt || now - rt.scrollAt > 30 * 60000)) { rt.scrollAt = now; saveRT(rt); return fireNudge('scroll'); }
+        } else if (r.col !== sc && el > 150 * 60000 && el < staleLimitH(r) * 3600000 && (!r.longAt || now - r.longAt > 150 * 60000)) { r.longAt = now; saveStateToCloud(); return fireNudge('long'); }
+      }
       if (!rt.morning && within(nm, w + 30, 90)) { rt.morning = true; saveRT(rt); return fireNudge('morning'); }
       if (rt.snoozeUntil > now) return;
       if (!rt.bed && within(nm, s - 10, 20)) { rt.bed = true; saveRT(rt); return fireNudge('bed'); }
       if (rt.bedAgainAt && now >= rt.bedAgainAt) { rt.bedAgainAt = 0; saveRT(rt); return fireNudge('bed'); }
-      if (r || inQuiet(nm, sleep, wake) || rt.count >= (cfg.max || 4)) return;
-      const gap = (cfg.every || 3) * 3600000 * (rt.ignored >= 2 ? 2 : 1);   // back off if the last two were ignored
+      const stale = r && elapsedMs(r) > staleLimitH(r) * 3600000;
+      const quiet = inQuiet(nm, sleep, wake);
+      // the hour you usually start scrolling: a gentle heads-up beforehand
+      const risk = riskStart();
+      if (risk !== null && !rt.risk && (!r || stale) && !quiet && !gentle() && within(nm, risk - 12, 15)) { rt.risk = true; saveRT(rt); return fireNudge('risk'); }
+      // 2 pm and still nothing logged
+      if (!rt.leaves && nm >= 14 * 60 && nm < 20 * 60 && !dayLogged(todayStr) && !isRest(todayStr) && !quiet) { rt.leaves = true; rt.count++; rt.lastAt = now; saveRT(rt); return fireNudge('leaves'); }
+      if ((r && !stale) || quiet || rt.count >= (gentle() ? 2 : (cfg.max || 4))) return;
+      const gap = (cfg.every || 3) * 3600000 * (rt.ignored >= 2 || gentle() ? 2 : 1);
       const last = Math.max(state.lastLogAt || 0, rt.lastAt || 0, appOpenedAt);
       if (now - last >= gap) { if (rt.pending) { rt.ignored++; saveRT(rt); } fireNudge('idle'); }
     }
@@ -2216,7 +2603,20 @@
       clearInterval(nudgeTimer); nudgeTimer = setInterval(nudgeTick, 60000);
       renderBell();
       const cfg = nudgeCfg();
-      if (!cfg.on && !cfg.asked) setTimeout(() => { if (!openPanel && !currentNudge && !nudgeCfg().on && !nudgeCfg().asked) fireNudge('offer'); }, 9000);
+      setTimeout(() => {
+        if (openPanel || currentNudge) return;
+        const r = state.running, h = new Date().getHours();
+        if (r && elapsedMs(r) > staleLimitH(r) * 3600000 && !r.staleAsked) { r.staleAsked = true; saveStateToCloud(); fireNudge('stale'); return; }
+        const yd = state.allDates[anchorIdx() - 1];
+        if (h >= 5 && h < 13 && yd && dayLogged(yd) && !reportSeen(yd)) { markReport(yd); fireNudge('report', yd); return; }
+        const now = new Date(), mmNow = String(now.getMonth() + 1).padStart(2, '0'), prev = new Date(now.getFullYear(), now.getMonth() - 1, 1), mmPrev = String(prev.getMonth() + 1).padStart(2, '0');
+        let shown = ''; try { shown = localStorage.getItem('tracker_mem_month') || ''; } catch { }
+        const lastMonth = (state.memories || []).filter(m => (m.date || '').endsWith('/' + mmPrev));
+        if (now.getDate() <= 7 && shown !== activeDocId + mmNow && lastMonth.length) { try { localStorage.setItem('tracker_mem_month', activeDocId + mmNow); } catch { } fireNudge('memories', { name: prev.toLocaleDateString('en-GB', { month: 'long' }), n: lastMonth.length, mm: mmPrev }); return; }
+        if (!cfg.on && !cfg.asked) { fireNudge('offer'); return; }
+        nudgeTick();
+      }, 4500);
+      setTimeout(maybeAutoReview, 8000);
     }
     if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
       navigator.serviceWorker.register('sw.js').then(r => { swReg = r; }).catch(() => { swReg = null; });
@@ -2301,6 +2701,11 @@
         } else if (a.act === 'end') endNow();
         else if (a.act === 'pick') { window.scrollTo({ top: 0, behavior: 'smooth' }); nowPick(true); }
         else if (a.act === 'plan') runCoach('plan');
+        else if (a.act === 'review') openReview();
+        else if (a.act === 'stopscroll') { if (state.running) endNow(); openReset(2); }
+        else if (a.act === 'stale') { if (state.running) fireNudge('stale'); }
+        else if (a.act === 'reset') openReset(1);
+        else if (a.act === 'report') openReport(state.allDates[anchorIdx() - 1] || todayStr);
         else if (a.nudge) { const n = buildNudge(a.nudge); if (n && n.options.length) showNudgeCard(n); }
       }, 900);
     }
@@ -2338,6 +2743,7 @@
           </div>
           <p class="hint" style="margin-top:6px">No nudges from ${esc(sw.sleep)} until ${esc(fromMin(toMin(sw.wake) + 30))}. A bedtime check-in comes about 10 minutes before you usually sleep, and a good-morning one after you wake.${cfg.sleep || cfg.wake ? ' <button class="linkish" onclick="setNudge(\'reset\')">Use my sleep log instead</button>' : ''}</p></div>
         <p class="hint">${perm === 'granted' ? 'Browser notifications are allowed, so check-ins also appear when this tab is in the background.' : perm === 'denied' ? 'Browser notifications are blocked for this site. Check-ins still appear inside the app; allow notifications in the site settings to get them in the background.' : perm === 'unsupported' ? 'This browser has no notifications, so check-ins appear inside the app only.' : 'Turn check-ins on and allow notifications to get them when this tab is in the background.'} They work while the site is open in a tab.</p>
+        ${nightSettingsHtml()}
         ${phoneSettingsHtml()}
         <div class="sheet-foot"><button class="btn small" onclick="closeAll();setTimeout(()=>fireNudge('idle'),350)">Send a test check-in</button><button class="btn accent" onclick="closeAll()">Done</button></div>
       </div>`;
@@ -2350,6 +2756,505 @@
       else cfg[key] = val;
       saveStateToCloud(); renderBell(); renderNudgeSettings();
     };
+
+    // ============ Today so far: awake time vs logged time, on a 24-hour strip ============
+    const nowMin = () => { const d = new Date(); return d.getHours() * 60 + d.getMinutes(); };
+    const fmtM = m => fmtH(m / 60);
+    function colGroupHue(c) { const gi = state.groups.findIndex(g => g.columns.includes(c)); return groupHue(state.groups[gi] || {}, Math.max(0, gi)); }
+    function dayIntervals(d) {
+      const sc = sleepCol(), iv = [], isT = d === todayStr, nm = nowMin();
+      allColumns().forEach(c => (cellOf(d, c).timeSlots || []).forEach(s => {
+        if (!s.from) return;
+        const a = toMin(s.from);
+        let b = s.to ? toMin(s.to) : (isT && state.running && state.running.col === c && state.running.date === d ? nm : null);
+        if (b === null) return;
+        if (b < a) b = 1440;
+        iv.push({ a, b, c, sleep: c === sc, live: !s.to });
+      }));
+      return iv.sort((x, y) => x.a - y.a);
+    }
+    function mergeIv(iv) { const out = []; [...iv].sort((x, y) => x.a - y.a).forEach(({ a, b }) => { const l = out[out.length - 1]; if (l && a <= l.b) l.b = Math.max(l.b, b); else out.push({ a, b }); }); return out; }
+    function todayStats() {
+      const d = todayStr, nm = nowMin(), iv = dayIntervals(d), sw = sleepWake(), sc = sleepCol();
+      const nonSleep = iv.filter(x => !x.sleep);
+      const morningSleep = iv.filter(x => x.sleep && x.a < 12 * 60).map(x => x.b);
+      let wake = morningSleep.length ? Math.max(...morningSleep) : toMin(sw.wake);
+      if (nonSleep.length) wake = Math.min(wake, nonSleep[0].a);
+      wake = Math.min(wake, nm);
+      const merged = mergeIv(nonSleep.map(x => ({ a: Math.max(x.a, wake), b: Math.min(x.b, nm) })).filter(x => x.b > x.a));
+      let logged = merged.reduce((s, x) => s + x.b - x.a, 0);
+      allColumns().forEach(c => { if (c === sc) return; const cd = cellOf(d, c); if (metaOf(c).type === 'time' && !(cd.timeSlots || []).some(s => s.from)) logged += (numOf(cd.actual) || 0) * 60; });
+      const awake = Math.max(0, nm - wake);
+      logged = Math.min(logged, awake);
+      const all = mergeIv(iv.map(x => ({ a: x.a, b: Math.min(x.b, nm) })).filter(x => x.b > x.a));
+      const gaps = []; let cur = wake;
+      all.forEach(x => { if (x.b <= cur) return; if (x.a > cur && Math.min(x.a, nm) - cur >= 30) gaps.push({ a: cur, b: Math.min(x.a, nm) }); cur = Math.max(cur, x.b); });
+      if (nm - cur >= 30) gaps.push({ a: cur, b: nm });
+      return { iv, wake, awake, logged, gaps, nm };
+    }
+    function gapDismissed(g) { try { return (JSON.parse(localStorage.getItem('tracker_gaps') || '{}')[todayStr] || []).includes(g.a); } catch { return false; } }
+    window.dismissGap = function (a) { try { const all = JSON.parse(localStorage.getItem('tracker_gaps') || '{}'); all[todayStr] = [...(all[todayStr] || []), a]; localStorage.setItem('tracker_gaps', JSON.stringify(all)); } catch { } renderToday(); };
+    window.fillGap = function (ci, a, b) {
+      const col = V(ci), d = todayStr;
+      if (!state.logs[d]) state.logs[d] = {};
+      if (!state.logs[d][col]) state.logs[d][col] = {};
+      const c = state.logs[d][col];
+      c.timeSlots = [...(c.timeSlots || []).filter(s => s.from), { from: fromMin(a), to: fromMin(b) }];
+      if (metaOf(col).type === 'time') syncTimeFromSlots(col, c);
+      else if (metaOf(col).type === 'check' && !(c.actual && String(c.actual).trim())) c.actual = '✓';
+      activeDate = d; afterEdit(col, false);
+      toast(`Logged ${fmtM(b - a)} of ${col}, ${fromMin(a)}–${fromMin(b)}.`);
+    };
+    function renderToday() {
+      const el = $('today-panel'); if (!el || !state) return;
+      if (selectedDate !== todayStr) { el.innerHTML = `<span class="now-label">Today so far</span><p class="hint" style="margin-top:8px">You're looking at ${esc(niceDate(selectedDate))}. <button class="linkish" onclick="goToday()">Back to today</button> for the live timeline.</p>`; return; }
+      const S = todayStats(), pct = S.awake ? Math.round(S.logged / S.awake * 100) : 0;
+      const segs = S.iv.map(x => `<i class="seg ${x.sleep ? 'sleep' : ''} ${x.live ? 'live' : ''}" style="left:${(x.a / 14.4).toFixed(2)}%;width:${Math.max(.5, (Math.min(x.b, S.nm) - x.a) / 14.4).toFixed(2)}%;${x.sleep ? '' : `background:${colGroupHue(x.c)}`}" title="${esc(x.c)} ${fromMin(x.a)}–${fromMin(Math.min(x.b, S.nm))}"></i>`).join('');
+      const gapSegs = S.gaps.map(g => `<i class="seg gap" style="left:${(g.a / 14.4).toFixed(2)}%;width:${((g.b - g.a) / 14.4).toFixed(2)}%" title="Not logged ${fromMin(g.a)}–${fromMin(g.b)}"></i>`).join('');
+      const open = S.gaps.filter(g => !gapDismissed(g)).sort((x, y) => (y.b - y.a) - (x.b - x.a))[0];
+      let gapBox = '';
+      if (open) {
+        const mid = Math.round((open.a + open.b) / 2), sc = sleepCol();
+        const sugg = [...new Set([yesterdayAt(mid), usualAt(mid, []), ...coreCols().filter(c => c !== sc && !isDone(todayStr, c))].filter(Boolean))].slice(0, 4);
+        const media = mediaCols().find(c => !sugg.includes(c));
+        if (media) sugg.push(media);
+        gapBox = `<div class="gap-box"><p><b>${fmtM(open.b - open.a)}</b> not logged, ${fromMin(open.a)}–${fromMin(open.b)}. What were you up to?</p>
+          <div class="chipset">${sugg.map(c => `<button class="chip" onclick="fillGap(${R(c)},${open.a},${open.b})">${esc(c)}</button>`).join('')}<button class="chip" onclick="dismissGap(${open.a})">Nothing to log</button></div></div>`;
+      } else if (S.awake > 60 && pct >= 80) gapBox = `<p class="hint" style="margin-top:10px">Nearly every waking minute is accounted for. That's rare 👏</p>`;
+      const legend = state.groups.map((g, gi) => g.columns.length ? `<span><i style="background:${groupHue(g, gi)}"></i>${esc(g.name.replace(/^\S+\s/, ''))}</span>` : '').join('');
+      el.innerHTML = `
+        <div class="tp-row"><span class="now-label">Today so far</span><span class="hint">${fromMin(S.nm)}</span></div>
+        <div class="ts-stats">
+          <div><b>${fmtM(S.awake)}</b><span>awake, since ${fromMin(S.wake)}</span></div>
+          <div><b>${fmtM(S.logged)}</b><span>logged</span></div>
+          <div><b class="${pct < 40 ? 'low' : pct >= 70 ? 'high' : ''}">${pct}%</b><span>of your awake time</span></div>
+        </div>
+        <div class="timeline" aria-label="Today's timeline">${gapSegs}${segs}<i class="now-mark" style="left:${(S.nm / 14.4).toFixed(2)}%"></i></div>
+        <div class="tl-axis"><span>00</span><span>06</span><span>12</span><span>18</span><span>24</span></div>
+        <div class="tl-legend">${legend}<span><i class="gapkey"></i>Not logged</span></div>
+        ${gapBox}`;
+    }
+    setInterval(() => { if (state && $('auth-gate').style.display === 'none') renderToday(); }, 60000);
+
+    // ============ data helpers for charts and records ============
+    const studyCols = () => { const g = state.groups.filter(g => /academ|study|career|learn|course|exam|college|work/i.test(g.name)); return (g.length ? g : state.groups.slice(0, 1)).flatMap(x => x.columns); };
+    const mediaCols = () => allColumns().filter(c => ruleOf(c) === 'less');
+    const hoursIn = (d, cols) => cols.reduce((s, c) => s + hoursOf(cellOf(d, c)), 0);
+    const studyHours = d => hoursIn(d, studyCols());
+    function sleepBefore(d) {
+      const sc = sleepCol(); if (!sc) return 0;
+      const i = state.allDates.indexOf(d), prev = state.allDates[i - 1];
+      const slotH = s => { let a = toMin(s.from), b = toMin(s.to); if (b < a) b += 1440; return (b - a) / 60; };
+      let h = 0;
+      if (prev) (cellOf(prev, sc).timeSlots || []).forEach(s => { if (s.from && s.to && toMin(s.from) >= 18 * 60) h += slotH(s); });
+      (cellOf(d, sc).timeSlots || []).forEach(s => { if (s.from && s.to && toMin(s.from) < 12 * 60) h += slotH(s); });
+      return h;
+    }
+    function lastDays(n, end = todayStr) { const i = state.allDates.indexOf(end), e = i >= 0 ? i : anchorIdx(); return state.allDates.slice(Math.max(0, e - n + 1), e + 1); }
+    function pearson(pts) {
+      const n = pts.length; if (n < 5) return null;
+      const mx = pts.reduce((a, p) => a + p[0], 0) / n, my = pts.reduce((a, p) => a + p[1], 0) / n;
+      let sxy = 0, sx = 0, sy = 0; pts.forEach(([x, y]) => { sxy += (x - mx) * (y - my); sx += (x - mx) ** 2; sy += (y - my) ** 2; });
+      return sx && sy ? sxy / Math.sqrt(sx * sy) : null;
+    }
+    const shortD = d => { const x = parseDM(d); return x ? x.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : d; };
+    const metricOf = (d, c) => { const m = metaOf(c); if (m.type === 'time') return hoursOf(cellOf(d, c)); if (m.type === 'count') return numOf(cellOf(d, c).actual) || 0; return isDone(d, c) ? 1 : 0; };
+
+    // ============ tiny SVG charts (no libraries) ============
+    function svgStacked(labels, series, { unit = 'h', every = 1, H = 210 } = {}) {
+      const W = 640, L = 38, B = 24, T = 10, n = labels.length;
+      const tot = labels.map((_, i) => series.reduce((s, x) => s + (x.vals[i] || 0), 0));
+      const mx = Math.max(...tot, 0), top = mx <= 1 ? 1 : mx <= 2 ? 2 : mx <= 4 ? 4 : Math.ceil(mx / 4) * 4;
+      const step = (W - L - 6) / n, bw = Math.max(3, step * .66);
+      let g = '';
+      for (let k = 0; k <= 4; k++) { const y = T + (H - T - B) * (1 - k / 4); g += `<line x1="${L}" x2="${W}" y1="${y}" y2="${y}" class="grid"/><text x="${L - 6}" y="${y + 4}" class="ax" text-anchor="end">${+(top * k / 4).toFixed(1)}${unit}</text>`; }
+      labels.forEach((lab, i) => {
+        let y = H - B; const x = L + 3 + i * step;
+        series.forEach(sr => { const v = sr.vals[i] || 0; if (!v) return; const hh = (H - T - B) * v / top; y -= hh; g += `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(.5, hh).toFixed(1)}" rx="2" fill="${sr.color}"><title>${esc(sr.name)}, ${esc(lab)}: ${unit === 'h' ? fmtH(v) : v.toFixed(1)}</title></rect>`; });
+        if (i % every === 0 || i === n - 1) g += `<text x="${(x + bw / 2).toFixed(1)}" y="${H - 6}" class="ax" text-anchor="middle">${esc(lab)}</text>`;
+      });
+      return `<svg viewBox="0 0 ${W} ${H}" class="chart" role="img">${g}</svg>`;
+    }
+    function svgLine(labels, vals, { unit = '%', max = 100, color = '#4fc3b0', every = 2 } = {}) {
+      const W = 640, H = 170, L = 38, B = 24, T = 12, n = labels.length, top = max || Math.max(1, ...vals);
+      const x = i => L + 8 + i * (W - L - 16) / Math.max(1, n - 1), y = v => T + (H - T - B) * (1 - v / top);
+      let g = '';
+      for (let k = 0; k <= 4; k++) { const yy = T + (H - T - B) * (1 - k / 4); g += `<line x1="${L}" x2="${W}" y1="${yy}" y2="${yy}" class="grid"/><text x="${L - 6}" y="${yy + 4}" class="ax" text-anchor="end">${Math.round(top * k / 4)}${unit}</text>`; }
+      const pts = vals.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+      g += `<polygon points="${x(0)},${H - B} ${pts} ${x(n - 1)},${H - B}" fill="${color}" opacity=".12"/><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linejoin="round"/>`;
+      vals.forEach((v, i) => { g += `<circle cx="${x(i)}" cy="${y(v)}" r="3.2" fill="${color}"><title>${esc(labels[i])}: ${v}${unit}</title></circle>`; if (i % every === 0 || i === n - 1) g += `<text x="${x(i)}" y="${H - 6}" class="ax" text-anchor="middle">${esc(labels[i])}</text>`; });
+      return `<svg viewBox="0 0 ${W} ${H}" class="chart" role="img">${g}</svg>`;
+    }
+    function svgScatter(pts, { xl, yl, color = '#86b7ff' }) {
+      const W = 300, H = 210, L = 34, B = 30, T = 10;
+      const mxX = Math.max(1, ...pts.map(p => p[0])) * 1.1, mxY = Math.max(1, ...pts.map(p => p[1])) * 1.1;
+      const x = v => L + (W - L - 8) * v / mxX, y = v => T + (H - T - B) * (1 - v / mxY);
+      let g = `<line x1="${L}" x2="${W}" y1="${H - B}" y2="${H - B}" class="grid"/><line x1="${L}" x2="${L}" y1="${T}" y2="${H - B}" class="grid"/>`;
+      g += `<text x="${(W + L) / 2}" y="${H - 6}" class="ax" text-anchor="middle">${esc(xl)}</text><text x="12" y="${(H - B) / 2}" class="ax" text-anchor="middle" transform="rotate(-90 12 ${(H - B) / 2})">${esc(yl)}</text>`;
+      if (pts.length >= 3) {
+        const n = pts.length, mx = pts.reduce((a, p) => a + p[0], 0) / n, my = pts.reduce((a, p) => a + p[1], 0) / n;
+        let sxy = 0, sx = 0; pts.forEach(([a, b]) => { sxy += (a - mx) * (b - my); sx += (a - mx) ** 2; });
+        if (sx) { const m = sxy / sx, b0 = my - m * mx, x0 = 0, x1 = mxX / 1.1; g += `<line x1="${x(x0)}" y1="${y(Math.max(0, b0))}" x2="${x(x1)}" y2="${y(Math.max(0, b0 + m * x1))}" stroke="${color}" stroke-dasharray="4 4" opacity=".7"/>`; }
+      }
+      pts.forEach(p => { g += `<circle cx="${x(p[0]).toFixed(1)}" cy="${y(p[1]).toFixed(1)}" r="4.5" fill="${color}" opacity=".8"><title>${fmtH(p[0])}, ${fmtH(p[1])}</title></circle>`; });
+      return `<svg viewBox="0 0 ${W} ${H}" class="chart" role="img">${g}</svg>`;
+    }
+    function spark(vals, color) {
+      const W = 96, H = 26, mx = Math.max(1e-9, ...vals);
+      const pts = vals.map((v, i) => `${(i * (W - 4) / Math.max(1, vals.length - 1) + 2).toFixed(1)},${(H - 3 - (H - 6) * v / mx).toFixed(1)}`).join(' ');
+      return `<svg viewBox="0 0 ${W} ${H}" class="spark"><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.8" stroke-linejoin="round"/></svg>`;
+    }
+
+    // ============ the report: "your day in charts" ============
+    const REPORT_KEY = 'tracker_report_seen';
+    const reportSeen = d => { try { return !!JSON.parse(localStorage.getItem(REPORT_KEY) || '{}')[activeDocId + d]; } catch { return false; } };
+    function markReport(d) { try { const m = JSON.parse(localStorage.getItem(REPORT_KEY) || '{}'); m[activeDocId + d] = 1; localStorage.setItem(REPORT_KEY, JSON.stringify(m)); } catch { } }
+    function reportHtml(d) {
+      const days = lastDays(14, d), labels = days.map(shortD), sc = sleepCol();
+      const groups = state.groups.map((g, gi) => ({ g, gi })).filter(x => x.g.columns.some(c => c !== sc));
+      const series = groups.map(({ g, gi }) => ({ name: g.name, color: groupHue(g, gi), vals: days.map(x => hoursIn(x, g.columns.filter(c => c !== sc))) }));
+      const prev7 = lastDays(8, d).slice(0, -1);
+      const cmp = groups.map(({ g }, k) => { const cols = g.columns.filter(c => c !== sc); return { name: g.name, color: series[k].color, t: hoursIn(d, cols), avg: prev7.length ? prev7.reduce((s, x) => s + hoursIn(x, cols), 0) / prev7.length : 0 }; });
+      const cmpMax = Math.max(1, ...cmp.flatMap(c => [c.t, c.avg]));
+      const thisW = lastDays(7, d), lastW = lastDays(14, d).slice(0, Math.max(0, lastDays(14, d).length - 7));
+      const rows = allColumns().filter(c => c !== sc).map(c => {
+        const a = thisW.reduce((s, x) => s + metricOf(x, c), 0), b = lastW.reduce((s, x) => s + metricOf(x, c), 0), m = metaOf(c);
+        return { c, a, b, ch: b ? (a - b) / b : null, vals: days.map(x => metricOf(x, c)), unit: m.type === 'time' ? 'h' : m.type === 'count' ? (m.unit || '') : 'days', good: ruleOf(c) === 'less' ? -1 : 1 };
+      }).filter(r => r.a || r.b).sort((x, y) => y.a - x.a);
+      const sCols = new Set(studyCols()), mCols = new Set(mediaCols());
+      const bins = { s: Array(24).fill(0), m: Array(24).fill(0), o: Array(24).fill(0) };
+      days.forEach(x => allColumns().forEach(c => { if (c === sc) return; (cellOf(x, c).timeSlots || []).forEach(s => { if (!s.from || !s.to) return; let a = toMin(s.from), b = toMin(s.to); if (b < a) b += 1440; for (let m = a; m < b; m += 5) (sCols.has(c) ? bins.s : mCols.has(c) ? bins.m : bins.o)[Math.floor(m / 60) % 24] += 5 / 60 / Math.max(1, days.length); }); }));
+      const sleepPts = days.map(x => [sleepBefore(x), studyHours(x)]).filter(p => p[0] > 2);
+      const screenPts = days.filter(dayLogged).map(x => [hoursIn(x, mediaCols()), studyHours(x)]);
+      const rSleep = pearson(sleepPts), rScreen = pearson(screenPts);
+      const comp = days.map(x => Math.round(dayProgress(x).pct * 100));
+
+      // findings in plain language
+      const ins = [];
+      const tS = studyHours(d), avgS = prev7.length ? prev7.reduce((s, x) => s + studyHours(x), 0) / prev7.length : 0;
+      if (tS || avgS) ins.push(avgS && Math.abs(tS - avgS) / avgS > .1 ? `Study time: <b>${fmtH(tS)}</b>, ${Math.round(Math.abs(tS / avgS - 1) * 100)}% ${tS > avgS ? 'above' : 'below'} your 7-day average (${fmtH(avgS)}).` : `Study time: <b>${fmtH(tS)}</b>, right around your 7-day average.`);
+      const mT = hoursIn(d, mediaCols()), mAvg = prev7.length ? prev7.reduce((s, x) => s + hoursIn(x, mediaCols()), 0) / prev7.length : 0;
+      if (mT || mAvg) ins.push(`Screen time: <b>${fmtH(mT)}</b> versus a ${fmtH(mAvg)} average${mT > mAvg * 1.2 ? '. Higher than usual.' : mT < mAvg * .8 ? '. Nicely lower than usual.' : '.'}`);
+      const moved = rows.filter(r => r.ch !== null && r.b > 0);
+      const better = [...moved].sort((a, b) => b.ch * b.good - a.ch * a.good)[0], worse = [...moved].sort((a, b) => a.ch * a.good - b.ch * b.good)[0];
+      if (better && better.ch * better.good > .15) ins.push(`Most improved this week: <b>${esc(better.c)}</b> (${better.ch > 0 ? '+' : ''}${Math.round(better.ch * 100)}% vs last week).`);
+      if (worse && worse.ch * worse.good < -.15) ins.push(`Slipping: <b>${esc(worse.c)}</b> (${worse.ch > 0 ? '+' : ''}${Math.round(worse.ch * 100)}% vs last week).`);
+      const peak = bins.s.indexOf(Math.max(...bins.s)), mpeak = bins.m.indexOf(Math.max(...bins.m));
+      if (Math.max(...bins.s) > .05) ins.push(`You study most around <b>${fromMin(peak * 60)}–${fromMin(peak * 60 + 60)}</b>. Protect that hour.`);
+      if (Math.max(...bins.m) > .05) ins.push(`Screen time peaks around <b>${fromMin(mpeak * 60)}</b>.`);
+      if (rSleep !== null && Math.abs(rSleep) >= .3) { const hi = sleepPts.filter(p => p[0] >= 7), lo = sleepPts.filter(p => p[0] < 7); const av = a => a.length ? a.reduce((s, p) => s + p[1], 0) / a.length : 0; ins.push(rSleep > 0 && hi.length && lo.length ? `After 7h+ of sleep you study <b>${fmtH(av(hi))}</b>, versus ${fmtH(av(lo))} after less.` : `Sleep and next-day study are linked (r = ${rSleep.toFixed(2)}).`); }
+      if (rScreen !== null && rScreen <= -.3) ins.push(`More screen time goes with less study for you (r = ${rScreen.toFixed(2)}).`);
+
+      const rec = studyRecords();
+      return `
+        <div class="r-ins">${ins.length ? `<ul>${ins.map(x => `<li>${x}</li>`).join('')}</ul>` : '<p class="hint">Log a few more days and I can start spotting patterns.</p>'}</div>
+        <div class="r-grid">
+          <div class="r-card wide"><h3>Where your time went, last 14 days</h3><p class="hint">Hours per day by area, sleep not included.</p>${svgStacked(labels, series, { every: 2 })}
+            <div class="tl-legend">${series.map(s => `<span><i style="background:${s.color}"></i>${esc(s.name.replace(/^\S+\s/, ''))}</span>`).join('')}</div></div>
+          <div class="r-card"><h3>${d === todayStr ? 'Today' : shortD(d)} vs your usual</h3><p class="hint">Bars are this day; the line is your 7-day average.</p>
+            <div class="cmp">${cmp.map(c => `<div class="cmp-row"><span>${esc(c.name.replace(/^\S+\s/, ''))}</span><div class="cmp-bar"><i style="width:${c.t / cmpMax * 100}%;background:${c.color}"></i><b style="left:${c.avg / cmpMax * 100}%"></b></div><em>${fmtH(c.t)}</em></div>`).join('')}</div></div>
+          <div class="r-card"><h3>When you do things</h3><p class="hint">Average hours per clock hour, last 14 days.</p>
+            ${svgStacked(Array.from({ length: 24 }, (_, h) => String(h).padStart(2, '0')), [{ name: 'Study', color: '#a09dff', vals: bins.s }, { name: 'Other', color: '#4fc3b0', vals: bins.o }, { name: 'Screen', color: '#ef6f7f', vals: bins.m }], { every: 3, H: 180 })}
+            <div class="tl-legend"><span><i style="background:#a09dff"></i>Study</span><span><i style="background:#4fc3b0"></i>Other</span><span><i style="background:#ef6f7f"></i>Screen</span></div></div>
+          <div class="r-card wide"><h3>Habit trends</h3><p class="hint">This week vs the week before. Arrows are green when it's moving the right way for that habit.</p>
+            <div class="trend-table">${rows.slice(0, 14).map(r => { const good = r.ch === null ? 0 : r.ch * r.good; return `<div class="tr"><span class="tr-name">${esc(r.c)}</span>${spark(r.vals, colGroupHue(r.c))}<span class="tr-v">${r.unit === 'h' ? fmtH(r.a) : `${+r.a.toFixed(1)} ${esc(r.unit)}`}</span><span class="tr-ch ${good > .05 ? 'up' : good < -.05 ? 'down' : ''}">${r.ch === null ? 'new' : `${r.ch >= 0 ? '↑' : '↓'} ${Math.abs(Math.round(r.ch * 100))}%`}</span></div>`; }).join('') || '<p class="hint">Nothing logged yet.</p>'}</div></div>
+          <div class="r-card"><h3>Sleep vs next-day study</h3><p class="hint">${rSleep === null ? 'Needs 5+ nights of logged sleep.' : `Correlation r = ${rSleep.toFixed(2)}.`}</p>${svgScatter(sleepPts, { xl: 'hours slept', yl: 'study hours', color: '#86b7ff' })}</div>
+          <div class="r-card"><h3>Screen time vs study</h3><p class="hint">${rScreen === null ? 'Needs 5+ logged days.' : `Correlation r = ${rScreen.toFixed(2)}.`}</p>${svgScatter(screenPts, { xl: 'screen hours', yl: 'study hours', color: '#ef6f7f' })}</div>
+          <div class="r-card wide"><h3>Daily habits completed</h3>${svgLine(labels, comp)}</div>
+          <div class="r-card wide"><h3>🏅 Personal records, study</h3>${recordsHtml(rec)}</div>
+        </div>`;
+    }
+    window.openReport = function (d = todayStr) {
+      closeAll(); nudgeClose();
+      markReport(d);
+      $('report-title').textContent = d === todayStr ? 'Your day in charts' : `${niceDate(d)} in charts`;
+      $('report-body').innerHTML = reportHtml(d);
+      const el = $('report'); el.hidden = false; requestAnimationFrame(() => el.classList.add('open'));
+    };
+    window.closeReport = function () { const el = $('report'); el.classList.remove('open'); setTimeout(() => { el.hidden = true; }, 300); };
+
+    // ============ personal bests, medals and memories ============
+    const MEDALS = ['🥇', '🥈', '🥉'], MEDAL_WORD = ['best', '2nd best', '3rd best'];
+    function studyRecords() {
+      const i = anchorIdx(), past = state.allDates.slice(0, i + 1);
+      const top = past.map(d => ({ d, h: studyHours(d) })).filter(x => x.h > 0).sort((a, b) => b.h - a.h).slice(0, 3);
+      let longest = null;
+      past.forEach(d => studyCols().forEach(c => (cellOf(d, c).timeSlots || []).forEach(s => { if (s.from && s.to) { let a = toMin(s.from), b = toMin(s.to); if (b < a) b += 1440; if (!longest || b - a > longest.m) longest = { m: b - a, d, c }; } })));
+      return { top, longest, streak: dayStreak().best };
+    }
+    function recordsHtml(rec = studyRecords()) {
+      return `<div class="podium">${[0, 1, 2].map(k => { const t = rec.top[k]; return `<div class="pod p${k + 1}"><span class="pm">${MEDALS[k]}</span>${t ? `<b>${fmtH(t.h)}</b><small>${esc(shortD(t.d))}${state.memories?.some(m => m.date === t.d) ? ' 📸' : ''}</small>` : '<b>—</b><small>up for grabs</small>'}</div>`; }).join('')}</div>
+        <div class="rec-list">${rec.longest ? `<div><span>⏱ Longest focus session</span><b>${fmtM(rec.longest.m)}</b><small>${esc(rec.longest.c)}, ${esc(shortD(rec.longest.d))}</small></div>` : ''}
+        <div><span>🔥 Longest streak</span><b>${rec.streak} days</b></div></div>`;
+    }
+    function renderRecords() {
+      const el = $('records-panel'); if (!el || !state) return;
+      const mems = (state.memories || []).length;
+      el.innerHTML = `<h2>Hall of fame</h2><p class="hint" style="margin:-6px 0 10px">Your best study days. Beat one and you earn its medal.</p>${recordsHtml()}
+        <div class="foot"><button class="btn small" onclick="openReport()">📊 All charts</button><button class="btn small" onclick="openMemories()">🎞 Memories${mems ? ` (${mems})` : ''}</button><button class="btn small" onclick="memoryFlow({date: todayStr})">+ Add a memory</button></div>`;
+    }
+    function checkMedal() {
+      if (!state) return;
+      const h = studyHours(todayStr); if (h < 1) return;
+      const others = state.allDates.filter(d => d !== todayStr).map(studyHours).filter(x => x > 0).sort((a, b) => b - a);
+      const rank = others.filter(x => x >= h).length + 1;
+      if (rank > 3) return;
+      if (!state.medals) state.medals = {};
+      const prev = state.medals[todayStr];
+      if (prev && prev <= rank) return;
+      state.medals[todayStr] = rank; saveStateToCloud();
+      const beat = others[rank - 1];
+      $('medal-icon').textContent = MEDALS[rank - 1];
+      $('medal-title').textContent = rank === 1 ? 'New personal best!' : `Your ${MEDAL_WORD[rank - 1]} study day ever!`;
+      $('medal-sub').textContent = `${fmtH(h)} of study today${beat ? `, beating ${fmtH(beat)}` : ''}. That deserves remembering.`;
+      $('medal-actions').innerHTML = `<button class="btn accent" onclick="memoryFlow({date: todayStr, medal: ${rank}, hours: ${h.toFixed(2)}})">📸 Make it a memory</button><button class="btn" onclick="closeMedal()">Not now</button>`;
+      const el = $('medal'); el.hidden = false; requestAnimationFrame(() => el.classList.add('open'));
+      sfx('bloom'); if (!reducedMotion()) confetti();
+    }
+    window.closeMedal = function () { const el = $('medal'); el.classList.remove('open'); setTimeout(() => { el.hidden = true; }, 300); };
+    let memMeta = null, memImg = null;
+    window.memoryFlow = function (meta) {
+      memMeta = meta; memImg = null;
+      const el = $('medal');
+      if (el.hidden) {
+        $('medal-icon').textContent = meta.medal ? MEDALS[meta.medal - 1] : '📸';
+        $('medal-title').textContent = 'Save a memory';
+        $('medal-sub').textContent = `A photo and a line about ${meta.date === todayStr ? 'today' : niceDate(meta.date)}. It shows up in your monthly slideshow.`;
+        el.hidden = false; requestAnimationFrame(() => el.classList.add('open'));
+      }
+      $('medal-actions').innerHTML = `<label class="btn accent file-btn">Choose a photo<input type="file" accept="image/*" onchange="memoryPicked(this)"></label><button class="btn" onclick="closeMedal()">Cancel</button>`;
+    };
+    function compressImage(file, max = 1000, q = .72) {
+      return new Promise((res, rej) => {
+        const r = new FileReader();
+        r.onerror = () => rej(new Error('read failed'));
+        r.onload = () => { const img = new Image(); img.onerror = () => rej(new Error('not an image')); img.onload = () => {
+          const k = Math.min(1, max / Math.max(img.width, img.height)), c = document.createElement('canvas');
+          c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+          c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+          let out = c.toDataURL('image/jpeg', q); let qq = q;
+          while (out.length > 700000 && qq > .35) { qq -= .1; out = c.toDataURL('image/jpeg', qq); }
+          res(out);
+        }; img.src = r.result; };
+        r.readAsDataURL(file);
+      });
+    }
+    window.memoryPicked = async function (input) {
+      const f = input.files?.[0]; if (!f) return;
+      try { memImg = await compressImage(f); } catch { toast("Couldn't read that image. Try another one."); return; }
+      $('medal-actions').innerHTML = `<img class="mem-preview" src="${memImg}" alt="Your photo">
+        <input id="mem-cap" class="field" placeholder="A line to remember it by" maxlength="140">
+        <div style="display:flex;gap:8px;justify-content:center"><button class="btn accent" onclick="memorySave()">Save memory</button><button class="btn" onclick="closeMedal()">Cancel</button></div>`;
+      setTimeout(() => $('mem-cap')?.focus(), 50);
+    };
+    window.memorySave = async function () {
+      if (!memImg || !memMeta) return;
+      const id = uid(), m = { id, date: memMeta.date, caption: ($('mem-cap')?.value || '').trim(), medal: memMeta.medal || 0, hours: +memMeta.hours || 0, at: Date.now() };
+      try { await setDoc(doc(db, 'tracker_data', `${activeDocId}-mem-${id}`), { ...m, img: memImg }); }
+      catch (e) { console.error(e); toast("Couldn't save the photo. Check your connection."); return; }
+      state.memories = [...(state.memories || []), m]; saveStateToCloud();
+      closeMedal(); renderRecords(); toast('Saved to your memories 📸'); sfx('done');
+    };
+    let slides = [], slideI = 0, slideT = null;
+    window.openMemories = async function (month) {
+      const list = (state.memories || []).filter(m => !month || (m.date || '').endsWith('/' + month)).sort((a, b) => a.at - b.at);
+      if (!list.length) { toast('No memories yet. Earn a medal or add one from the Hall of fame.'); return; }
+      closeAll(); nudgeClose();
+      const el = $('slides'); el.hidden = false; requestAnimationFrame(() => el.classList.add('open'));
+      $('slide-stage').innerHTML = '<div class="spin"></div>';
+      slides = (await Promise.all(list.map(async m => { try { const s = await getDoc(doc(db, 'tracker_data', `${activeDocId}-mem-${m.id}`)); return s.exists() ? { ...m, img: s.data().img } : null; } catch { return null; } }))).filter(Boolean);
+      if (!slides.length) { $('slide-stage').innerHTML = '<p class="hint">Those photos could not be loaded.</p>'; return; }
+      slideI = 0; showSlide(); sfx('anticipate');
+    };
+    function showSlide() {
+      clearTimeout(slideT);
+      const m = slides[slideI]; if (!m) return;
+      $('slide-stage').innerHTML = `<div class="slide"><img src="${m.img}" alt=""><div class="slide-cap">${m.medal ? `<span class="pm">${MEDALS[m.medal - 1]}</span>` : ''}<b>${esc(m.caption || niceDate(m.date))}</b><small>${esc(niceDate(m.date))}${m.hours ? `, ${fmtH(m.hours)} of study` : ''}</small></div></div>
+        <div class="slide-dots">${slides.map((_, i) => `<i class="${i === slideI ? 'on' : ''}"></i>`).join('')}</div>`;
+      slideT = setTimeout(() => { slideI = (slideI + 1) % slides.length; showSlide(); }, 5000);
+    }
+    window.slideStep = function (k) { slideI = (slideI + k + slides.length) % slides.length; showSlide(); };
+    window.closeSlides = function () { clearTimeout(slideT); const el = $('slides'); el.classList.remove('open'); setTimeout(() => { el.hidden = true; }, 300); };
+
+    // ============ late-night reminders ============
+    function nightDateFor(ts = Date.now()) { const d = new Date(ts); if (d.getHours() < 5) d.setDate(d.getDate() - 1); return d.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' }); }
+    function setNight(id, val, date) {
+      if (!state.nightLog) state.nightLog = {};
+      if (!state.nightLog[date]) state.nightLog[date] = {};
+      state.nightLog[date][id] = val;
+      const t = (state.nightTasks || []).find(x => x.id === id);
+      if (t?.col && val === 'done' && allColumns().includes(t.col)) {
+        if (!state.logs[date]) state.logs[date] = {};
+        if (!state.logs[date][t.col]) state.logs[date][t.col] = {};
+        const c = state.logs[date][t.col];
+        if (!(c.actual && String(c.actual).trim())) c.actual = metaOf(t.col).type === 'count' ? '1' : '✓';
+        touchLog();
+      }
+      saveStateToCloud(); scheduleRefresh();
+    }
+    window.addNight = function () {
+      const title = $('nt-title').value.trim(), time = $('nt-time').value, col = $('nt-col').value;
+      if (!title || !time) { toast('Give it a name and a time.'); return; }
+      state.nightTasks = [...(state.nightTasks || []), { id: uid(), title, time, col }];
+      saveStateToCloud(); renderNudgeSettings(); toast(`I'll remind you at ${time}.`);
+    };
+    window.removeNight = function (id) { state.nightTasks = (state.nightTasks || []).filter(t => t.id !== id); saveStateToCloud(); renderNudgeSettings(); };
+    function nightSettingsHtml() {
+      const list = state.nightTasks || [];
+      return `<div class="phone-box"><span class="lbl">Late-night reminders</span>
+        <p class="hint">Things to do before bed. You get a reminder at that time, and the next morning a one-tap "was this done last night?"</p>
+        ${list.map(t => `<div class="nt-row"><span>🌙 <b>${esc(t.title)}</b> at ${esc(t.time)}${t.col ? ` <em>(counts as ${esc(t.col)})</em>` : ''}</span><button class="nudge-x" onclick="removeNight('${t.id}')" aria-label="Remove">×</button></div>`).join('')}
+        <div class="nt-add"><input id="nt-title" class="field" placeholder="e.g. Plan tomorrow, skincare, read 10 pages"><input id="nt-time" type="time" class="field" value="22:30">
+          <select id="nt-col" class="field"><option value="">Not linked to a habit</option>${allColumns().map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join('')}</select>
+          <button class="btn small accent" onclick="addNight()">Add</button></div></div>`;
+    }
+
+    // ============ "I'm stuck": a gentle way out of a doomscroll or a lost day ============
+    let resetT = [], calmNodes = null;
+    function calmPad(on) {
+      if (!on) { if (calmNodes) { const n = actx.currentTime; calmNodes.g.gain.cancelScheduledValues(n); calmNodes.g.gain.setValueAtTime(calmNodes.g.gain.value, n); calmNodes.g.gain.linearRampToValueAtTime(0.0001, n + 1.2); const o = calmNodes.o; setTimeout(() => o.forEach(x => { try { x.stop(); } catch { } }), 1400); calmNodes = null; } return; }
+      const ctx = audio(); if (!ctx || calmNodes) return;
+      const t = ctx.currentTime, g = ctx.createGain(); g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(0.022, t + 2.5); g.connect(master);
+      const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 600; lp.connect(g);
+      const o = [110, 164.81, 220, 277.18].map((f, i) => { const x = ctx.createOscillator(); x.type = i % 2 ? 'triangle' : 'sine'; x.frequency.value = f; x.detune.value = Math.random() * 6 - 3; x.connect(lp); x.start(); return x; });
+      calmNodes = { g, o };
+    }
+    function resetStudyHabit() { const sc = sleepCol(); return coreCols().find(c => studyCols().includes(c) && c !== sc && !isDone(todayStr, c)) || studyCols().find(c => c !== sc) || null; }
+    window.openReset = function (step = 1) {
+      closeAll(); nudgeClose(); closeReport();
+      const el = $('reset'); el.hidden = false; requestAnimationFrame(() => el.classList.add('open'));
+      calmPad(true);
+      if (step === 2) resetSteps(); else resetIntro();
+    };
+    window.closeReset = function () { resetT.forEach(clearTimeout); resetT = []; calmPad(false); const el = $('reset'); el.classList.remove('open'); setTimeout(() => { el.hidden = true; }, 400); };
+    function resetIntro() {
+      $('reset-stage').innerHTML = `<p class="reset-kicker">Hey. It's okay.</p>
+        <h2>Getting stuck happens to everyone.</h2>
+        <p>Scrolling, a lost afternoon, a day that slipped away. It doesn't make you lazy or broken. Your brain found the easiest reward around, and it's very good at that. Let's take one minute, then pick one small thing.</p>
+        <div class="reset-actions"><button class="btn accent" onclick="resetBreathe()">Breathe with me, 1 minute</button><button class="btn" onclick="resetSteps()">Skip to one small step</button></div>
+        <button class="linkish" onclick="closeReset();runCoach('stuck')">Or talk it through with the coach</button>`;
+    }
+    window.resetBreathe = function () {
+      resetT.forEach(clearTimeout); resetT = [];
+      $('reset-stage').innerHTML = `<div class="breath"><div class="breath-orb" id="orb"></div><p id="breath-txt" class="breath-txt">Breathe in</p><p class="hint" id="breath-n">1 of 4</p></div><button class="linkish" onclick="resetSteps()">Skip</button>`;
+      const phases = [['Breathe in', 4000, 'in'], ['Hold', 4000, 'hold'], ['Breathe out', 6000, 'out']];
+      let cycle = 0;
+      const run = () => {
+        if (cycle >= 4) { resetSteps(true); return; }
+        let off = 0;
+        phases.forEach(([txt, ms, cls]) => { resetT.push(setTimeout(() => { const o = $('orb'); if (!o) return; o.style.transitionDuration = ms + 'ms'; o.className = 'breath-orb ' + cls; $('breath-txt').textContent = txt; $('breath-n').textContent = `${cycle + 1} of 4`; }, off)); off += ms; });
+        resetT.push(setTimeout(() => { cycle++; run(); }, off));
+      };
+      run();
+    };
+    let tinySteps = [];
+    window.resetSteps = function (after) {
+      resetT.forEach(clearTimeout); resetT = [];
+      const study = resetStudyHabit();
+      tinySteps = [['💧', 'Drink a glass of water', null], ['🚶', 'Step outside for 5 minutes', null], ['📵', 'Put your phone in another room', null], study ? ['📖', `Open ${study} for just 5 minutes`, study] : null, ['🚿', 'Wash your face or take a shower', null], ['💬', 'Message a friend or someone at home', null]].filter(Boolean);
+      $('reset-stage').innerHTML = `<p class="reset-kicker">${after === true ? 'Nice. That was a whole minute.' : 'One small step'}</p>
+        <h2>What's one tiny thing you can do in the next 5 minutes?</h2>
+        <p>Not the whole day. Just the next 5 minutes.</p>
+        <div class="tiny-steps">${tinySteps.map(([e, t], i) => `<button class="tiny" onclick="resetGo(${i})"><span>${e}</span>${esc(t)}</button>`).join('')}</div>
+        <div class="reset-actions">${!isRest(todayStr) ? `<button class="btn small" onclick="toggleRest();closeReset()">🌧 Make today a rest day</button>` : ''}<button class="btn small" onclick="closeReset();runCoach('stuck')">Talk it through</button></div>`;
+    };
+    window.resetGo = function (i) {
+      const [e, t, col] = tinySteps[i];
+      if (state.running && mediaCols().includes(state.running.col)) endSession();
+      if (col) { closeReset(); startNow(R(col)); setTimeout(() => buddySay('Just 5 minutes. You can stop after that 🌱', 5000), 400); return; }
+      const end = Date.now() + 5 * 60000, C = 2 * Math.PI * 52;
+      $('reset-stage').innerHTML = `<div class="breath"><div class="count-ring"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" class="cr-track"/><circle cx="60" cy="60" r="52" class="cr-bar" id="cr-bar" style="stroke-dasharray:${C}"/></svg><b id="cr-t">5:00</b></div>
+        <p class="breath-txt">${e} ${esc(t)}</p><p class="hint">Go do it. I'll be right here.</p></div><button class="linkish" onclick="resetDone()">I did it</button>`;
+      const tick = () => { const left = Math.max(0, end - Date.now()), b = $('cr-bar'); if (!b) return; b.style.strokeDashoffset = C * (1 - left / 300000); $('cr-t').textContent = fmtClock(left); if (left <= 0) { resetDone(); return; } resetT.push(setTimeout(tick, 500)); };
+      tick();
+    };
+    window.resetDone = function () {
+      resetT.forEach(clearTimeout); resetT = []; sfx('done');
+      const study = resetStudyHabit();
+      $('reset-stage').innerHTML = `<p class="reset-kicker">You did it 🌱</p><h2>That's how loops break: one small step at a time.</h2><p>Want to ride the momentum, or is that enough for now? Both are fine.</p>
+        <div class="reset-actions">${study ? `<button class="btn accent" onclick="closeReset();startNow(${R(study)})">Start ${esc(study)}</button>` : ''}<button class="btn" onclick="closeReset()">That's enough for now</button></div>`;
+    };
+
+    // ============ 3-day AI reviews ============
+    function reviewRange() { const ds = lastDays(3); return `${shortD(ds[0])} to ${shortD(ds[ds.length - 1])}`; }
+    const REVIEW_PROMPT = () => `Write my 3-day review for ${reviewRange()}, comparing it with the 3 days before.
+### The short version
+Two sentences.
+### Wins
+2–3 bullets with real numbers.
+### What slipped
+2–3 honest, specific bullets.
+### Patterns
+Cause-and-effect chains across the days (sleep, screen time, mood, when I studied), with times.
+### My tree
+How its growth and health moved and why.
+### Next 3 days
+Two small experiments to try.
+Under 280 words. Kind but honest. If a day was marked as a rest day, respect it.`;
+    function addReview(r) {
+      state.reviews = [...(state.reviews || []), { text: r.text, at: r.at, range: r.range || '', seen: false }].slice(-12);
+      state.lastReviewAt = Math.max(state.lastReviewAt || 0, r.at);
+      state.lastInsight = { text: r.text, at: r.at, label: `3-day review${r.range ? ', ' + r.range : ''}` };
+      saveStateToCloud(); renderInsightCard();
+    }
+    async function maybeAutoReview() {
+      aiCfg = loadAi(); if (!aiCfg.key || !state) return;
+      const last = Math.max(state.lastReviewAt || 0, ...(state.reviews || []).map(r => r.at || 0));
+      if (Date.now() - last < 3 * 864e5 || !lastDays(3).some(dayLogged)) return;
+      const prevClaim = state.lastReviewAt || 0;
+      state.lastReviewAt = Date.now(); saveStateToCloud();
+      let text = '';
+      try { await streamCompletion([{ role: 'system', content: buildSystem() }, { role: 'user', content: REVIEW_PROMPT() }], d => { text += d; }); }
+      catch (e) { state.lastReviewAt = prevClaim; saveStateToCloud(); return; }
+      if (!text.trim()) return;
+      addReview({ text, at: Date.now(), range: reviewRange() });
+      fireNudge('review');
+    }
+    window.openReview = function (i) {
+      const list = state.reviews || [], r = list[i ?? list.length - 1];
+      if (!r) { toast('No review yet. The first one arrives after 3 days of logging.'); return; }
+      r.seen = true;
+      openCoach();
+      if (!state.chat.some(m => m.role === 'assistant' && m.content === r.text)) {
+        state.chat.push({ role: 'user', content: 'Show me my latest 3-day review.', display: `📋 My 3-day review${r.range ? ', ' + r.range : ''}` }, { role: 'assistant', content: r.text, display: '' });
+        state.chat = state.chat.slice(-40);
+      }
+      saveStateToCloud(); renderChat(); renderInsightCard();
+      $('ai-status').textContent = 'Ask anything about this review, like "why did Thursday go badly?"';
+      setTimeout(() => $('ai-q').focus(), 300);
+    };
+
+    // ============ taps from the phone, picked up from Firestore ============
+    const pushRef = () => doc(db, 'tracker_data', `${activeDocId}-push`);
+    const tsOf = v => typeof v === 'number' ? v : typeof v === 'string' ? Date.parse(v) : v?.toMillis ? v.toMillis() : v?.seconds ? v.seconds * 1000 : 0;
+    const dmOf = ts => new Date(ts).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' });
+    let pushBusy = false;
+    async function syncPush() {
+      if (!state || pushBusy) return; pushBusy = true;
+      try {
+        const snap = await getDoc(pushRef()); if (!snap.exists()) return;
+        const P = snap.data(), upd = {};
+        const taps = Object.entries(P.taps || {}).map(([k, v]) => ({ k, ...v, ts: tsOf(v.at) })).filter(t => t.ts).sort((a, b) => a.ts - b.ts);
+        taps.forEach(t => { applyTap(t); upd['taps.' + t.k] = deleteField(); });
+        if (P.review?.text) { const at = tsOf(P.review.at) || Date.now(); if (!(state.reviews || []).some(r => r.at === at)) addReview({ text: P.review.text, at, range: P.review.range || '' }); upd.review = deleteField(); }
+        if (Object.keys(upd).length) await updateDoc(pushRef(), upd);
+        if (taps.length) { saveStateToCloud(); refreshAll(); toast(taps.length === 1 ? 'Picked up your tap from your phone 📱' : `Picked up ${taps.length} taps from your phone 📱`); }
+      } catch (e) { console.warn('Phone sync skipped', e); } finally { pushBusy = false; }
+    }
+    function applyTap(t) {
+      const date = dmOf(t.ts);
+      if (t.night) { setNight(t.night, t.val || 'done', t.nd || nightDateFor(t.ts)); return; }
+      if (t.act === 'end') { if (state.running) endSession(t.ts); return; }
+      if (t.act === 'rest') { if (!state.restDays) state.restDays = {}; state.restDays[date] = true; return; }
+      if (t.col && allColumns().includes(t.col)) {
+        if (state.running && state.running.col === t.col) return;
+        if (state.running) endSession(t.ts);
+        if (!state.allDates.includes(date)) state.allDates.push(date);
+        startSession(t.col, date, t.ts);
+      }
+    }
+    setInterval(() => { if (state && $('auth-gate').style.display === 'none') syncPush(); }, 120000);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden && state && $('auth-gate').style.display === 'none') syncPush(); });
 
     function renderStreak() {
       const { cur, best } = dayStreak();
@@ -2454,7 +3359,7 @@
     // ============ refresh orchestration ============
     let refreshT;
     function scheduleRefresh() { clearTimeout(refreshT); refreshT = setTimeout(refreshViews, 120); }
-    function refreshViews() { renderDay(false); renderTiles(); renderHeatmap(); renderStreak(); renderTable(false); renderGoals(); }
+    function refreshViews() { renderDay(false); renderTiles(); renderHeatmap(); renderStreak(); renderTable(false); renderGoals(); renderToday(); renderRecords(); checkMedal(); }
     function refreshAll() { renderDay(true); refreshViews(); }
 
     // ============ habit types + units ============
@@ -2580,7 +3485,8 @@
               <div class="chipset">${['more', 'less', 'exact'].map(r => `<button type="button" class="chip ${rule === r ? 'on' : ''}" onclick="setRule(${ci},'${r}')">${RULE_TEXT[r]}</button>`).join('')}</div></div>` : ''}
           </div>
         </details>`;
-      return `<div class="ed2" data-col="${ci}">${main}${bar}${note}${more}${setup}</div>`;
+      const reacts = `<div class="reacts"><span>How did it feel?</span>${REACTIONS.map(e => `<button type="button" class="${cd.reaction === e ? 'sel' : ''}" onclick="setReaction(${ci},'${e}')" aria-pressed="${cd.reaction === e}">${e}</button>`).join('')}</div>`;
+      return `<div class="ed2" data-col="${ci}">${main}${bar}${reacts}${note}${more}${setup}</div>`;
     }
 
     function rowHtml(date, col, focus) {
@@ -3098,7 +4004,7 @@ Otherwise propose the habits I should track daily, grouped, each with a one-line
         if (cd.reason) bits.push(`note: "${cd.reason}"`);
         lines.push(`  - ${col}: ${bits.join(', ')}`);
       });
-      return `${niceDate(date)} (${date})${parts.length ? ' | ' + parts.join(', ') : ''}\n${lines.length ? lines.join('\n') : '  (nothing logged)'}`;
+      return `${niceDate(date)} (${date})${isRest(date) ? ' [rest day]' : ''}${parts.length ? ' | ' + parts.join(', ') : ''}\n${lines.length ? lines.join('\n') : '  (nothing logged)'}`;
     }
     function goalText(g) {
       const s = goalStats(g);
@@ -3124,6 +4030,9 @@ ${p.about ? p.about : 'No profile written yet. You may suggest they fill in "Abo
 
 ## Goals
 ${(state.goals || []).length ? state.goals.map(goalText).join('\n') : 'No goals set yet.'}
+
+## Tree
+${(() => { const T = treeState(todayStr); return `${stageName(T.growth)}, ${T.growth}/21 growth days, health ${healthLabel(T).toLowerCase()}${T.rest ? ', rest day today' : ''}.`; })()}
 
 ## Habits tracked and scoring rules
 ${habitsText()}
@@ -3305,6 +4214,7 @@ For each goal: am I on track or behind (compare logged hours and active days wit
       }
       openCoach();
       if (kind === 'setup') return send(SETUP_PROMPT, 'Help me set up my habits');
+      if (kind === 'stuck') return send("I'm stuck right now, in a loop of scrolling or cheap dopamine, and I feel bad about it. Be warm and brief: no lectures and no lists of tips. Acknowledge it, tell me it's normal, ask me one gentle question about what's going on, and suggest one tiny 5-minute step based on my habits. Under 120 words.", 'I feel stuck right now 🫧');
       if (kind === 'day') return send(reflectPrompt(selectedDate), `Analyze my day, ${niceDate(selectedDate)}`, { label: `Day analysis, ${niceDate(selectedDate)}` });
       if (kind === 'week') return send(WEEK_PROMPT, 'Weekly review', { label: 'Weekly review' });
       if (kind === 'plan') return send(PLAN_PROMPT, 'Plan tomorrow for me', { label: "Tomorrow's plan" });
@@ -3335,7 +4245,7 @@ For each goal: am I on track or behind (compare logged hours and active days wit
       $('insight-card').innerHTML = li?.text ? `
           <div class="row"><h2>From your coach</h2><span class="hint">${esc(li.label)}, ${new Date(li.at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</span></div>
           <div class="md">${md(li.text)}</div>
-          <div class="foot"><button class="btn small" onclick="openCoach()">Read in full</button><button class="btn small accent" onclick="openCoach();runCoach('week')">Refresh weekly review</button></div>`
+          <div class="foot">${(state.reviews || []).length ? `<button class="btn small accent" onclick="openReview()">Discuss my review</button>` : ''}<button class="btn small" onclick="openCoach()">Read in full</button><button class="btn small accent" onclick="openCoach();runCoach('week')">Refresh weekly review</button></div>`
         : `
           <h2>Your coach</h2>
           <p class="muted" style="margin:0 0 6px">Get a short, honest read on how your days are going: what's working, what's slipping, and one thing to try tomorrow.</p>
