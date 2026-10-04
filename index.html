@@ -893,6 +893,20 @@
     }
     @media (max-width: 1100px) { .tree-row { grid-template-columns: 1fr !important; } }
     .bigval strong { width: auto; min-width: 160px; white-space: nowrap; font-size: 42px; }
+
+    /* ---------- phones: keep everything inside the screen width ---------- */
+    html { overflow-x: clip; }
+    .today > *, .tree-row > *, .insights > *, .r-grid > * { min-width: 0; }
+    @media (max-width: 1000px) { .insights { grid-template-columns: 1fr !important; } }
+    @media (max-width: 900px) { .today { grid-template-columns: minmax(0, 1fr) auto; } }
+    @media (max-width: 560px) {
+      .now { margin: -6px -20px -20px; width: auto; }
+      .now-what { min-width: 0; }
+      .energy { flex-wrap: nowrap; }
+      .checkin-row { gap: 12px; }
+      .day-label { min-width: 0; } .day-nav { gap: 8px; min-width: 0; } .day-label .dow { font-size: 24px; }
+      .ring { width: 80px; height: 80px; } .ring svg { width: 80px; height: 80px; }
+    }
   </style>
 </head>
 <body>
@@ -2625,9 +2639,10 @@
         const first = usualAt(nm, []);
         return { kind, title: `Good morning${name} ☀️`, body: `${coreCols().length} daily habits to water your tree today.`, options: [first ? { label: `Start with ${first}`, col: first } : null, { label: 'Plan my day with the coach', act: 'plan' }].filter(Boolean) };
       }
+      if (kind === 'hello') return { kind, title: `How are you doing today${name}? 🌱`, body: 'Honest answers only. Nothing is wrong with any of them.', options: [{ label: "Good, let's go 💪", act: 'hello' }, { label: 'A bit stuck 🫧', act: 'reset' }, { label: 'Rough day 🌧', act: 'roughAsk' }] };
       if (kind === 'offer') return { kind, title: 'Can I check in on you? 🌱', body: "Now and then I'll ask what you're up to, so logging takes one tap. I stay quiet while you sleep.", options: [{ label: 'Yes, check in on me', act: 'enable' }, { label: 'Maybe later', act: 'decline' }] };
       const opts = pickOptions(nm, sleep);
-      if (kind === 'leaves') return { kind, title: "Your tree's leaves are dropping 🍂", body: 'Nothing logged yet today. One tap is enough to water it.', options: opts, more: true };
+      if (kind === 'leaves') return { kind, title: "Your tree's leaves are dropping 🍂", body: 'Nothing logged yet today. One tap waters it. Stuck? That happens too.', options: [...opts.slice(0, 2), { label: 'Feeling stuck? 🫧', act: 'reset' }], more: true };
       const hrs = Math.max(1, Math.round((Date.now() - Math.max(state.lastLogAt || 0, appOpenedAt)) / 3600000));
       return {
         kind: 'idle',
@@ -2707,6 +2722,8 @@
         case 'reset': openReset(1); break;
         case 'resetStep2': openReset(2); break;
         case 'rest': if (!isRest(todayStr)) toggleRest(); break;
+        case 'hello': buddyHop(); emote(['💪', '💚', '✨'], 4); buddySay('Love it. Water me as you go 💧', 3500); break;
+        case 'roughAsk': setTimeout(() => fireNudge('rough'), 350); break;
         case 'winddown': buddySay('Good call. Phone away, lights down 🌙', 5000); break;
         case 'review': openReview(); break;
         case 'report': openReport(o.date || todayStr); break;
@@ -2778,6 +2795,8 @@
         if (openPanel || currentNudge) return;
         const r = state.running, h = new Date().getHours();
         if (r && elapsedMs(r) > staleLimitH(r) * 3600000 && !r.staleAsked) { r.staleAsked = true; saveStateToCloud(); fireNudge('stale'); return; }
+        let helloSeen = ''; try { helloSeen = localStorage.getItem('tracker_hello') || ''; } catch { }
+        if (helloSeen !== activeDocId + todayStr) { try { localStorage.setItem('tracker_hello', activeDocId + todayStr); } catch { } fireNudge('hello'); return; }
         const yd = state.allDates[anchorIdx() - 1];
         if (h >= 5 && h < 13 && yd && dayLogged(yd) && !reportSeen(yd)) { markReport(yd); fireNudge('report', yd); return; }
         const now = new Date(), mmNow = String(now.getMonth() + 1).padStart(2, '0'), prev = new Date(now.getFullYear(), now.getMonth() - 1, 1), mmPrev = String(prev.getMonth() + 1).padStart(2, '0');
