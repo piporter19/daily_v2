@@ -706,6 +706,42 @@
     @media (max-width: 1000px) { .tree-row, .insights { grid-template-columns: 1fr; } .r-grid { grid-template-columns: 1fr; } }
     @media (max-width: 640px) { .tree-panel { grid-template-columns: 1fr; } .tiny-steps { grid-template-columns: 1fr; } .tr { grid-template-columns: 1fr 70px 60px; } .tr .spark { display: none; } }
 
+
+    /* ---------- tree companion v2 ---------- */
+    .tree-row { grid-template-columns: 1fr !important; }
+    .buddy { width: 250px; padding: 0 8px 10px; background: radial-gradient(ellipse 75% 65% at 50% 62%, rgba(36, 44, 92, .96), rgba(26, 30, 58, .9) 70%, rgba(26, 30, 58, .0) 100%); border: 0; box-shadow: none; border-radius: 40px; }
+    .tree-wrap.mini { height: 210px; cursor: pointer; transition: transform .2s; }
+    .tree-wrap.mini:hover { transform: scale(1.03); }
+    .tree-wrap.mini:active { transform: scale(.97); }
+    .buddy.bounce .tree-wrap.mini { animation: tbounce .65s cubic-bezier(.3, 1.6, .5, 1); }
+    @keyframes tbounce { 30% { transform: scale(1.08, .92) translateY(4px); } 60% { transform: scale(.96, 1.06) translateY(-8px); } }
+    .buddy.m-sad .canopy-sway { animation: droop 7s ease-in-out infinite; }
+    @keyframes droop { 0%, 100% { transform: rotate(-1.5deg) translateY(2px); } 50% { transform: rotate(1deg) translateY(3px); } }
+    .buddy.m-grin .canopy-sway { animation: dance 1.6s ease-in-out infinite; }
+    @keyframes dance { 0%, 100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg) translateY(-2px); } }
+    .buddy.m-sleepy .canopy-sway { animation: tsway 9s ease-in-out infinite; }
+    .tear { animation: tear 2.6s ease-in infinite; transform-box: fill-box; }
+    @keyframes tear { 0% { opacity: 0; transform: translateY(0); } 25% { opacity: 1; } 100% { opacity: 0; transform: translateY(9px); } }
+    .buddy-bar { display: flex; align-items: center; gap: 8px; padding: 0 14px; }
+    .buddy-bar .buddy-rail { flex: 1; margin: 0; }
+    #buddy-count { font-family: var(--display); font-weight: 700; font-size: 14px; color: var(--ink); min-width: 34px; text-align: right; }
+    .emotes { position: absolute; left: 0; right: 0; top: 0; height: 200px; pointer-events: none; }
+    .emotes span { position: absolute; bottom: 60px; font-size: 20px; opacity: 0; animation: emo 2.4s ease-out forwards; font-family: var(--display); font-weight: 700; color: var(--muted); }
+    @keyframes emo { 0% { opacity: 0; transform: translate(0, 10px) scale(.6); } 20% { opacity: 1; transform: translate(0, 0) scale(1.1); } 100% { opacity: 0; transform: translate(var(--dx), -110px) scale(.9); } }
+    .buddy-say { right: 10px; bottom: calc(100% - 14px); font-size: 14px; }
+    .buddy.min { width: auto; padding: 4px; background: rgba(26, 30, 58, .9); border-radius: 20px; }
+    .buddy.min .tree-wrap.mini { width: 96px; height: 86px; }
+    .buddy.min .buddy-bar, .buddy.min .emotes { display: none; }
+    .buddy-toggle { top: 10px; right: 12px; opacity: .55; }
+    .buddy-toggle:hover { opacity: 1; }
+    .shell { padding-bottom: 290px !important; }
+    .nudge { bottom: 268px; }
+    @media (max-width: 560px) {
+      .buddy { width: 176px; right: 6px; bottom: 6px; }
+      .tree-wrap.mini { height: 150px; }
+      .emotes { height: 140px; }
+      .nudge { bottom: 196px; }
+    }
     /* ---------- Pip, the progress buddy ---------- */
     .buddy { position: fixed; right: 18px; bottom: 18px; z-index: 30; width: 270px; background: rgba(23, 26, 51, .95); border: 1px solid var(--line); border-radius: 22px; padding: 8px 14px 11px; box-shadow: 0 14px 34px rgba(0, 0, 0, .38); }
     .buddy-track { position: relative; height: 104px; }
@@ -769,6 +805,94 @@
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { transition: none !important; animation: none !important; }
     }
+    /* ---------- tree companion: final overrides ---------- */
+    #buddy.buddy { width: 250px; padding: 0 8px 10px; background: radial-gradient(ellipse 75% 65% at 50% 62%, rgba(36, 44, 92, .96), rgba(26, 30, 58, .88) 70%, rgba(26, 30, 58, 0) 100%); border: 0; box-shadow: none; border-radius: 40px; }
+    #buddy #buddy-btn { width: 100%; height: 210px; display: block; }
+    #mini-tree { height: 100%; }
+    #buddy.min { width: auto; padding: 4px; background: rgba(26, 30, 58, .92); border: 1px solid var(--line); border-radius: 20px; }
+    #buddy.min #buddy-btn { width: 96px; height: 86px; }
+    #buddy .buddy-bar .buddy-rail { position: relative; left: auto; right: auto; bottom: auto; flex: 1; }
+    @media (max-width: 560px) { #buddy.buddy { width: 176px; } #buddy #buddy-btn { height: 150px; } }
+
+    /* ---------- tree column on the right (wide screens) ---------- */
+    .tree-sky { display: none; }
+    @media (min-width: 901px) {
+      body:not(.tree-min) .shell { max-width: none; margin: 0 312px 0 0; padding-left: 28px; padding-right: 8px; padding-bottom: 60px !important; }
+      body:not(.tree-min) #buddy.buddy:not(.min) { top: 16px; bottom: 16px; right: 16px; width: 280px; padding: 0 0 14px; display: flex; flex-direction: column; justify-content: flex-end; border-radius: 28px; border: 1px solid var(--line); overflow: hidden; background: #171a3a; box-shadow: 0 18px 40px rgba(0, 0, 0, .3); }
+      #buddy:not(.min) .tree-sky { display: block; position: absolute; inset: 0; background: linear-gradient(180deg, #0c0e2a, #1a1e48 70%, #232a5a); transition: background 1s; }
+      #buddy.sky-morning .tree-sky { background: linear-gradient(180deg, #6fa3d8, #b7cbe6 55%, #f2cdae); }
+      #buddy.sky-afternoon .tree-sky { background: linear-gradient(180deg, #4d8fd1, #8fbfea 60%, #cfe5f6); }
+      #buddy.sky-evening .tree-sky { background: linear-gradient(180deg, #212254, #633c75 45%, #c2607a 75%, #f0a05a); }
+      .sky-orb { position: absolute; top: 9%; right: 18%; width: 46px; height: 46px; border-radius: 50%; background: #fff1c4; box-shadow: 0 0 40px 14px rgba(255, 230, 160, .5); }
+      #buddy.sky-morning .sky-orb { top: 30%; left: 16%; right: auto; background: #ffd684; }
+      #buddy.sky-evening .sky-orb { top: 44%; background: #ffb36b; box-shadow: 0 0 50px 18px rgba(255, 150, 90, .45); }
+      #buddy.sky-night .sky-orb { background: transparent; box-shadow: 9px 6px 0 0 #f6e7b8; width: 40px; height: 40px; transform: rotate(-20deg); }
+      .sky-cloud { position: absolute; width: 90px; height: 26px; border-radius: 20px; background: rgba(255, 255, 255, .75); animation: skydrift 40s ease-in-out infinite alternate; }
+      .sky-cloud::before, .sky-cloud::after { content: ''; position: absolute; background: inherit; border-radius: 50%; }
+      .sky-cloud::before { width: 40px; height: 34px; left: 14px; top: -16px; }
+      .sky-cloud::after { width: 30px; height: 26px; left: 44px; top: -10px; }
+      .sky-cloud.c1 { top: 16%; left: -20px; } .sky-cloud.c2 { top: 34%; left: 150px; transform: scale(.7); animation-duration: 55s; } .sky-cloud.c3 { top: 52%; left: 40px; transform: scale(.55); animation-duration: 70s; }
+      #buddy.sky-night .sky-cloud, #buddy.sky-evening .sky-cloud { background: rgba(220, 225, 255, .12); }
+      @keyframes skydrift { to { translate: 60px 0; } }
+      .sky-stars { display: none; position: absolute; inset: 0; }
+      #buddy.sky-night .sky-stars, #buddy.sky-evening .sky-stars { display: block; }
+      .sky-stars i { position: absolute; width: 2px; height: 2px; border-radius: 50%; background: #fff6dc; animation: twinkle 3.5s ease-in-out infinite; opacity: .3; }
+      #buddy.sky-evening .sky-stars i:nth-child(odd) { display: none; }
+      body:not(.tree-min) #buddy:not(.min) #buddy-btn { position: relative; flex: 0 0 auto; height: min(62vh, 520px); width: 100%; }
+      body:not(.tree-min) #buddy:not(.min) #mini-tree { height: 100%; }
+      body:not(.tree-min) #buddy:not(.min) .tree-svg { width: 120%; height: 100%; margin-left: -10%; }
+      body:not(.tree-min) #buddy:not(.min) .buddy-bar { position: relative; padding: 4px 18px 0; }
+      #buddy.sky-morning #buddy-count, #buddy.sky-afternoon #buddy-count { color: #1b2050; }
+      body:not(.tree-min) #buddy:not(.min) .buddy-say { left: 16px; right: 16px; width: auto; max-width: none; bottom: auto; top: 26%; text-align: center; border-radius: 16px; z-index: 3; }
+      body:not(.tree-min) #buddy:not(.min) .emotes { top: auto; bottom: 120px; height: 52vh; z-index: 2; }
+      body:not(.tree-min) #buddy:not(.min) .emotes span { font-size: 24px; bottom: 30%; }
+      body:not(.tree-min) #buddy:not(.min) .buddy-toggle { z-index: 4; }
+      body:not(.tree-min) .nudge { right: 312px; bottom: 20px; }
+    }
+
+    /* ---------- v4: today + consistency side by side, compact today, tree card, time pickers ---------- */
+    .tree-row { grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr) !important; align-items: stretch; }
+    .insights { grid-template-columns: 1fr 1fr !important; }
+    .today-panel { padding: 14px 18px; gap: 8px; }
+    .today-panel .ts-stats b { font-size: 20px; }
+    .today-panel .ts-stats span { font-size: 11.5px; }
+    .today-panel .timeline { height: 18px; }
+    .today-panel .gap-box { padding: 8px 10px; }
+    .today-panel .gap-box p { margin-bottom: 6px; font-size: 13px; }
+    .today-panel .gap-box .chip { padding: 3px 10px; font-size: 12px; }
+    .cons-panel { padding: 14px 18px; }
+    .cons-panel h2 { font-size: 17px; margin-bottom: 8px; }
+    .cons-panel .stats { gap: 16px; margin-top: 10px; }
+    .cons-panel .stat b { font-size: 19px; }
+    .when { display: flex; flex-direction: column; gap: 7px; background: var(--well); border: 1px solid var(--line); border-radius: 14px; padding: 10px 12px; }
+    .when .lbl { margin-bottom: 0; }
+    .when .slot input[type=time] { font-size: 15px; padding: 7px 9px; min-width: 112px; }
+    .when .slot em { font-style: normal; color: var(--sky); font-weight: 700; font-size: 12.5px; min-width: 46px; }
+    .slot.part .part-name { min-width: 104px; font-size: 13.5px; color: var(--ink); font-weight: 600; }
+    .measure { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .measure .lbl { margin: 0; min-width: 80px; }
+    .measure em { font-style: normal; color: var(--muted); font-size: 13px; }
+    .mstep.cnt { margin-left: 6px; } .mstep.cnt input { width: 46px; } .mstep.cnt small { color: var(--dim); font-size: 11px; margin-left: 4px; }
+    .tgt-row { display: flex; gap: 10px; align-items: center; margin-top: 8px; }
+    .tgt-row .field { max-width: 150px; color-scheme: dark; }
+    .tree-card { display: none; }
+    @media (min-width: 901px) {
+      body:not(.tree-min) #buddy:not(.min) .tree-card { display: flex; flex-direction: column; gap: 8px; position: absolute; top: 14px; left: 14px; right: 46px; z-index: 3; padding: 12px 14px; border-radius: 18px; background: rgba(18, 21, 44, .62); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, .08); }
+      .tc-top { display: flex; justify-content: space-between; align-items: baseline; }
+      .tc-top b { font-family: var(--display); font-size: 20px; }
+      .tc-top span { font-size: 12px; color: var(--muted); font-weight: 700; }
+      .tree-card .grow-dots { gap: 3px; margin: 0; }
+      .tree-card .grow-dots i { width: 7px; height: 7px; }
+      .tc-hp { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
+      .tc-hp span { min-width: 64px; }
+      .tc-hp .gbar { flex: 1; height: 6px; }
+      .tc-actions { display: flex; gap: 6px; }
+      .tc-actions button { flex: 1; border: 1px solid rgba(255, 255, 255, .12); background: rgba(255, 255, 255, .06); border-radius: 999px; padding: 5px 8px; font-size: 12px; font-weight: 600; color: var(--ink); }
+      .tc-actions button:hover { background: rgba(255, 255, 255, .14); }
+      body:not(.tree-min) #buddy:not(.min) .buddy-say { top: 196px; }
+    }
+    @media (max-width: 1100px) { .tree-row { grid-template-columns: 1fr !important; } }
+    .bigval strong { width: auto; min-width: 160px; white-space: nowrap; font-size: 42px; }
   </style>
 </head>
 <body>
@@ -887,8 +1011,13 @@
     </section>
 
     <section class="tree-row">
-      <div class="panel tree-panel"><button class="tree-wrap big" onclick="buddyClick()" aria-label="Your tree. Tap to log the next habit."><div id="big-tree"></div></button><div class="tree-info" id="tree-info"></div></div>
       <div class="panel today-panel" id="today-panel"></div>
+      <div class="panel cons-panel">
+        <h2>Consistency</h2>
+        <div class="heat" id="heatmap"></div>
+        <div class="legend">Less <i style="background:var(--panel2)"></i><i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="l4"></i> More</div>
+        <div class="stats" id="stats"></div>
+      </div>
     </section>
 
     <section id="tiles"></section>
@@ -909,12 +1038,6 @@
     </section>
 
     <section class="insights">
-      <div class="panel">
-        <h2>Consistency</h2>
-        <div class="heat" id="heatmap"></div>
-        <div class="legend">Less <i style="background:var(--panel2)"></i><i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="l4"></i> More</div>
-        <div class="stats" id="stats"></div>
-      </div>
       <div class="panel insight-card" id="insight-card"></div>
       <div class="panel" id="records-panel"></div>
     </section>
@@ -949,13 +1072,15 @@
     </section>
   </div>
 
-  <!-- Your tree, small and always there: tap it to log the next habit -->
+  <!-- Your tree: always with you in the corner. Tap it to log the next habit. -->
   <div id="buddy" class="buddy" hidden>
+    <div class="tree-sky" aria-hidden="true"><i class="sky-orb"></i><i class="sky-cloud c1"></i><i class="sky-cloud c2"></i><i class="sky-cloud c3"></i><div class="sky-stars" id="sky-stars"></div></div>
+    <div class="tree-card" id="tree-card"></div>
     <button class="buddy-toggle" onclick="toggleBuddy()" aria-label="Shrink or expand your tree" title="Shrink or expand">−</button>
     <div id="buddy-say" class="buddy-say" aria-live="polite"></div>
-    <button id="buddy-btn" class="tree-wrap mini" onclick="buddyClick()" title="Tap to log the next habit"><div id="mini-tree"></div></button>
-    <div class="buddy-rail"><div id="buddy-fill"></div></div>
-    <div class="buddy-foot"><span id="buddy-count"></span><span id="buddy-stage"></span></div>
+    <div id="emotes" class="emotes" aria-hidden="true"></div>
+    <button id="buddy-btn" class="tree-wrap mini" onclick="buddyClick()" title="Tap me"><div id="mini-tree"></div></button>
+    <div class="buddy-bar"><div class="buddy-rail"><div id="buddy-fill"></div></div><span id="buddy-count"></span></div>
   </div>
 
   <div id="scrim" class="scrim" onclick="closeAll()"></div>
@@ -1277,6 +1402,7 @@
         toast("Couldn't reach the cloud. Changes may not save.");
       }
 
+      try { migrateHabitsV2(); } catch (e) { console.warn('migration', e); }
       if (rememberThis) writeDevice(activeDocId, state.profile?.name || (activeDocId === 'soham_dashboard' ? 'Soham' : ''));
       selectedDate = state.allDates.includes(todayStr) ? todayStr : state.allDates[state.allDates.length - 1];
       renderHeader(); renderBg(); updateViewButtons(); updateEditModeButton(); updateCompact();
@@ -1431,7 +1557,7 @@
           }
         }
       });
-      return parseFloat((mins / 60).toFixed(1));
+      return parseFloat((mins / 60).toFixed(3));
     }
     function hoursOf(cd) {
       if (cd.hours) { const h = parseFloat(cd.hours); if (!isNaN(h)) return h; }
@@ -1455,7 +1581,7 @@
       }
       return '';
     }
-    const activeTargetOf = (date, col) => getInheritedTarget(date, col);
+    const activeTargetOf = (date, col) => metaOf(col).targetKind === 'none' ? '' : getInheritedTarget(date, col);
     // Scoring rule: explicit choice wins; media-type groups default to "less is better"
     function ruleOf(col) {
       const r = state.columnRules?.[col];
@@ -1464,9 +1590,10 @@
       return g && /media|screen|social|ott/i.test(g.name) ? 'less' : 'more';
     }
     // Value used for colouring: the typed actual, or logged hours if no actual was typed
-    function scoreVal(cd) {
-      if (cd.actual !== undefined && String(cd.actual).trim() !== '') return cd.actual;
-      const h = hoursOf(cd); return h > 0 ? String(h) : '';
+    function scoreVal(cd, col) {
+      if (col && metaOf(col).targetKind === 'measure') { const n = numOf(cd.count); return n !== null ? String(n) : ''; }
+      const h = hoursOf(cd); if (h > 0) return String(h);
+      return isTimeNum(cd.actual) ? String(numOf(cd.actual)) : '';
     }
 
     function calculateProgressStyle(target, actual, col) {
@@ -1484,12 +1611,12 @@
     }
     function isDone(date, col) {
       const cd = cellOf(date, col);
-      return (cd.actual !== undefined && String(cd.actual).trim() !== '') || hoursOf(cd) > 0;
+      return (cd.actual !== undefined && String(cd.actual).trim() !== '') || hoursOf(cd) > 0 || (numOf(cd.count) || 0) > 0;
     }
     function progressOf(date, col) {
       if (!isDone(date, col)) return { fill: 0, tone: 'none' };
       const cd = cellOf(date, col);
-      const t = numOf(activeTargetOf(date, col)), a = numOf(scoreVal(cd));
+      const t = numOf(activeTargetOf(date, col)), a = numOf(scoreVal(cd, col));
       const rule = ruleOf(col);
       if (t && a !== null) {
         if (rule === 'more') { const r = Math.max(0.06, Math.min(1, a / t)); return { fill: r, tone: r >= 1 ? 'good' : 'partial' }; }
@@ -1632,7 +1759,7 @@
           <span class="t-meta">
             ${p.over ? `<span class="over-tag">+${p.over} over</span>` : ''}
             ${run && runSlot?.from ? `<span class="live">${minsSince(runSlot.from)} min</span>` : ''}
-            ${h > 0 && cd.actual && metaOf(col).type !== 'time' ? `<span>⏱ ${fmtH(h)}</span>` : ''}
+            ${h > 0 && metaOf(col).targetKind === 'measure' ? `<span>⏱ ${fmtH(h)}</span>` : ''}
             ${cd.reaction ? `<span>${cd.reaction}</span>` : ''}
             ${cd.reason ? `<span title="${esc(cd.reason)}">✎ note</span>` : ''}
           </span>
@@ -1701,17 +1828,15 @@
       return T.pct >= .4 ? 'smile' : 'calm';
     }
     function treeLine(T) {
-      if (T.rest) return "Resting today 🌧 I'm safe. Take it easy.";
-      if (!T.total) return 'Add a habit and I will start growing.';
-      if (T.pct >= 1) return T.over ? 'Full bloom, even with a bit much screen time 🌸' : 'Full bloom! Every daily habit done 🌸';
-      if (T.wilt > .3 && !T.logged) return "My leaves are dropping 🍂 Log anything and I'll perk up.";
-      if (T.dry >= 2 && T.logged) return 'Thank you, I can feel the water 💧';
-      if (T.over) return "Too much screen time, I'm drooping a little.";
-      if (!T.done) return T.logged ? 'A start! Now one daily habit?' : 'Log your first habit and watch me grow 🌱';
-      const left = T.total - T.done;
-      return T.pct < .5 ? `${T.done} done, ${left} to go. Every log is water 💧` : `Blossoming! Just ${left} left 🌸`;
+      if (T.rest) return 'Resting with you today 🌧';
+      if (!T.total) return 'Plant a habit? 🌱';
+      if (T.pct >= 1) return 'Full bloom! 🌸';
+      if (T.wilt > .3 && !T.logged) return 'Thirsty… 🥺';
+      if (T.dry >= 2 && T.logged) return 'Ahh, water! 💧';
+      if (T.over) return 'Too much scrolling 😟';
+      if (!T.done) return T.logged ? 'More please 🌱' : 'Water me? 💧';
+      return T.pct < .5 ? 'Yum 💚' : 'Almost blooming 🌸';
     }
-
     // --- drawing
     function hashRand(str) { let h = 2166136261; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return ((h >>> 0) % 10000) / 10000; }
     function mixHex(a, b, t) {
@@ -1762,6 +1887,7 @@
           <g opacity="${lidOp}"><path d="M${x - ex - er} ${y} A${er} ${er} 0 0 1 ${x - ex + er} ${y}Z M${x + ex - er} ${y} A${er} ${er} 0 0 1 ${x + ex + er} ${y}Z" fill="${skin}"/></g>
         </g>
         ${mood === 'smile' || mood === 'grin' ? `<ellipse cx="${x - ex - 2 * k}" cy="${y + 6 * k}" rx="${3 * k}" ry="${1.8 * k}" fill="#ef6f7f" opacity=".5"/><ellipse cx="${x + ex + 2 * k}" cy="${y + 6 * k}" rx="${3 * k}" ry="${1.8 * k}" fill="#ef6f7f" opacity=".5"/>` : ''}
+        ${mood === 'sad' ? `<path class="tear" d="M${x - ex + 1.5 * k} ${y + er * .9} q ${-1.6 * k} ${3 * k} 0 ${4.4 * k} q ${1.6 * k} ${-1.4 * k} 0 ${-4.4 * k}z" fill="#9fd0ff"/>` : ''}
         <path class="tree-mouth" d="${mouthPath(mood, x, y + 7 * k, k)}" stroke="#3a220e" stroke-width="${1.5 * k}" fill="${mood === 'grin' ? '#7a2c1c' : 'none'}" stroke-linecap="round"/>
       </g>`;
     }
@@ -1833,7 +1959,7 @@
       }
       // a little rain cloud on rest days
       const rain = T.rest ? `<g class="rest-cloud"><path d="M${gx + 40} ${canopyTop - 6} c -12 0 -14 -14 -3 -16 c 1 -10 16 -12 20 -4 c 8 -6 20 0 17 9 c 8 1 8 11 -1 11z" fill="#c9cfee" opacity=".9"/>${[0, 1, 2].map(i => `<line class="drop" x1="${gx + 46 + i * 10}" y1="${canopyTop + 8}" x2="${gx + 44 + i * 10}" y2="${canopyTop + 15}" stroke="#86b7ff" stroke-width="2" stroke-linecap="round" style="animation-delay:${i * .3}s"/>`).join('')}</g>` : '';
-      return `<svg class="tree-svg" viewBox="0 0 300 260" aria-hidden="true">
+      return `<svg class="tree-svg" viewBox="0 0 300 260" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
         <defs><radialGradient id="${uid}-glow"><stop offset="0" stop-color="#ffe9a8" stop-opacity=".55"/><stop offset="1" stop-color="#ffe9a8" stop-opacity="0"/></radialGradient>
         <radialGradient id="${uid}-seed" cx="38%" cy="34%" r="72%"><stop offset="0" stop-color="#ffd684"/><stop offset="1" stop-color="#e3951f"/></radialGradient></defs>
         ${back}<g class="canopy-sway">${trunk}${leaves}${extras}${face}</g>${fall}${rain}</svg>`;
@@ -1849,6 +1975,11 @@
       if (mini && treeKeys.mini !== key) { mini.innerHTML = treeSvg(T, 'm'); treeKeys.mini = key; }
       const big = $('big-tree');
       if (big && treeKeys.big !== key) { big.innerHTML = treeSvg(T, 'b'); treeKeys.big = key; }
+      const tc = $('tree-card');
+      if (tc) tc.innerHTML = `<div class="tc-top"><b>${stageName(T.growth)}</b><span>${Math.min(T.growth, 21)}/21</span></div>
+        <div class="grow-dots" title="${T.growth} of 21 growth days">${Array.from({ length: 21 }, (_, i) => `<i class="${i < T.growth ? 'on' : ''}"></i>`).join('')}</div>
+        <div class="tc-hp"><span>${healthLabel(T)}</span><div class="gbar hp"><i style="width:${Math.max(4, Math.round(T.health * 100))}%;background:${mixHex('#e2c04a', '#5fbf6a', T.health)}"></i></div></div>
+        <div class="tc-actions">${T.isToday ? `<button onclick="toggleRest()" title="${T.rest ? 'End the rest day' : 'Rough day? Rest your tree'}">${T.rest ? '☀️ Back' : '🌧 Rest'}</button>` : ''}<button onclick="openReset()" title="Feeling stuck?">🫧 Stuck?</button></div>`;
       const info = $('tree-info');
       if (info) {
         const pctH = Math.round(T.health * 100);
@@ -1865,18 +1996,57 @@
       // the floating card
       $('buddy-fill') && ($('buddy-fill').style.width = (T.pct * 100) + '%');
       $('buddy') && $('buddy').classList.toggle('bloom', T.pct >= 1 && T.total > 0);
-      if ($('buddy-count')) $('buddy-count').innerHTML = `<b>${T.done}</b> of ${T.total} daily${T.bonus ? ` +${T.bonus}` : ''}`;
-      if ($('buddy-stage')) $('buddy-stage').textContent = T.rest ? 'Resting' : `${stageName(T.growth)}, ${healthLabel(T).toLowerCase()}`;
+      if ($('buddy-count')) $('buddy-count').textContent = `${T.done}/${T.total}`;
+      const dock = $('buddy');
+      if (dock) {
+        const hh = new Date().getHours();
+        const sky = hh >= 5 && hh < 11 ? 'morning' : hh >= 11 && hh < 17 ? 'afternoon' : hh >= 17 && hh < 20 ? 'evening' : 'night';
+        ['morning', 'afternoon', 'evening', 'night'].forEach(k => dock.classList.toggle('sky-' + k, k === sky));
+        const st = $('sky-stars');
+        if (st && !st.childElementCount) st.innerHTML = Array.from({ length: 34 }, () => `<i style="left:${(Math.random() * 100).toFixed(1)}%;top:${(Math.random() * 60).toFixed(1)}%;animation-delay:${(-Math.random() * 4).toFixed(1)}s"></i>`).join('');
+        const mood = treeMood(T);
+        ['sad', 'sleepy', 'grin', 'smile', 'calm'].forEach(m => dock.classList.toggle('m-' + m, m === mood));
+        dock.title = `${stageName(T.growth)}, day ${Math.min(T.growth, 21)} of 21. ${healthLabel(T)}.`;
+        treeMoodNow = mood;
+      }
       $('buddy-btn')?.setAttribute('aria-label', `Your tree: ${stageName(T.growth)}, ${healthLabel(T)}. ${T.done} of ${T.total} daily habits done. Tap to log the next habit.`);
       const p = buddyPrev;
-      if (p && p.date === selectedDate && p.done !== T.done) { if (T.done > p.done) { buddyHop(); sfx(T.pct >= 1 ? 'bloom' : 'done'); } buddySay(treeLine(T)); }
-      else if (p && p.date === selectedDate && !p.logged && T.logged) { buddyHop(); buddySay(treeLine(T)); }
+      if (p && p.date === selectedDate && p.done !== T.done) {
+        if (T.done > p.done) { buddyHop(); sfx(T.pct >= 1 ? 'bloom' : 'done'); emote(T.pct >= 1 ? ['🌸', '✨', '💚', '🌸', '✨'] : ['💚', '✨', '💚'], T.pct >= 1 ? 9 : 4); }
+        buddySay(treeLine(T));
+      }
+      else if (p && p.date === selectedDate && !p.logged && T.logged) { buddyHop(); emote(['💧', '💚'], 4); buddySay(treeLine(T)); }
       buddyPrev = { date: selectedDate, done: T.done, logged: T.logged };
     }
     const renderBuddy = renderTree;
     function buddyWalk() { }
+    let treeMoodNow = 'calm';
+    // little floating feelings above the tree
+    function emote(chars, n = 3) {
+      const box = $('emotes'); if (!box || reducedMotion() || $('buddy').hidden || $('buddy').classList.contains('min')) return;
+      for (let i = 0; i < n; i++) {
+        const e = document.createElement('span');
+        e.textContent = chars[i % chars.length];
+        e.style.left = (30 + Math.random() * 40) + '%';
+        e.style.setProperty('--dx', (Math.random() * 50 - 25) + 'px');
+        e.style.animationDelay = (i * .18) + 's';
+        box.appendChild(e); setTimeout(() => e.remove(), 2600 + i * 180);
+      }
+    }
+    // what it does on its own, depending on how it feels
+    setInterval(() => {
+      if (!state || document.hidden || $('auth-gate').style.display !== 'none') return;
+      const r = state.running, m = treeMoodNow;
+      if (m === 'sleepy') emote(['z', 'z', 'Z'], 3);
+      else if (m === 'sad') emote(['🍂'], 1);
+      else if (m === 'grin') emote(['✨', '🌸'], 2);
+      else if (r && mediaCols().includes(r.col) && elapsedMs(r) > 45 * 60000) emote(['😟'], 1);
+      else if (r) emote(['🎯'], 1);
+      else if (Math.random() < .4) emote(['💚'], 1);
+    }, 9000);
     function buddyHop() {
       if (reducedMotion()) return;
+      const d = $('buddy'); if (d) { d.classList.remove('bounce'); d.getBoundingClientRect(); d.classList.add('bounce'); setTimeout(() => d.classList.remove('bounce'), 700); }
       document.querySelectorAll('.tree-wrap').forEach(w => { w.classList.remove('rustle'); w.getBoundingClientRect(); w.classList.add('rustle'); setTimeout(() => w.classList.remove('rustle'), 700); });
     }
     function buddySay(text, ms = 3600) {
@@ -1887,21 +2057,22 @@
       const h = new Date().getHours();
       const hi = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
       const name = state.profile?.name ? `, ${state.profile.name}` : '';
-      setTimeout(() => buddySay(`${hi}${name}! ${treeLine(treeState(selectedDate))}`, 4600), 700);
+      setTimeout(() => { buddySay(`${hi}${name}! ${treeLine(treeState(selectedDate))}`, 4200); emote(['👋'], 1); }, 900);
     }
     window.buddyClick = function () {
-      buddyHop();
+      buddyHop(); emote(['💚'], 1);
       const next = coreCols().find(c => !isDone(selectedDate, c));
-      if (next) { buddySay(`Let's do ${next}.`, 1800); setTimeout(() => openSheet(R(next)), 280); }
+      if (next) { buddySay(`${next}? 🙏`, 1800); setTimeout(() => openSheet(R(next)), 420); }
       else { buddySay('All done for the day. Look at me bloom!'); if (!reducedMotion()) confetti(); }
     };
     window.toggleBuddy = function () {
       const d = $('buddy'); const min = !d.classList.contains('min');
       d.classList.toggle('min', min);
+      document.body.classList.toggle('tree-min', min);
       d.querySelector('.buddy-toggle').textContent = min ? '+' : '−';
       try { localStorage.setItem('buddy_min', min ? '1' : '0'); } catch { }
     };
-    try { if (localStorage.getItem('buddy_min') === '1') { $('buddy').classList.add('min'); $('buddy').querySelector('.buddy-toggle').textContent = '+'; } } catch { }
+    try { if (localStorage.getItem('buddy_min') === '1') { $('buddy').classList.add('min'); document.body.classList.add('tree-min'); $('buddy').querySelector('.buddy-toggle').textContent = '+'; } } catch { }
     window.toggleRest = function () {
       if (!state.restDays) state.restDays = {};
       if (state.restDays[todayStr]) { delete state.restDays[todayStr]; toast('Rest day ended. Welcome back 🌱'); }
@@ -2154,7 +2325,7 @@
       renderNow();
       if (!info.saved) { toast('That was under a minute, so nothing was saved.'); return; }
       toast(`Saved ${fmtH(info.mins / 60)} to ${info.col} (${info.from}–${info.to}).`);
-      if (metaOf(info.col).type === 'count') setTimeout(() => openSheet(R(info.col), R(info.date)), 450);
+      if (metaOf(info.col).measure) setTimeout(() => openSheet(R(info.col), R(info.date)), 450);
     };
     setInterval(() => {
       const r = state?.running;
@@ -2783,7 +2954,7 @@
       wake = Math.min(wake, nm);
       const merged = mergeIv(nonSleep.map(x => ({ a: Math.max(x.a, wake), b: Math.min(x.b, nm) })).filter(x => x.b > x.a));
       let logged = merged.reduce((s, x) => s + x.b - x.a, 0);
-      allColumns().forEach(c => { if (c === sc) return; const cd = cellOf(d, c); if (metaOf(c).type === 'time' && !(cd.timeSlots || []).some(s => s.from)) logged += (numOf(cd.actual) || 0) * 60; });
+      allColumns().forEach(c => { if (c === sc) return; const cd = cellOf(d, c); if (!(cd.timeSlots || []).some(s => s.from && s.to)) logged += hoursOf(cd) * 60; });
       const awake = Math.max(0, nm - wake);
       logged = Math.min(logged, awake);
       const all = mergeIv(iv.map(x => ({ a: x.a, b: Math.min(x.b, nm) })).filter(x => x.b > x.a));
@@ -2858,7 +3029,7 @@
       return sx && sy ? sxy / Math.sqrt(sx * sy) : null;
     }
     const shortD = d => { const x = parseDM(d); return x ? x.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : d; };
-    const metricOf = (d, c) => { const m = metaOf(c); if (m.type === 'time') return hoursOf(cellOf(d, c)); if (m.type === 'count') return numOf(cellOf(d, c).actual) || 0; return isDone(d, c) ? 1 : 0; };
+    const metricOf = (d, c) => { const m = metaOf(c); if (m.targetKind === 'measure') return numOf(cellOf(d, c).count) || 0; if (m.type === 'text') return isDone(d, c) ? 1 : 0; return hoursOf(cellOf(d, c)); };
 
     // ============ tiny SVG charts (no libraries) ============
     function svgStacked(labels, series, { unit = 'h', every = 1, H = 210 } = {}) {
@@ -2919,7 +3090,7 @@
       const thisW = lastDays(7, d), lastW = lastDays(14, d).slice(0, Math.max(0, lastDays(14, d).length - 7));
       const rows = allColumns().filter(c => c !== sc).map(c => {
         const a = thisW.reduce((s, x) => s + metricOf(x, c), 0), b = lastW.reduce((s, x) => s + metricOf(x, c), 0), m = metaOf(c);
-        return { c, a, b, ch: b ? (a - b) / b : null, vals: days.map(x => metricOf(x, c)), unit: m.type === 'time' ? 'h' : m.type === 'count' ? (m.unit || '') : 'days', good: ruleOf(c) === 'less' ? -1 : 1 };
+        return { c, a, b, ch: b ? (a - b) / b : null, vals: days.map(x => metricOf(x, c)), unit: m.targetKind === 'measure' ? m.measure : m.type === 'text' ? 'days' : 'h', good: ruleOf(c) === 'less' ? -1 : 1 };
       }).filter(r => r.a || r.b).sort((x, y) => y.a - x.a);
       const sCols = new Set(studyCols()), mCols = new Set(mediaCols());
       const bins = { s: Array(24).fill(0), m: Array(24).fill(0), o: Array(24).fill(0) };
@@ -2991,7 +3162,7 @@
       const el = $('records-panel'); if (!el || !state) return;
       const mems = (state.memories || []).length;
       el.innerHTML = `<h2>Hall of fame</h2><p class="hint" style="margin:-6px 0 10px">Your best study days. Beat one and you earn its medal.</p>${recordsHtml()}
-        <div class="foot"><button class="btn small" onclick="openReport()">📊 All charts</button><button class="btn small" onclick="openMemories()">🎞 Memories${mems ? ` (${mems})` : ''}</button><button class="btn small" onclick="memoryFlow({date: todayStr})">+ Add a memory</button></div>`;
+        <div class="foot"><button class="btn small" onclick="openReport()">📊 All charts</button><button class="btn small" onclick="openMemories()">🎞 Memories${mems ? ` (${mems})` : ''}</button><button class="btn small" onclick="memoryFlow({date: '${todayStr}'})">+ Add a memory</button></div>`;
     }
     function checkMedal() {
       if (!state) return;
@@ -3007,7 +3178,7 @@
       $('medal-icon').textContent = MEDALS[rank - 1];
       $('medal-title').textContent = rank === 1 ? 'New personal best!' : `Your ${MEDAL_WORD[rank - 1]} study day ever!`;
       $('medal-sub').textContent = `${fmtH(h)} of study today${beat ? `, beating ${fmtH(beat)}` : ''}. That deserves remembering.`;
-      $('medal-actions').innerHTML = `<button class="btn accent" onclick="memoryFlow({date: todayStr, medal: ${rank}, hours: ${h.toFixed(2)}})">📸 Make it a memory</button><button class="btn" onclick="closeMedal()">Not now</button>`;
+      $('medal-actions').innerHTML = `<button class="btn accent" onclick="memoryFlow({date: '${todayStr}', medal: ${rank}, hours: ${h.toFixed(2)}})">📸 Make it a memory</button><button class="btn" onclick="closeMedal()">Not now</button>`;
       const el = $('medal'); el.hidden = false; requestAnimationFrame(() => el.classList.add('open'));
       sfx('bloom'); if (!reducedMotion()) confetti();
     }
@@ -3022,7 +3193,16 @@
         $('medal-sub').textContent = `A photo and a line about ${meta.date === todayStr ? 'today' : niceDate(meta.date)}. It shows up in your monthly slideshow.`;
         el.hidden = false; requestAnimationFrame(() => el.classList.add('open'));
       }
-      $('medal-actions').innerHTML = `<label class="btn accent file-btn">Choose a photo<input type="file" accept="image/*" onchange="memoryPicked(this)"></label><button class="btn" onclick="closeMedal()">Cancel</button>`;
+      $('medal-actions').innerHTML = `<button class="btn accent" onclick="pickMemoryPhoto()">📷 Choose a photo</button><button class="btn" onclick="closeMedal()">Cancel</button>`;
+      pickMemoryPhoto();
+    };
+    window.pickMemoryPhoto = function () {
+      const inp = document.createElement('input');
+      inp.type = 'file'; inp.accept = 'image/*';
+      inp.style.cssText = 'position:fixed;left:-9999px;opacity:0';
+      inp.onchange = () => { memoryPicked(inp); inp.remove(); };
+      document.body.appendChild(inp);
+      inp.click();
     };
     function compressImage(file, max = 1000, q = .72) {
       return new Promise((res, rej) => {
@@ -3339,7 +3519,7 @@ Under 280 words. Kind but honest. If a day was marked as a rest day, respect it.
           if (!group.columns.length) row += `<td></td>`;
           group.columns.forEach(col => {
             const cd = cellOf(date, col);
-            const bg = calculateProgressStyle(activeTargetOf(date, col), scoreVal(cd), col);
+            const bg = calculateProgressStyle(activeTargetOf(date, col), scoreVal(cd, col), col);
             row += `<td class="cell" id="td-${safeId(date)}-${safeId(col)}" style="background-color:${bg || 'transparent'}" onclick="openSheet(${R(col)}, ${di})">${getCellInnerHtml(date, col, cd)}</td>`;
           });
         });
@@ -3359,147 +3539,186 @@ Under 280 words. Kind but honest. If a day was marked as a rest day, respect it.
     // ============ refresh orchestration ============
     let refreshT;
     function scheduleRefresh() { clearTimeout(refreshT); refreshT = setTimeout(refreshViews, 120); }
-    function refreshViews() { renderDay(false); renderTiles(); renderHeatmap(); renderStreak(); renderTable(false); renderGoals(); renderToday(); renderRecords(); checkMedal(); }
+    function refreshViews() { [() => renderDay(false), renderTiles, renderHeatmap, renderStreak, () => renderTable(false), renderGoals, renderToday, renderRecords, checkMedal].forEach(f => { try { f(); } catch (e) { console.warn('render', e); } }); }
     function refreshAll() { renderDay(true); refreshViews(); }
 
-    // ============ habit types + units ============
-    const TYPES = { count: 'Count', time: 'Time', check: 'Done or not', text: 'Short text' };
-    const TYPE_HINT = {
-      count: 'For things you count: questions, pages, chapters, km.',
-      time: 'For time spent. Use the +15m buttons or the timer.',
-      check: "For yes/no habits, like a call home or meditation.",
-      text: 'For a word or two, like what you ate.'
-    };
-    const UNIT_SUGGEST = ['questions', 'problems', 'pages', 'chapters', 'lectures', 'papers', 'km', 'meals'];
+    // ============ habit model: every habit is timed; some also count something ============
+    const TYPES = { time: 'Time', text: 'Short text' };
+    const UNIT_SUGGEST = ['questions', 'problems', 'pages', 'chapters', 'lectures', 'papers', 'km', 'reps'];
+    const PART_ICON = p => ({ breakfast: '🍳', lunch: '🍛', dinner: '🍲', snack: '🍎', morning: '🌅', evening: '🌇', night: '🌙' }[String(p).toLowerCase()] || '•');
     function inferMeta(col) {
       const n = col.toLowerCase();
-      const g = state.groups.find(g => g.columns.includes(col));
-      if (/instagram|youtube|hotstar|netflix|prime video|reels|ott|screen|social|twitter/.test(n) || (g && /media|screen|social/i.test(g.name))) return { type: 'time', unit: '' };
-      if (/call|meditat|journal|vitamin/.test(n)) return { type: 'check', unit: '' };
-      if (/breakfast|lunch|dinner|meal/.test(n)) return { type: 'count', unit: 'meals' };
-      if (/dsa|pyq|question|problem|leetcode|mcq/.test(n)) return { type: 'count', unit: 'questions' };
-      if (/paper|mock/.test(n)) return { type: 'count', unit: 'papers' };
-      if (/water/.test(n)) return { type: 'count', unit: 'glasses' };
-      return { type: 'time', unit: '' };
+      const m = { type: 'time', unit: '', measure: '', targetKind: 'time', parts: [] };
+      if (/breakfast|lunch|dinner|meal|food/.test(n)) { m.parts = ['Breakfast', 'Lunch', 'Dinner']; m.targetKind = 'none'; }
+      else if (/dsa|pyq|question|problem|leetcode|mcq/.test(n)) { m.measure = 'questions'; m.targetKind = 'measure'; }
+      else if (/paper|mock/.test(n)) { m.measure = 'papers'; m.targetKind = 'measure'; }
+      return m;
     }
-    function metaOf(col) { const m = state.habitMeta?.[col]; return m && TYPES[m.type] ? { type: m.type, unit: m.unit || '' } : inferMeta(col); }
+    function metaOf(col) {
+      const st = state.habitMeta?.[col] || {}, inf = inferMeta(col);
+      let type = st.type || inf.type, measure = st.measure, targetKind = st.targetKind, parts = st.parts;
+      if (type === 'count') { if (measure === undefined) measure = st.unit || 'count'; targetKind = targetKind || 'measure'; }
+      if (type === 'check') targetKind = targetKind || 'none';
+      if (type !== 'text') type = 'time';
+      if (measure === undefined) measure = inf.measure;
+      if (parts === undefined) parts = inf.parts;
+      if (!targetKind) targetKind = st.type ? (measure ? 'measure' : 'time') : inf.targetKind;
+      if (targetKind === 'measure' && !measure) targetKind = 'time';
+      return { type, unit: '', measure: measure || '', targetKind, parts: Array.isArray(parts) ? parts : [], daily: typeof st.daily === 'boolean' ? st.daily : true };
+    }
+    // one-time move from the old types (count / done-or-not) to "time + optional number"
+    function oldInferType(col) {
+      const n = col.toLowerCase(), g = state.groups.find(g => g.columns.includes(col));
+      if (/instagram|youtube|hotstar|netflix|prime video|reels|ott|screen|social|twitter/.test(n) || (g && /media|screen|social/i.test(g.name))) return 'time';
+      if (/call|meditat|journal|vitamin/.test(n)) return 'check';
+      if (/breakfast|lunch|dinner|meal|dsa|pyq|question|problem|leetcode|mcq|paper|mock|water/.test(n)) return 'count';
+      return 'time';
+    }
+    function migrateHabitsV2() {
+      if ((state.schemaV || 0) >= 2) return;
+      if (!state.habitMeta) state.habitMeta = {};
+      allColumns().forEach(c => {
+        const st = state.habitMeta[c] || {}, oldType = st.type || oldInferType(c);
+        const isMeal = /breakfast|lunch|dinner|meal|food/.test(c.toLowerCase());
+        const m = { type: oldType === 'text' ? 'text' : 'time', unit: '', measure: '', targetKind: 'time', parts: [], daily: typeof st.daily === 'boolean' ? st.daily : true };
+        if (isMeal) { m.parts = ['Breakfast', 'Lunch', 'Dinner']; m.targetKind = 'none'; }
+        else if (oldType === 'count') { m.measure = st.unit || inferMeta(c).measure || 'count'; m.targetKind = 'measure'; }
+        else if (oldType === 'check') m.targetKind = 'none';
+        state.habitMeta[c] = m;
+        if (oldType === 'count') state.allDates.forEach(d => {
+          const cd = state.logs[d]?.[c]; if (!cd) return;
+          const a = cd.actual !== undefined ? String(cd.actual).trim() : '';
+          if (a) { if (cd.count === undefined) cd.count = a; const h = computeHoursFromSlots(cd.timeSlots); cd.actual = h ? String(h) : ''; cd.hours = h ? String(h) : ''; }
+        });
+      });
+      state.schemaV = 2; saveStateToCloud();
+    }
     const isTimeNum = v => /^\s*\d*\.?\d+\s*(h|hr|hrs|hours?)?\s*$/i.test(String(v ?? ''));
     function fmtH(h) {
       h = +h || 0; if (h <= 0) return '0m';
       const hh = Math.floor(h), mm = Math.round((h - hh) * 60);
       return hh && mm ? `${hh}h ${mm}m` : hh ? `${hh}h` : `${mm}m`;
     }
+    const partsFilled = (cd, m) => m.parts.filter(p => (cd.timeSlots || []).some(s => s.label === p && s.from && s.to)).length;
     function targetLabel(col, t) {
       if (t === '' || t == null) return '';
       const m = metaOf(col);
-      if (m.type === 'time' && isTimeNum(t)) return fmtH(numOf(t));
-      return `${t}${m.type === 'count' && m.unit && isFinite(+String(t).trim()) ? ' ' + m.unit : ''}`;
+      if (m.targetKind === 'none') return '';
+      if (m.targetKind === 'measure') return `${t} ${m.measure}`;
+      return isTimeNum(t) ? fmtH(numOf(t)) : String(t);
     }
     function valueLabel(date, col) {
-      const m = metaOf(col); const cd = cellOf(date, col); const a = cd.actual;
-      const has = a !== undefined && String(a).trim() !== '';
-      if (m.type === 'check') return has || hoursOf(cd) > 0 ? 'Done' : '';
-      if (m.type === 'time') { if (has) return isTimeNum(a) ? fmtH(numOf(a)) : String(a); const h = hoursOf(cd); return h > 0 ? fmtH(h) : ''; }
-      if (m.type === 'count') return has ? `${String(a).trim()}${m.unit && isFinite(+String(a).trim()) ? ' ' + m.unit : ''}` : '';
-      return has ? String(a) : '';
+      const m = metaOf(col), cd = cellOf(date, col);
+      if (m.type === 'text') return cd.actual ? String(cd.actual) : '';
+      const h = hoursOf(cd), n = numOf(cd.count), bits = [];
+      if (m.parts.length) { const f = partsFilled(cd, m); if (f) bits.push(`${f} of ${m.parts.length}`); else if (n) bits.push(`${n} done`); }
+      else if (m.measure && n !== null && n > 0) bits.push(`${n} ${m.measure}`);
+      if (h > 0) bits.push(fmtH(h));
+      if (!bits.length && cd.actual && String(cd.actual).trim()) bits.push(isTimeNum(cd.actual) ? fmtH(numOf(cd.actual)) : 'Done');
+      return bits.join(', ');
     }
     function tileVal(d, col) {
-      const m = metaOf(col), cd = cellOf(d, col), t = activeTargetOf(d, col);
-      const lbl = valueLabel(d, col);
+      const m = metaOf(col), cd = cellOf(d, col), t = activeTargetOf(d, col), tl = targetLabel(col, t);
       const small = s => s ? `<span class="muted" style="font-size:13px;font-weight:500"> ${s}</span>` : '';
-      if (!lbl) return t && m.type !== 'check' && m.type !== 'text' ? `Target ${esc(targetLabel(col, t))}` : 'Tap to log';
-      if (m.type === 'check') return '✓ Done';
-      if (m.type === 'count' && isFinite(+String(cd.actual).trim())) return `${esc(String(cd.actual).trim())}${small(esc(((t ? `/ ${t} ` : '') + (m.unit || '')).trim()))}`;
-      if (m.type === 'time') return `${esc(lbl)}${t ? small('/ ' + esc(targetLabel(col, t))) : ''}`;
-      return esc(lbl);
+      const h = hoursOf(cd), n = numOf(cd.count);
+      if (m.type === 'text') return cd.actual ? esc(cd.actual) : 'Tap to log';
+      if (!isDone(d, col)) return tl ? `Target ${esc(tl)}` : 'Tap to log';
+      if (m.parts.length) { const f = partsFilled(cd, m); return f ? `${f}/${m.parts.length}${small(h ? fmtH(h) : '')}` : esc(valueLabel(d, col)); }
+      if (m.targetKind === 'measure' && n !== null) return `${n}${small(esc(`${t ? '/ ' + t + ' ' : ''}${m.measure}`))}`;
+      if (h > 0) return `${fmtH(h)}${small(tl ? '/ ' + esc(tl) : '')}`;
+      if (n) return `${n}${small(esc(m.measure))}`;
+      return esc(valueLabel(d, col)) || 'Done';
     }
 
     // ============ quick-log sheet (one habit) + drawer rows (whole day) ============
     let openSetupCol = null, openMoreCol = null;
+    const slotMins = s => { if (!s.from || !s.to) return 0; let a = toMin(s.from), b = toMin(s.to); if (b < a) b += 1440; return b - a; };
     function sheetEditorHtml(date, col) {
       const ci = R(col), m = metaOf(col), cd = cellOf(date, col);
-      const t = activeTargetOf(date, col), tn = numOf(t);
-      const rule = ruleOf(col);
+      const t = activeTargetOf(date, col), tn = numOf(t), rule = ruleOf(col);
       const run = state.running && state.running.date === date && state.running.col === col;
-      const slots = cd.timeSlots || [];
-      const has = cd.actual !== undefined && String(cd.actual).trim() !== '';
-      let main = '';
-      if (m.type === 'count') {
-        main = `<div class="big">
-            <button type="button" class="bigstep" onclick="bump(${ci},-1)" aria-label="One less">−</button>
-            <label class="bigval"><input inputmode="decimal" value="${esc(cd.actual ?? '')}" placeholder="0" oninput="updateCell(${ci},'actual',this.value)" aria-label="Amount done">
-              <span>${esc(((t ? `of ${t} ` : '') + (m.unit || (t ? '' : 'done'))).trim())}</span></label>
-            <button type="button" class="bigstep" onclick="bump(${ci},1)" aria-label="One more">+</button>
-          </div>
-          <div class="quick"><button type="button" onclick="bump(${ci},5)">+5</button><button type="button" onclick="bump(${ci},10)">+10</button></div>`;
-      } else if (m.type === 'time') {
-        const h = has && isTimeNum(cd.actual) ? numOf(cd.actual) : hoursOf(cd);
+      const h = hoursOf(cd), n = numOf(cd.count);
+      let main = '', when = '', measure = '';
+      if (m.type === 'text') {
+        main = `<input class="field text-big" value="${esc(cd.actual ?? '')}" placeholder="What happened?" oninput="updateCell(${ci},'actual',this.value)" aria-label="${esc(col)}">`;
+      } else if (m.parts.length) {
+        main = `<div class="big"><div class="bigval"><strong>${fmtH(h)}</strong><span>${partsFilled(cd, m)} of ${m.parts.length} logged</span></div></div>`;
+      }
+      if (m.type !== 'text' && !m.parts.length) {
         main = `<div class="big">
             <button type="button" class="bigstep" onclick="addTime(${ci},-0.25)" aria-label="15 minutes less">−</button>
-            <div class="bigval"><strong>${has && !isTimeNum(cd.actual) ? esc(cd.actual) : fmtH(h)}</strong><span>${t ? `of ${esc(targetLabel(col, t))}` : 'spent'}</span></div>
+            <div class="bigval"><strong>${fmtH(h)}</strong><span>${m.targetKind === 'time' && tn ? `of ${fmtH(tn)}` : 'time spent'}</span></div>
             <button type="button" class="bigstep" onclick="addTime(${ci},0.25)" aria-label="15 minutes more">+</button>
           </div>
           <div class="quick">
             <button type="button" onclick="addTime(${ci},0.25)">+15m</button><button type="button" onclick="addTime(${ci},0.5)">+30m</button><button type="button" onclick="addTime(${ci},1)">+1h</button>
             <button type="button" class="timer-btn ${run ? 'running' : ''}" onclick="toggleTimer(${ci})">${run ? '■ Stop timer' : '▶ Start timer'}</button>
           </div>`;
-      } else if (m.type === 'check') {
-        main = `<button type="button" class="done-big ${has ? 'on' : ''}" onclick="toggleCheck(${ci})" aria-pressed="${has}">${has ? '✓ Done' : 'Mark as done'}</button>`;
-      } else {
-        main = `<input class="field text-big" value="${esc(cd.actual ?? '')}" placeholder="What happened?" oninput="updateCell(${ci},'actual',this.value)" aria-label="${esc(col)}">`;
       }
-      const a = numOf(scoreVal(cd));
-      const bar = tn && a !== null && (m.type === 'count' || m.type === 'time')
-        ? `<div class="pbar tone-${progressOf(date, col).tone}"><i style="width:${Math.min(100, a / tn * 100)}%"></i></div>` : '';
+      if (m.type !== 'text') {
+        const slotRow = (s, idx, len) => `<div class="slot">
+            <input type="time" value="${esc(s.from || '')}" onchange="updateTimeSlot(${ci},${idx},'from',this.value)" aria-label="Started at">
+            <span>→</span>
+            <input type="time" value="${esc(s.to || '')}" onchange="updateTimeSlot(${ci},${idx},'to',this.value)" aria-label="Ended at">
+            <em>${slotMins(s) ? fmtH(slotMins(s) / 60) : ''}</em>
+            ${len > 1 ? `<button type="button" class="x" onclick="removeTimeSlot(${ci},${idx})" aria-label="Remove">×</button>` : ''}
+          </div>`;
+        if (m.parts.length) {
+          when = `<div class="when"><span class="lbl">When</span>${m.parts.map((p, pi) => {
+            const s = (cd.timeSlots || []).find(x => x.label === p) || {};
+            return `<div class="slot part"><span class="part-name">${PART_ICON(p)} ${esc(p)}</span>
+              <input type="time" value="${esc(s.from || '')}" onchange="updatePart(${ci},${pi},'from',this.value)" aria-label="${esc(p)} started">
+              <span>→</span>
+              <input type="time" value="${esc(s.to || '')}" onchange="updatePart(${ci},${pi},'to',this.value)" aria-label="${esc(p)} ended">
+              <em>${slotMins(s) ? fmtH(slotMins(s) / 60) : ''}</em></div>`;
+          }).join('')}</div>`;
+        } else {
+          const slots = (cd.timeSlots || []).filter(s => !s.label);
+          const shown = slots.length ? slots : [{ from: '', to: '' }];
+          when = `<div class="when"><span class="lbl">When</span>${shown.map((s, i) => slotRow(s, (cd.timeSlots || []).indexOf(s) >= 0 ? (cd.timeSlots || []).indexOf(s) : i, shown.length)).join('')}
+            <div><button type="button" class="mini" onclick="addTimeSlot(${ci})">+ Another time</button></div></div>`;
+        }
+        if (m.measure) measure = `<div class="measure"><span class="lbl">${esc(m.measure[0].toUpperCase() + m.measure.slice(1))}</span>
+            <div class="mstep"><button type="button" onclick="bumpCount(${ci},-1)" aria-label="One less">−</button><input inputmode="decimal" value="${esc(cd.count ?? '')}" placeholder="0" oninput="updateCell(${ci},'count',this.value)" aria-label="${esc(m.measure)}"><button type="button" onclick="bumpCount(${ci},1)" aria-label="One more">+</button></div>
+            ${m.targetKind === 'measure' && t ? `<em>of ${esc(t)}</em>` : ''}</div>`;
+      }
+      const a = numOf(scoreVal(cd, col));
+      const bar = tn && a !== null && m.targetKind !== 'none' ? `<div class="pbar tone-${progressOf(date, col).tone}"><i style="width:${Math.min(100, a / tn * 100)}%"></i></div>` : '';
+      const reacts = `<div class="reacts"><span>How did it feel?</span>${REACTIONS.map(e => `<button type="button" class="${cd.reaction === e ? 'sel' : ''}" onclick="setReaction(${ci},'${e}')" aria-pressed="${cd.reaction === e}">${e}</button>`).join('')}</div>`;
       const note = `<input class="field note" value="${esc(cd.reason || '')}" placeholder="Add a note (optional)" oninput="updateCell(${ci},'reason',this.value)" aria-label="Note">`;
-      const shownSlots = slots.length ? slots : [{ from: '', to: '' }];
-      const slotSummary = slots.filter(s => s.from && s.to).map(s => `${s.from}–${s.to}`).join(', ');
-      const more = `<details class="fold" ${openMoreCol === col ? 'open' : ''} ontoggle="foldToggle('more',${ci},this.open)">
-          <summary>When did you do it? <em>${slotSummary || 'optional, helps the coach spot patterns'}</em></summary>
-          <div class="slots">
-            ${shownSlots.map((s, idx) => `
-              <div class="slot">
-                <input type="time" value="${esc(s.from || '')}" onchange="updateTimeSlot(${ci},${idx},'from',this.value)" aria-label="From">
-                <span>to</span>
-                <input type="time" value="${esc(s.to || '')}" onchange="updateTimeSlot(${ci},${idx},'to',this.value)" aria-label="To">
-                ${shownSlots.length > 1 ? `<button type="button" class="x" onclick="removeTimeSlot(${ci},${idx})" aria-label="Remove">×</button>` : ''}
-              </div>`).join('')}
-            <div><button type="button" class="mini" onclick="addTimeSlot(${ci})">+ Another time</button></div>
-          </div>
-        </details>`;
+      const tgtSummary = m.targetKind === 'none' ? 'no target' : t ? `target ${targetLabel(col, t)}` : 'no target yet';
       const setup = `<details class="fold" ${openSetupCol === col ? 'open' : ''} ontoggle="foldToggle('setup',${ci},this.open)">
-          <summary>Habit settings <em>${isCore(col) ? 'Daily' : 'Optional'}, ${TYPES[m.type].toLowerCase()}${m.type === 'count' && m.unit ? `, ${esc(m.unit)}` : ''}${(m.type === 'count' || m.type === 'time') ? (t ? `, target ${esc(targetLabel(col, t))}` : ', no target yet') : ''}${(m.type === 'count' || m.type === 'time') ? `, ${RULE_TEXT[rule].toLowerCase()}` : ''}</em></summary>
+          <summary>Habit settings <em>${isCore(col) ? 'Daily' : 'Optional'}${m.measure ? `, counts ${esc(m.measure)}` : ''}, ${esc(tgtSummary)}</em></summary>
           <div class="setup-body">
             <div><span class="lbl">How often</span>
-              <div class="chipset"><button type="button" class="chip ${isCore(col) ? 'on' : ''}" onclick="setDaily(${ci},true)">Every day</button><button type="button" class="chip ${!isCore(col) ? 'on' : ''}" onclick="setDaily(${ci},false)">Optional, a bonus when I do it</button></div></div>
-            <div><span class="lbl">Track it as</span>
-              <div class="chipset">${Object.entries(TYPES).map(([k, v]) => `<button type="button" class="chip ${m.type === k ? 'on' : ''}" onclick="setMeta(${ci},'type','${k}')">${v}</button>`).join('')}</div>
-              <p class="hint" style="margin-top:6px">${TYPE_HINT[m.type]}</p></div>
-            ${m.type === 'count' ? `<div><span class="lbl">Counted in</span>
-              <input class="field" value="${esc(m.unit || '')}" placeholder="e.g. questions" onchange="setMeta(${ci},'unit',this.value.trim())">
-              <div class="chipset">${UNIT_SUGGEST.map(u => `<button type="button" class="chip small ${m.unit === u ? 'on' : ''}" onclick="setMeta(${ci},'unit','${u}')">${u}</button>`).join('')}</div></div>` : ''}
-            ${m.type === 'count' || m.type === 'time' ? `<div><span class="lbl">Daily target${m.type === 'time' ? ', in hours' : ''}</span>
-              <input class="field" inputmode="decimal" value="${esc(t)}" placeholder="${m.type === 'time' ? 'e.g. 1.5' : 'e.g. 5'}" onchange="setTarget(${ci},this.value.trim())">
-              <p class="hint" style="margin-top:6px">Applies from this day onward until you change it.</p></div>
-            <div><span class="lbl">What counts as a good day</span>
-              <div class="chipset">${['more', 'less', 'exact'].map(r => `<button type="button" class="chip ${rule === r ? 'on' : ''}" onclick="setRule(${ci},'${r}')">${RULE_TEXT[r]}</button>`).join('')}</div></div>` : ''}
+              <div class="chipset"><button type="button" class="chip ${isCore(col) ? 'on' : ''}" onclick="setDaily(${ci},true)">Every day</button><button type="button" class="chip ${!isCore(col) ? 'on' : ''}" onclick="setDaily(${ci},false)">Optional, a bonus</button></div></div>
+            ${m.type === 'text' ? '' : `<div><span class="lbl">Also count something? (optional)</span>
+              <input class="field" value="${esc(m.measure)}" placeholder="e.g. questions, pages, km" onchange="setMeta(${ci},'measure',this.value.trim())">
+              <div class="chipset">${UNIT_SUGGEST.map(u => `<button type="button" class="chip small ${m.measure === u ? 'on' : ''}" onclick="setMeta(${ci},'measure','${u}')">${u}</button>`).join('')}${m.measure ? `<button type="button" class="chip small" onclick="setMeta(${ci},'measure','')">Nothing</button>` : ''}</div></div>
+            <div><span class="lbl">Split into parts? (optional)</span>
+              <input class="field" value="${esc(m.parts.join(', '))}" placeholder="e.g. Breakfast, Lunch, Dinner" onchange="setParts(${ci},this.value)"></div>
+            <div><span class="lbl">Target</span>
+              <div class="chipset"><button type="button" class="chip ${m.targetKind === 'none' ? 'on' : ''}" onclick="setMeta(${ci},'targetKind','none')">No target</button><button type="button" class="chip ${m.targetKind === 'time' ? 'on' : ''}" onclick="setMeta(${ci},'targetKind','time')">⏱ Time</button>${m.measure ? `<button type="button" class="chip ${m.targetKind === 'measure' ? 'on' : ''}" onclick="setMeta(${ci},'targetKind','measure')"># ${esc(m.measure)}</button>` : ''}</div>
+              ${m.targetKind === 'time' ? `<div class="tgt-row"><input type="time" class="field" value="${tn ? fromMin(Math.round(tn * 60)) : ''}" onchange="setTargetTime(${ci},this.value)" aria-label="Target duration"><span class="hint">hours : minutes a day</span></div>` : ''}
+              ${m.targetKind === 'measure' ? `<div class="tgt-row"><input class="field" inputmode="decimal" value="${esc(t)}" placeholder="e.g. 5" onchange="setTarget(${ci},this.value.trim())"><span class="hint">${esc(m.measure)} a day</span></div>` : ''}
+              ${m.targetKind !== 'none' ? `<p class="hint" style="margin-top:6px">Applies from this day on.</p>` : ''}</div>
+            ${m.targetKind !== 'none' ? `<div><span class="lbl">A good day is</span>
+              <div class="chipset">${['more', 'less', 'exact'].map(r => `<button type="button" class="chip ${rule === r ? 'on' : ''}" onclick="setRule(${ci},'${r}')">${RULE_TEXT[r]}</button>`).join('')}</div></div>` : ''}`}
+            <div><span class="lbl">Log it as</span><div class="chipset"><button type="button" class="chip ${m.type === 'time' ? 'on' : ''}" onclick="setMeta(${ci},'type','time')">⏱ Time</button><button type="button" class="chip ${m.type === 'text' ? 'on' : ''}" onclick="setMeta(${ci},'type','text')">✎ A few words</button></div></div>
           </div>
         </details>`;
-      const reacts = `<div class="reacts"><span>How did it feel?</span>${REACTIONS.map(e => `<button type="button" class="${cd.reaction === e ? 'sel' : ''}" onclick="setReaction(${ci},'${e}')" aria-pressed="${cd.reaction === e}">${e}</button>`).join('')}</div>`;
-      return `<div class="ed2" data-col="${ci}">${main}${bar}${reacts}${note}${more}${setup}</div>`;
+      return `<div class="ed2" data-col="${ci}">${main}${when}${measure}${bar}${reacts}${note}${setup}</div>`;
     }
 
     function rowHtml(date, col, focus) {
       const ci = R(col), m = metaOf(col), cd = cellOf(date, col), t = activeTargetOf(date, col);
-      const has = cd.actual !== undefined && String(cd.actual).trim() !== '';
       let ctl;
-      if (m.type === 'count') ctl = `<div class="mstep"><button type="button" onclick="bump(${ci},-1)" aria-label="One less">−</button><input inputmode="decimal" value="${esc(cd.actual ?? '')}" placeholder="0" oninput="updateCell(${ci},'actual',this.value)" aria-label="${esc(col)}"><button type="button" onclick="bump(${ci},1)" aria-label="One more">+</button></div>`;
-      else if (m.type === 'time') ctl = `<div class="mstep"><button type="button" onclick="addTime(${ci},-0.25)" aria-label="15 minutes less">−</button><span>${esc(valueLabel(date, col) || '0m')}</span><button type="button" onclick="addTime(${ci},0.25)" aria-label="15 minutes more">+</button></div>`;
-      else if (m.type === 'check') ctl = `<button type="button" class="done-mini ${has ? 'on' : ''}" onclick="toggleCheck(${ci})">${has ? '✓ Done' : 'Mark done'}</button>`;
-      else ctl = `<input class="field" style="width:160px" value="${esc(cd.actual ?? '')}" placeholder="What happened?" oninput="updateCell(${ci},'actual',this.value)" aria-label="${esc(col)}">`;
-      const sub = [t && (m.type === 'count' || m.type === 'time') ? `Target ${targetLabel(col, t)}` : '', m.type === 'count' && m.unit && !t ? m.unit : '', cd.reason ? '✎ has a note' : ''].filter(Boolean).join(', ');
+      if (m.type === 'text') ctl = `<input class="field" style="width:160px" value="${esc(cd.actual ?? '')}" placeholder="What happened?" oninput="updateCell(${ci},'actual',this.value)" aria-label="${esc(col)}">`;
+      else if (m.parts.length) ctl = `<button type="button" class="done-mini ${partsFilled(cd, m) ? 'on' : ''}" onclick="openSheet(${ci}, ${R(date)})">${partsFilled(cd, m)}/${m.parts.length} ⏱</button>`;
+      else ctl = `<div class="mstep"><button type="button" onclick="addTime(${ci},-0.25)" aria-label="15 minutes less">−</button><span>${fmtH(hoursOf(cd))}</span><button type="button" onclick="addTime(${ci},0.25)" aria-label="15 minutes more">+</button></div>${m.measure ? `<div class="mstep cnt"><input inputmode="decimal" value="${esc(cd.count ?? '')}" placeholder="0" oninput="updateCell(${ci},'count',this.value)" aria-label="${esc(m.measure)}"><small>${esc(m.measure)}</small></div>` : ''}`;
+      const sub = [t ? `Target ${targetLabel(col, t)}` : '', cd.reason ? '✎ has a note' : ''].filter(Boolean).join(', ');
       return `<div class="hrow tone-${progressOf(date, col).tone} ${focus ? 'focus' : ''}" data-col="${ci}">
-          <button type="button" class="hname" onclick="openSheet(${ci}, ${R(date)})"><b>${esc(col)}</b><small>${esc(sub) || 'Tap for notes, times and settings'}</small></button>
+          <button type="button" class="hname" onclick="openSheet(${ci}, ${R(date)})"><b>${esc(col)}</b><small>${esc(sub) || 'Tap for times, notes and settings'}</small></button>
           <div class="hctl">${ctl}</div>
         </div>`;
     }
@@ -3523,37 +3742,42 @@ Under 280 words. Kind but honest. If a day was marked as a rest day, respect it.
       scheduleRefresh();
       checkCelebrate(activeDate);
     }
+    // time comes from the clock times when there are any; otherwise from the +/- buttons
     function syncTimeFromSlots(col, c) {
       if (metaOf(col).type !== 'time') return;
-      const h = computeHoursFromSlots(c.timeSlots);
-      if (h > 0) { c.actual = String(h); c.hours = String(h); }
+      if ((c.timeSlots || []).some(s => s.from && s.to)) { const h = computeHoursFromSlots(c.timeSlots); c.hours = String(h); c.actual = String(h); c.manualH = false; }
+      else if (!c.manualH) { c.hours = ''; if (isTimeNum(c.actual)) c.actual = ''; }
     }
 
     window.updateCell = function (ci, field, value) { const col = V(ci); ensureCell(col)[field] = value; afterEdit(col, false); };
     window.setReaction = function (ci, e) { const col = V(ci); const c = ensureCell(col); c.reaction = c.reaction === e ? '' : e; afterEdit(col, true); };
-    window.bump = function (ci, delta) {
+    window.bump = function (ci, delta) { window.bumpCount(ci, delta); };
+    window.bumpCount = function (ci, delta) {
       const col = V(ci); const c = ensureCell(col);
-      const n = numOf(c.actual) ?? 0;
-      c.actual = String(Math.max(0, +(n + delta).toFixed(2)));
+      c.count = String(Math.max(0, +((numOf(c.count) ?? 0) + delta).toFixed(2)));
       afterEdit(col, true);
     };
     window.addTime = function (ci, d) {
       const col = V(ci); const c = ensureCell(col);
-      const cur = c.actual !== undefined && String(c.actual).trim() !== '' && isTimeNum(c.actual) ? numOf(c.actual) : hoursOf(c);
-      const v = Math.max(0, Math.round((cur + d) * 100) / 100);
-      c.actual = v ? String(v) : ''; c.hours = c.actual;
+      const done = (c.timeSlots || []).filter(s => s.from && s.to && !s.label);
+      if (done.length) {
+        // nudge the end of the last time block, so the clock times and the total stay in step
+        const s = done[done.length - 1];
+        s.to = fromMin(Math.max(toMin(s.from) + 5, toMin(s.to) + (toMin(s.to) < toMin(s.from) ? 1440 : 0) + d * 60));
+        syncTimeFromSlots(col, c);
+      } else if ((c.timeSlots || []).some(s => s.from && s.to)) {
+        toast('Adjust the times above to change this.'); return;
+      } else {
+        const v = Math.max(0, Math.round((hoursOf(c) + d) * 100) / 100);
+        c.hours = v ? String(v) : ''; c.actual = c.hours; c.manualH = v > 0;
+      }
       afterEdit(col, true);
     };
-    window.toggleCheck = function (ci) {
-      const col = V(ci); const c = ensureCell(col);
-      c.actual = c.actual && String(c.actual).trim() ? '' : '✓';
-      afterEdit(col, true);
-    };
+    window.toggleCheck = function (ci) { const col = V(ci); const c = ensureCell(col); c.actual = c.actual && String(c.actual).trim() ? '' : '✓'; afterEdit(col, true); };
     window.addTimeSlot = function (ci) {
       const col = V(ci); const c = ensureCell(col);
-      if (!c.timeSlots || !c.timeSlots.length) c.timeSlots = [{ from: '', to: '' }];
+      if (!(c.timeSlots || []).some(s => !s.label)) c.timeSlots = [...(c.timeSlots || []), { from: '', to: '' }];
       c.timeSlots.push({ from: '', to: '' });
-      openMoreCol = col;
       afterEdit(col, true);
     };
     window.removeTimeSlot = function (ci, idx) {
@@ -3564,16 +3788,25 @@ Under 280 words. Kind but honest. If a day was marked as a rest day, respect it.
         if (state.running.idx === idx) state.running = null; else if (state.running.idx > idx) state.running.idx--;
       }
       syncTimeFromSlots(col, c);
-      openMoreCol = col;
       afterEdit(col, true);
     };
     window.updateTimeSlot = function (ci, idx, field, val) {
       const col = V(ci); const c = ensureCell(col);
-      if (!c.timeSlots || !c.timeSlots.length) c.timeSlots = [{ from: '', to: '' }];
+      if (!c.timeSlots) c.timeSlots = [];
       if (!c.timeSlots[idx]) c.timeSlots[idx] = { from: '', to: '' };
       c.timeSlots[idx][field] = val;
+      if (field === 'from' && val && !c.timeSlots[idx].to) c.timeSlots[idx].to = fromMin(toMin(val) + 30);
       syncTimeFromSlots(col, c);
-      openMoreCol = col;
+      afterEdit(col, true);
+    };
+    window.updatePart = function (ci, pi, field, val) {
+      const col = V(ci), m = metaOf(col), c = ensureCell(col), label = m.parts[pi];
+      if (!c.timeSlots) c.timeSlots = [];
+      let s = c.timeSlots.find(x => x.label === label);
+      if (!s) { s = { from: '', to: '', label }; c.timeSlots.push(s); }
+      s[field] = val;
+      if (field === 'from' && val && !s.to) s.to = fromMin(toMin(val) + 20);
+      syncTimeFromSlots(col, c);
       afterEdit(col, true);
     };
     window.toggleTimer = function (ci) {
@@ -3597,11 +3830,16 @@ Under 280 words. Kind but honest. If a day was marked as a rest day, respect it.
       const col = V(ci);
       if (!state.habitMeta) state.habitMeta = {};
       const m = { ...metaOf(col), [key]: val };
-      state.habitMeta[col] = { type: m.type, unit: m.unit || '', daily: isCore(col) };
-      if (key === 'type' && val === 'time' && state.logs[activeDate]?.[col]) syncTimeFromSlots(col, state.logs[activeDate][col]);
+      if (key === 'measure') m.targetKind = val ? (m.targetKind === 'time' && !activeTargetOf(activeDate, col) ? 'measure' : m.targetKind) : (m.targetKind === 'measure' ? 'time' : m.targetKind);
+      state.habitMeta[col] = m;
       openSetupCol = col;
       saveStateToCloud(); rerenderEditor(col); scheduleRefresh();
     };
+    window.setParts = function (ci, txt) {
+      const parts = txt.split(',').map(x => x.trim()).filter(Boolean).slice(0, 6);
+      window.setMeta(ci, 'parts', parts);
+    };
+    window.setTargetTime = function (ci, hm) { if (!hm) return window.setTarget(ci, ''); window.setTarget(ci, String(+(toMin(hm) / 60).toFixed(2))); };
     window.setRule = function (ci, r) {
       const col = V(ci); state.columnRules[col] = r; openSetupCol = col;
       saveStateToCloud(); rerenderEditor(col); scheduleRefresh();
@@ -3657,9 +3895,9 @@ Under 280 words. Kind but honest. If a day was marked as a rest day, respect it.
     const SETUP_RULES = `## Changing habits
 When the user wants to set up, add, remove, rename or retune their habits, write your explanation first, then end the reply with a fenced code block whose language tag is habits, containing JSON for the COMPLETE setup (not a diff):
 \`\`\`habits
-{"groups":[{"name":"📚 Academics","habits":[{"name":"DSA","type":"count","unit":"questions","target":5,"rule":"more","daily":true},{"name":"Instagram","type":"time","target":0.5,"rule":"less"}]}]}
+{"groups":[{"name":"📚 Academics","habits":[{"name":"DSA","measure":"questions","target_kind":"measure","target":5,"rule":"more","daily":true},{"name":"Instagram","target_kind":"time","target":0.5,"rule":"less","daily":true},{"name":"Meals","parts":["Breakfast","Lunch","Dinner"],"target_kind":"none","daily":true}]}]}
 \`\`\`
-daily is true for habits done every day and false for optional ones that only count as a bonus when done; mark only the genuine every-day habits as daily. type is count, time (target in hours), check (done or not, no target) or text. rule is more, less or exact. Keep an existing habit's exact name when it stays, so its history is kept. Keep it lean, usually 8 to 14 habits in 2 to 4 groups with an emoji at the start of each group name, because logging should take under two minutes a day. The app shows the block as an "Apply this setup" card, so don't mention JSON or code in your prose. Only include the block when proposing or revising a setup.`;
+daily is true for habits done every day and false for optional ones that only count as a bonus when done; mark only the genuine every-day habits as daily. Every habit is timed. measure is an optional thing it also counts (like questions or pages), or empty. parts optionally splits it into named time blocks (like Breakfast, Lunch, Dinner). target_kind is time (target in hours), measure (target in that unit) or none. rule is more, less or exact. Keep an existing habit's exact name when it stays, so its history is kept. Keep it lean, usually 8 to 14 habits in 2 to 4 groups with an emoji at the start of each group name, because logging should take under two minutes a day. The app shows the block as an "Apply this setup" card, so don't mention JSON or code in your prose. Only include the block when proposing or revising a setup.`;
     const SETUP_PROMPT = `Help me set up the habits I track. Look at my profile, my goals and my current habits.
 If you know too little about me (no profile and no goals), don't propose yet: ask me 3 or 4 short questions first, about what I'm working towards, my daily routine, what usually derails me, and how much time I'm willing to spend logging.
 Otherwise propose the habits I should track daily, grouped, each with a one-line reason and a realistic starting target based on my recent logs. Say which of my current habits to drop or merge and why. Then ask what I'd like to change, and include the habits block.`;
@@ -3683,9 +3921,12 @@ Otherwise propose the habits I should track daily, grouped, each with a one-line
         g.habits.forEach(h => {
           const name = String(h?.name || '').trim().slice(0, 60);
           if (!name || seen.has(name)) return; seen.add(name);
-          const type = TYPES[h.type] ? h.type : 'count';
-          const target = (type === 'count' || type === 'time') && h.target !== undefined && h.target !== null && h.target !== '' ? String(h.target) : '';
-          habits.push({ name, type, unit: type === 'count' ? String(h.unit || '').slice(0, 20) : '', target, rule: ['more', 'less', 'exact'].includes(h.rule) ? h.rule : 'more', daily: h.daily !== false });
+          const measure = String(h.measure || (h.type === 'count' ? h.unit || '' : '')).slice(0, 20);
+          let targetKind = ['time', 'measure', 'none'].includes(h.target_kind) ? h.target_kind : (h.type === 'count' ? 'measure' : h.type === 'check' ? 'none' : 'time');
+          if (targetKind === 'measure' && !measure) targetKind = 'time';
+          const parts = Array.isArray(h.parts) ? h.parts.map(x => String(x).slice(0, 20)).filter(Boolean).slice(0, 6) : [];
+          const target = targetKind !== 'none' && h.target !== undefined && h.target !== null && h.target !== '' ? String(h.target) : '';
+          habits.push({ name, type: h.type === 'text' ? 'text' : 'time', measure, targetKind, parts, target, rule: ['more', 'less', 'exact'].includes(h.rule) ? h.rule : 'more', daily: h.daily !== false });
         });
         if (habits.length) groups.push({ name: String(g.name).slice(0, 60), habits });
       });
@@ -3698,8 +3939,7 @@ Otherwise propose the habits I should track daily, grouped, each with a one-line
       const proposed = new Set(groups.flatMap(g => g.habits.map(h => h.name)));
       const added = [...proposed].filter(n => !current.has(n));
       const removed = [...current].filter(n => !proposed.has(n));
-      const hdesc = h => (h.daily ? '' : 'optional, ') + (h.type === 'check' ? 'done or not' : h.type === 'text' ? 'short text'
-        : h.target ? (h.type === 'time' ? `${fmtH(numOf(h.target))}${h.rule === 'less' ? ' max' : ''}` : `${h.target}${h.unit ? ' ' + h.unit : ''}`) : (h.unit || (h.type === 'time' ? 'time' : 'count')));
+      const hdesc = h => [h.daily ? '' : 'optional', h.parts.length ? h.parts.join('/') : '', h.targetKind === 'time' && h.target ? `${fmtH(numOf(h.target))}${h.rule === 'less' ? ' max' : ''}` : h.targetKind === 'measure' && h.target ? `${h.target} ${h.measure}` : h.measure].filter(Boolean).join(', ') || 'timed';
       return `<div class="setup-card">
           ${groups.map(g => `<div><h5>${esc(g.name)}</h5><div class="chips">${g.habits.map(h => `<span><b>${esc(h.name)}</b> ${esc(hdesc(h))}</span>`).join('')}</div></div>`).join('')}
           <p class="diff">${added.length ? `New: ${esc(added.join(', '))}. ` : ''}${removed.length ? `Leaving out: ${esc(removed.join(', '))}. ` : ''}${!added.length && !removed.length ? 'Same habits, updated settings. ' : ''}Past entries are kept either way.</p>
@@ -3726,7 +3966,7 @@ Otherwise propose the habits I should track daily, grouped, each with a one-line
       const anchor = state.allDates.includes(todayStr) ? todayStr : selectedDate;
       state.groups = groups.map(g => ({ name: g.name, color: 'bg-amber-950/40 text-amber-300 border-amber-900/50', columns: g.habits.map(h => h.name) }));
       groups.forEach(g => g.habits.forEach(h => {
-        state.habitMeta[h.name] = { type: h.type, unit: h.unit, daily: h.daily };
+        state.habitMeta[h.name] = { type: h.type, unit: '', measure: h.measure, targetKind: h.targetKind, parts: h.parts, daily: h.daily };
         state.dailyChosen = true;
         state.columnRules[h.name] = h.rule;
         if (h.target) { if (!state.logs[anchor]) state.logs[anchor] = {}; if (!state.logs[anchor][h.name]) state.logs[anchor][h.name] = {}; state.logs[anchor][h.name].target = h.target; }
@@ -3979,7 +4219,7 @@ Otherwise propose the habits I should track daily, grouped, each with a one-line
       return state.groups.map(g => `${g.name}: ` + g.columns.map(c => {
         const t = activeTargetOf(selectedDate, c);
         const m = metaOf(c);
-        return `${c} [${isCore(c) ? 'daily' : 'optional'}, ${m.type}${m.unit ? ' in ' + m.unit : ''}${m.type === 'time' ? ' (hours)' : ''}, ${RULE_TEXT[ruleOf(c)].toLowerCase()}${t ? `, current target ${targetLabel(c, t)}` : ''}]`;
+        return `${c} [${isCore(c) ? 'daily' : 'optional'}, ${m.type === 'text' ? 'text' : 'timed'}${m.measure ? ` + counts ${m.measure}` : ''}${m.parts.length ? `, parts ${m.parts.join('/')}` : ''}, ${RULE_TEXT[ruleOf(c)].toLowerCase()}${t ? `, current target ${targetLabel(c, t)}` : ''}]`;
       }).join('; ')).join('\n');
     }
     function dayText(date) {
