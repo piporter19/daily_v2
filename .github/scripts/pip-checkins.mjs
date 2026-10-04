@@ -67,7 +67,7 @@ function engine(S, today) {
   const cellOf = (d, c) => S.logs?.[d]?.[c] || {};
   const slotsHours = slots => { let m = 0; (slots || []).forEach(s => { if (s.from && s.to) { let a = toMin(s.from), b = toMin(s.to); if (b < a) b += 1440; m += b - a; } }); return m / 60; };
   const hoursOf = cd => { const h = parseFloat(cd.hours); return cd.hours && !isNaN(h) ? h : slotsHours(cd.timeSlots); };
-  const isDone = (d, c) => { const cd = cellOf(d, c); return (cd.actual !== undefined && String(cd.actual).trim() !== '') || hoursOf(cd) > 0; };
+  const isDone = (d, c) => { const cd = cellOf(d, c); return (cd.actual !== undefined && String(cd.actual).trim() !== '') || hoursOf(cd) > 0 || (parseFloat(cd.count) || 0) > 0; };
   const ruleOf = c => { const r = S.columnRules?.[c]; if (r) return r; const g = (S.groups || []).find(g => (g.columns || []).includes(c)); return g && /media|screen|social|ott/i.test(g.name) ? 'less' : 'more'; };
   const isCore = c => { const m = S.habitMeta?.[c]; return m && typeof m.daily === 'boolean' ? m.daily : true; };
   const coreCols = () => { const a = allColumns(), c = a.filter(isCore); return c.length ? c : a; };
