@@ -294,7 +294,7 @@ async function checkDashboard(docId) {
       Object.assign(msg, { title: 'Heads up 🫧', message: `Around ${fromMin(risk)} is usually when scrolling starts. Want to plan the next hour first?`, click: site, actions: [st ? tap(`Start ${st}`, { col: st }) : null, ack('Wind down early'), ack("I've got this")].filter(Boolean) });
     } else {
       const opts = E.pickOptions(nm, sleep);
-      if (kind === 'leaves') Object.assign(msg, { title: "Your tree's leaves are dropping 🍂", message: 'Nothing logged yet today. One tap is enough to water it.', actions: optsAsTaps(opts) });
+      if (kind === 'leaves') Object.assign(msg, { title: "Your tree's leaves are dropping 🍂", message: 'Nothing logged yet today. One tap waters it. Stuck? That happens too.', actions: [...optsAsTaps(opts.slice(0, 2)), view('Feeling stuck? 🫧', { act: 'reset' })] });
       else {
         const hrs = Math.max(1, Math.round((now - Math.max(lastLog, pf.lastAt || 0)) / 3600000));
         const titles = [`Hey${name} 👋 what are you up to?`, 'Quick check-in 🌱', "What's happening right now?", 'Your tree is curious 👀 what are you doing?'];
