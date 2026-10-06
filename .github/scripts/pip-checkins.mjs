@@ -253,6 +253,16 @@ async function checkDashboard(docId) {
       if (elapsed / 60000 >= lim && now >= (ctl.scrollUntil || 0) && now - (rt.scrollAt || 0) > 30 * 60000) { kind = 'scroll'; rt.scrollAt = now; }
     } else if (!stale && run.col !== sc && elapsed > 150 * 60000 && now - (rt.longAt || 0) > 150 * 60000) { kind = 'long'; rt.longAt = now; }
   }
+  // what's on today's plan
+  const planBlocks = (S.plans?.[today] || []).filter(b => !b.status && b.kind !== 'urgent');
+  const bLen = b => { let a = toMin(b.from), e = toMin(b.to); if (e <= a) e += 1440; return e - a; };
+  if (!kind) for (const b of planBlocks) {
+    const key = 'p' + b.id + b.from.replace(':', '');
+    if ((rt.plan || {})[key] || !within(nm, toMin(b.from) - 10, 20)) continue;
+    if (run && b.col && run.col === b.col) continue;
+    rt.plan = { ...(rt.plan || {}), [key]: true }; kind = 'plan'; extra = b; break;
+  }
+  const plannedNow = (planBlocks.find(b => b.col && within(nm, toMin(b.from) - 15, bLen(b) + 15)) || {}).col || null;
   if (!kind && !rt.morning && !pf.morning && within(nm, w + 30, 90)) { kind = 'morning'; rt.morning = true; }
   const snoozed = (ctl.snoozeUntil || 0) > now;
   if (!kind && !snoozed && !rt.bed && !pf.bed && within(nm, s - 15, 35)) { kind = 'bed'; rt.bed = true; rt.count++; rt.lastAt = now; }
@@ -276,7 +286,8 @@ async function checkDashboard(docId) {
   const optsAsTaps = opts => opts.map(o => tap(o.label, { col: o.col }));
   if (kind) {
     const msg = { click: `${site}?nudge=idle&d=${docId}` };
-    if (kind === 'night') { Object.assign(msg, { title: `🌙 ${extra.title}`, message: 'Your late-night reminder.', click: site, actions: [tap('Done ✓', { night: extra.id, val: 'done', nd }), setButton('In 20 minutes', docId, `ctl.nightAgain.${nightKey(extra.id)}`, now + 20 * 60000), tap('Skip tonight', { night: extra.id, val: 'skip', nd })] }); }
+    if (kind === 'plan') Object.assign(msg, { title: `${extra.kind === 'urgent' ? '⚡' : '⏰'} ${extra.col || extra.title} at ${extra.from}`, message: `On your plan until ${extra.to}.`, click: site, actions: [extra.col ? tap(`Start ${extra.col}`, { col: extra.col }) : tap('On it ✓', { act: 'planDone', id: extra.id }), tap('Push 30 min', { act: 'planPush', id: extra.id, mins: '30' }), tap('Skip today', { act: 'planSkip', id: extra.id })] });
+    else if (kind === 'night') { Object.assign(msg, { title: `🌙 ${extra.title}`, message: 'Your late-night reminder.', click: site, actions: [tap('Done ✓', { night: extra.id, val: 'done', nd }), setButton('In 20 minutes', docId, `ctl.nightAgain.${nightKey(extra.id)}`, now + 20 * 60000), tap('Skip tonight', { night: extra.id, val: 'skip', nd })] }); }
     else if (kind === 'stale') Object.assign(msg, { title: `Is ${run.col} still going?`, message: `The timer has been running for ${fmtH(elapsed / 3600000)}. Forgot to stop it?`, click: site, actions: [tap('End it now', { act: 'end' }), ack('Yes, still going'), view('Fix the time', { act: 'stale' })] });
     else if (kind === 'scroll') Object.assign(msg, { title: `${fmtH(elapsed / 3600000)} on ${run.col} 🫧`, message: 'No judgement. How are you feeling about it?', click: `${site}?act=reset&d=${docId}`, actions: [setButton("I'm good, 10 more min", docId, 'ctl.scrollUntil', now + 10 * 60000), view('Help me stop', { act: 'stopscroll' }), view("I'm stuck", { act: 'reset' })] });
     else if (kind === 'long') Object.assign(msg, { title: `Still on ${run.col}? ⏱`, message: `${fmtH(elapsed / 3600000)} so far. Nice focus.`, click: site, actions: [ack('Keep going'), tap('End session', { act: 'end' }), view('Switch', { act: 'pick' })] });
@@ -293,7 +304,8 @@ async function checkDashboard(docId) {
       const st = E.coreCols().find(c => E.studyCols().includes(c) && c !== sc && !E.isDone(today, c)) || E.studyCols()[0];
       Object.assign(msg, { title: 'Heads up 🫧', message: `Around ${fromMin(risk)} is usually when scrolling starts. Want to plan the next hour first?`, click: site, actions: [st ? tap(`Start ${st}`, { col: st }) : null, ack('Wind down early'), ack("I've got this")].filter(Boolean) });
     } else {
-      const opts = E.pickOptions(nm, sleep);
+      let opts = E.pickOptions(nm, sleep);
+      if (plannedNow) opts = [{ label: `${plannedNow} (planned now)`, col: plannedNow }, ...opts.filter(o => o.col !== plannedNow)].slice(0, 3);
       if (kind === 'leaves') Object.assign(msg, { title: "Your tree's leaves are dropping 🍂", message: 'Nothing logged yet today. One tap waters it. Stuck? That happens too.', actions: [...optsAsTaps(opts.slice(0, 2)), view('Feeling stuck? 🫧', { act: 'reset' })] });
       else {
         const hrs = Math.max(1, Math.round((now - Math.max(lastLog, pf.lastAt || 0)) / 3600000));
