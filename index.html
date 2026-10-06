@@ -907,6 +907,41 @@
       .day-label { min-width: 0; } .day-nav { gap: 8px; min-width: 0; } .day-label .dow { font-size: 24px; }
       .ring { width: 80px; height: 80px; } .ring svg { width: 80px; height: 80px; }
     }
+
+    /* ---------- Your day (plan) ---------- */
+    .plan-panel { padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; }
+    .plan-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .plan-head h2 { font-size: 19px; display: inline; margin-right: 10px; }
+    .plan-tools { display: flex; gap: 8px; align-items: center; }
+    .btn.urgent { border-color: color-mix(in srgb, var(--rose) 55%, var(--line)); color: #ffd3d9; }
+    .btn.urgent:hover { background: color-mix(in srgb, var(--rose) 18%, var(--panel2)); }
+    .round.sm { width: 30px; height: 30px; font-size: 15px; }
+    .plan-list { display: flex; flex-direction: column; gap: 6px; max-height: 360px; overflow-y: auto; padding-right: 2px; }
+    .pb { display: grid; grid-template-columns: 54px 1fr auto; gap: 10px; align-items: center; background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--c); border-radius: 12px; padding: 7px 10px; }
+    .pb-time { display: flex; flex-direction: column; font-variant-numeric: tabular-nums; line-height: 1.15; }
+    .pb-time b { font-size: 14px; } .pb-time span { font-size: 11.5px; color: var(--dim); }
+    .pb-main { background: none; border: 0; padding: 0; text-align: left; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+    .pb-title { font-weight: 600; font-size: 14.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .pb-sub { font-size: 12px; color: var(--muted); }
+    .pb-prog { height: 4px; border-radius: 2px; background: var(--well); overflow: hidden; max-width: 220px; }
+    .pb-prog i { display: block; height: 100%; background: var(--c); }
+    .pb-act { display: flex; gap: 5px; }
+    .pa { min-width: 34px; height: 30px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel2); font-size: 12.5px; font-weight: 700; padding: 0 9px; }
+    .pa:hover { border-color: var(--c); }
+    .pa.go { background: var(--c); border-color: var(--c); color: #12142a; }
+    .pb.st-now { background: color-mix(in srgb, var(--c) 14%, var(--panel)); box-shadow: 0 0 0 1px var(--c) inset; }
+    .pb.st-now .pb-sub::before { content: '● '; color: var(--c); }
+    .pb.st-done { opacity: .62; } .pb.st-done .pb-title { text-decoration: line-through; text-decoration-color: rgba(255, 255, 255, .35); }
+    .pb.st-skip { opacity: .4; }
+    .pb.st-missed .pb-sub { color: var(--rose); } .pb.st-partial .pb-sub { color: var(--mari); }
+    .plan-now { position: relative; height: 14px; margin: 0 0 0 54px; }
+    .plan-now::before { content: ''; position: absolute; left: 0; right: 0; top: 50%; border-top: 2px solid var(--mari); }
+    .plan-now span { position: absolute; left: -50px; top: 0; font-size: 11px; font-weight: 700; color: var(--mari); }
+    .plan-empty p { margin: 0 0 10px; color: var(--muted); font-size: 14px; }
+    .plan-lane { position: relative; height: 5px; margin-bottom: -4px; }
+    .plan-lane i { position: absolute; top: 0; height: 4px; border-radius: 2px; opacity: .85; }
+    .tl-legend i.plankey { height: 3px; background: var(--muted); }
+    @media (max-width: 560px) { .pb { grid-template-columns: 46px 1fr; } .pb-act { grid-column: 2; } .plan-tools .btn.urgent { padding: 5px 10px; } }
   </style>
 </head>
 <body>
@@ -1023,6 +1058,8 @@
       <div class="ring" id="ring" role="button" tabindex="0" title="Choose which habits are daily" onclick="openDailyPicker()" onkeydown="if(event.key==='Enter')openDailyPicker()"></div>
       <div class="now" id="now"></div>
     </section>
+
+    <section class="panel plan-panel" id="plan-panel"></section>
 
     <section class="tree-row">
       <div class="panel today-panel" id="today-panel"></div>
@@ -1403,7 +1440,7 @@
           if (!state.habitMeta) state.habitMeta = {};
           if (state.dailyChosen === undefined) state.dailyChosen = Object.values(state.habitMeta).some(m => typeof m.daily === 'boolean');
           if (state.layoutBackup === undefined) state.layoutBackup = null;
-          for (const [k, v] of [['restDays', {}], ['medals', {}], ['memories', []], ['reviews', []], ['nightTasks', []], ['nightLog', {}]]) if (!state[k]) state[k] = v;
+          for (const [k, v] of [['restDays', {}], ['medals', {}], ['memories', []], ['reviews', []], ['nightTasks', []], ['nightLog', {}], ['plans', {}], ['planTemplates', {}]]) if (!state[k]) state[k] = v;
           if (!state.viewMode) state.viewMode = '5';
         } else {
           state = JSON.parse(JSON.stringify(defaultState));
@@ -1420,7 +1457,7 @@
       if (rememberThis) writeDevice(activeDocId, state.profile?.name || (activeDocId === 'soham_dashboard' ? 'Soham' : ''));
       selectedDate = state.allDates.includes(todayStr) ? todayStr : state.allDates[state.allDates.length - 1];
       renderHeader(); renderBg(); updateViewButtons(); updateEditModeButton(); updateCompact();
-      renderDay(true); renderTiles(); renderHeatmap(); renderStreak(); renderInsightCard(); renderGoals(); renderToday(); renderRecords();
+      renderDay(true); renderTiles(); renderHeatmap(); renderStreak(); renderInsightCard(); renderGoals(); renderPlan(); renderToday(); renderRecords();
       renderTable(true);
 
       await gateDone;
@@ -1733,10 +1770,10 @@
     };
     window.shiftDay = function (dir) {
       const i = state.allDates.indexOf(selectedDate) + dir;
-      if (i >= 0 && i < state.allDates.length) { selectedDate = state.allDates[i]; renderDay(true); renderTiles(); renderHeatmap(); renderToday(); }
+      if (i >= 0 && i < state.allDates.length) { selectedDate = state.allDates[i]; renderDay(true); renderTiles(); renderHeatmap(); renderToday(); renderPlan(); }
     };
-    window.goToday = function () { if (state.allDates.includes(todayStr)) { selectedDate = todayStr; renderDay(true); renderTiles(); renderHeatmap(); } };
-    window.selectDay = function (di) { selectedDate = V(di); renderDay(true); renderTiles(); renderHeatmap(); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+    window.goToday = function () { if (state.allDates.includes(todayStr)) { selectedDate = todayStr; renderDay(true); renderTiles(); renderHeatmap(); renderToday(); renderPlan(); } };
+    window.selectDay = function (di) { selectedDate = V(di); renderDay(true); renderTiles(); renderHeatmap(); renderToday(); renderPlan(); window.scrollTo({ top: 0, behavior: 'smooth' }); };
 
     // ============ tiles ============
     function renderTiles() {
@@ -2596,7 +2633,8 @@
     const gentle = () => isRest(todayStr) || (state.checkins?.[todayStr]?.mood || 5) <= 2;
     // three answers: what you did yesterday at this time, what's likely now, and an honest break
     function pickOptions(nm, sleep) {
-      const sc = sleepCol(), o1 = yesterdayAt(nm), used = new Set(o1 ? [o1] : []), opts = [];
+      const sc = sleepCol(), pl = planNowHabit(nm), y1 = yesterdayAt(nm), o1 = y1 !== pl ? y1 : null, used = new Set([pl, o1].filter(Boolean)), opts = [];
+      if (pl) opts.push({ label: `${pl} (planned now)`, col: pl });
       if (o1) opts.push({ label: `${o1} (like yesterday)`, col: o1 });
       const rest = restOption(nm, sleep, [...used]);
       const cands = [usualAt(nm, [...used]), ...shuffle(coreCols().filter(c => c !== sc && !isDone(todayStr, c))), ...shuffle(allColumns().filter(c => c !== sc))];
@@ -2640,6 +2678,7 @@
         return { kind, title: `Good morning${name} ☀️`, body: `${coreCols().length} daily habits to water your tree today.`, options: [first ? { label: `Start with ${first}`, col: first } : null, { label: 'Plan my day with the coach', act: 'plan' }].filter(Boolean) };
       }
       if (kind === 'hello') return { kind, title: `How are you doing today${name}? 🌱`, body: 'Honest answers only. Nothing is wrong with any of them.', options: [{ label: "Good, let's go 💪", act: 'hello' }, { label: 'A bit stuck 🫧', act: 'reset' }, { label: 'Rough day 🌧', act: 'roughAsk' }] };
+      if (kind === 'plan') { const b = arg; return { kind, title: `${b.kind === 'urgent' ? '⚡' : '⏰'} ${b.col || b.title} at ${b.from}`, body: `On your plan until ${b.to}.`, options: [b.col ? { label: `Start ${b.col}`, col: b.col } : { label: 'On it ✓', act: 'planDone', id: b.id }, { label: 'Push 30 min', act: 'planPush', id: b.id }, { label: 'Skip today', act: 'planSkip', id: b.id }] }; }
       if (kind === 'offer') return { kind, title: 'Can I check in on you? 🌱', body: "Now and then I'll ask what you're up to, so logging takes one tap. I stay quiet while you sleep.", options: [{ label: 'Yes, check in on me', act: 'enable' }, { label: 'Maybe later', act: 'decline' }] };
       const opts = pickOptions(nm, sleep);
       if (kind === 'leaves') return { kind, title: "Your tree's leaves are dropping 🍂", body: 'Nothing logged yet today. One tap waters it. Stuck? That happens too.', options: [...opts.slice(0, 2), { label: 'Feeling stuck? 🫧', act: 'reset' }], more: true };
@@ -2722,6 +2761,9 @@
         case 'reset': openReset(1); break;
         case 'resetStep2': openReset(2); break;
         case 'rest': if (!isRest(todayStr)) toggleRest(); break;
+        case 'planDone': planDone(o.id, todayStr); break;
+        case 'planPush': shiftBlock(o.id, 30, true, todayStr); break;
+        case 'planSkip': planSkip(o.id, todayStr); break;
         case 'hello': buddyHop(); emote(['💪', '💚', '✨'], 4); buddySay('Love it. Water me as you go 💧', 3500); break;
         case 'roughAsk': setTimeout(() => fireNudge('rough'), 350); break;
         case 'winddown': buddySay('Good call. Phone away, lights down 🌙', 5000); break;
@@ -2761,6 +2803,13 @@
       if (!rt.askedNight && within(nm, w, 7 * 60) && !inQuiet(nm, sleep, wake)) { rt.askedNight = true; saveRT(rt); if (askNightBacklog()) return; }
       if (!rt.report && nm >= 21 * 60 + 30 && dayLogged(todayStr) && !reportSeen(todayStr)) { rt.report = true; saveRT(rt); return fireNudge('report', todayStr); }
       if (!cfg.on) return;
+      // reminders for what's on your plan
+      for (const b of planOf(todayStr)) {
+        if (b.status || b.kind === 'urgent' || rt.plan?.[b.id + b.from] || !within(nm, toMin(b.from) - 5, 10)) continue;
+        if (blockStatus(todayStr, b) === 'done' || (r && b.col && r.col === b.col)) continue;
+        rt.plan = { ...(rt.plan || {}), [b.id + b.from]: true }; saveRT(rt);
+        return fireNudge('plan', b);
+      }
       // sessions: forgotten timers, long focus, and screen time running long
       if (r) {
         const el = elapsedMs(r);
@@ -2961,6 +3010,7 @@
         if (b < a) b = 1440;
         iv.push({ a, b, c, sleep: c === sc, live: !s.to });
       }));
+      (state.plans?.[d] || []).filter(p => !p.col && p.status === 'done').forEach(p => { const a = toMin(p.from); iv.push({ a, b: Math.min(1440, a + blockMins(p)), c: p.title, ev: true, sleep: false }); });
       return iv.sort((x, y) => x.a - y.a);
     }
     function mergeIv(iv) { const out = []; [...iv].sort((x, y) => x.a - y.a).forEach(({ a, b }) => { const l = out[out.length - 1]; if (l && a <= l.b) l.b = Math.max(l.b, b); else out.push({ a, b }); }); return out; }
@@ -2999,7 +3049,7 @@
       const el = $('today-panel'); if (!el || !state) return;
       if (selectedDate !== todayStr) { el.innerHTML = `<span class="now-label">Today so far</span><p class="hint" style="margin-top:8px">You're looking at ${esc(niceDate(selectedDate))}. <button class="linkish" onclick="goToday()">Back to today</button> for the live timeline.</p>`; return; }
       const S = todayStats(), pct = S.awake ? Math.round(S.logged / S.awake * 100) : 0;
-      const segs = S.iv.map(x => `<i class="seg ${x.sleep ? 'sleep' : ''} ${x.live ? 'live' : ''}" style="left:${(x.a / 14.4).toFixed(2)}%;width:${Math.max(.5, (Math.min(x.b, S.nm) - x.a) / 14.4).toFixed(2)}%;${x.sleep ? '' : `background:${colGroupHue(x.c)}`}" title="${esc(x.c)} ${fromMin(x.a)}–${fromMin(Math.min(x.b, S.nm))}"></i>`).join('');
+      const segs = S.iv.map(x => `<i class="seg ${x.sleep ? 'sleep' : ''} ${x.live ? 'live' : ''}" style="left:${(x.a / 14.4).toFixed(2)}%;width:${Math.max(.5, (Math.min(x.b, S.nm) - x.a) / 14.4).toFixed(2)}%;${x.sleep ? '' : `background:${x.ev ? '#86b7ff' : colGroupHue(x.c)}`}" title="${esc(x.c)} ${fromMin(x.a)}–${fromMin(Math.min(x.b, S.nm))}"></i>`).join('');
       const gapSegs = S.gaps.map(g => `<i class="seg gap" style="left:${(g.a / 14.4).toFixed(2)}%;width:${((g.b - g.a) / 14.4).toFixed(2)}%" title="Not logged ${fromMin(g.a)}–${fromMin(g.b)}"></i>`).join('');
       const open = S.gaps.filter(g => !gapDismissed(g)).sort((x, y) => (y.b - y.a) - (x.b - x.a))[0];
       let gapBox = '';
@@ -3019,9 +3069,10 @@
           <div><b>${fmtM(S.logged)}</b><span>logged</span></div>
           <div><b class="${pct < 40 ? 'low' : pct >= 70 ? 'high' : ''}">${pct}%</b><span>of your awake time</span></div>
         </div>
+        ${planOf(todayStr).length ? `<div class="plan-lane" aria-label="Your plan">${planOf(todayStr).filter(b => b.status !== 'skip').map(b => `<i style="left:${(toMin(b.from) / 14.4).toFixed(2)}%;width:${(blockMins(b) / 14.4).toFixed(2)}%;background:${blockColor(b)}" title="Planned: ${esc(b.col || b.title)} ${b.from}–${b.to}"></i>`).join('')}</div>` : ''}
         <div class="timeline" aria-label="Today's timeline">${gapSegs}${segs}<i class="now-mark" style="left:${(S.nm / 14.4).toFixed(2)}%"></i></div>
         <div class="tl-axis"><span>00</span><span>06</span><span>12</span><span>18</span><span>24</span></div>
-        <div class="tl-legend">${legend}<span><i class="gapkey"></i>Not logged</span></div>
+        <div class="tl-legend">${legend}<span><i class="gapkey"></i>Not logged</span>${planOf(todayStr).length ? '<span><i class="plankey"></i>Planned (thin line)</span>' : ''}</div>
         ${gapBox}`;
     }
     setInterval(() => { if (state && $('auth-gate').style.display === 'none') renderToday(); }, 60000);
@@ -3444,6 +3495,11 @@ Under 280 words. Kind but honest. If a day was marked as a rest day, respect it.
       const date = dmOf(t.ts);
       if (t.night) { setNight(t.night, t.val || 'done', t.nd || nightDateFor(t.ts)); return; }
       if (t.act === 'end') { if (state.running) endSession(t.ts); return; }
+      if (t.act === 'planDone' || t.act === 'planSkip' || t.act === 'planPush') {
+        const b = (state.plans?.[date] || []).find(x => x.id === t.id); if (!b) return;
+        if (t.act === 'planPush') shiftBlock(t.id, +t.mins || 30, true, date); else b.status = t.act === 'planDone' ? 'done' : 'skip';
+        return;
+      }
       if (t.act === 'rest') { if (!state.restDays) state.restDays = {}; state.restDays[date] = true; return; }
       if (t.col && allColumns().includes(t.col)) {
         if (state.running && state.running.col === t.col) return;
@@ -3454,6 +3510,243 @@ Under 280 words. Kind but honest. If a day was marked as a rest day, respect it.
     }
     setInterval(() => { if (state && $('auth-gate').style.display === 'none') syncPush(); }, 120000);
     document.addEventListener('visibilitychange', () => { if (!document.hidden && state && $('auth-gate').style.display === 'none') syncPush(); });
+
+    // ============ Your day: a simple time plan that stays in sync with what you log ============
+    const planOf = d => state.plans?.[d] || [];
+    const isWeekend = d => { const x = parseDM(d); return x ? [0, 6].includes(x.getDay()) : false; };
+    const KIND_COLOR = { event: '#86b7ff', urgent: '#ef6f7f' };
+    const blockMins = b => { let a = toMin(b.from), e = toMin(b.to); if (e <= a) e += 1440; return e - a; };
+    const blockColor = b => b.kind !== 'plan' ? KIND_COLOR[b.kind] : b.col ? colGroupHue(b.col) : '#a09dff';
+    function ensurePlan(d) {
+      if (!state.plans) state.plans = {};
+      if (!state.plans[d]) {
+        const tpl = state.planTemplates?.[isWeekend(d) ? 'weekend' : 'weekday'];
+        const i = state.allDates.indexOf(d);
+        if (tpl && tpl.length && i >= anchorIdx()) { state.plans[d] = tpl.map(b => ({ ...b, id: uid(), status: '' })); saveStateToCloud(); }
+      }
+      return state.plans[d] || [];
+    }
+    function loggedIn(d, b) {
+      if (!b.col) return 0;
+      const a = toMin(b.from), e = a + blockMins(b), isT = d === todayStr, nm = nowMin();
+      let m = 0;
+      (cellOf(d, b.col).timeSlots || []).forEach(s => {
+        if (!s.from) return;
+        let x = toMin(s.from), y = s.to ? toMin(s.to) : (isT && state.running?.col === b.col ? nm : null);
+        if (y === null) return; if (y < x) y += 1440;
+        m += Math.max(0, Math.min(y, e) - Math.max(x, a));
+      });
+      return m;
+    }
+    function blockStatus(d, b) {
+      const isT = d === todayStr, past = state.allDates.indexOf(d) < anchorIdx(), nm = isT ? nowMin() : 0;
+      const a = toMin(b.from), e = a + blockMins(b), need = blockMins(b), li = loggedIn(d, b);
+      if (b.status === 'skip') return 'skip';
+      if (b.status === 'done' || (b.col && li >= need * .8)) return 'done';
+      if (isT && nm >= a && nm < e) return 'now';
+      if (past || (isT && nm >= e)) {
+        if (b.col && li > 0) return 'partial';
+        if (b.col && hoursOf(cellOf(d, b.col)) * 60 >= need * .8) return 'done';
+        return 'missed';
+      }
+      return 'upcoming';
+    }
+    const STATUS_TEXT = { done: '✓ Done', partial: 'Partly done', now: 'Now', missed: 'Missed', skip: 'Skipped', upcoming: 'Planned' };
+    function planNowHabit(nm) {
+      const b = planOf(todayStr).find(b => b.col && !b.status && within(nm, toMin(b.from) - 15, blockMins(b) + 15) && blockStatus(todayStr, b) !== 'done');
+      return b ? b.col : null;
+    }
+    function renderPlan() {
+      const el = $('plan-panel'); if (!el || !state) return;
+      const d = selectedDate, list = ensurePlan(d), isT = d === todayStr, nm = isT ? nowMin() : -1;
+      const sorted = [...list].sort((x, y) => toMin(x.from) - toMin(y.from));
+      const sts = sorted.map(b => blockStatus(d, b)), done = sts.filter(s => s === 'done').length;
+      const plannedM = sorted.reduce((s, b) => s + blockMins(b), 0);
+      const tpl = state.planTemplates?.[isWeekend(d) ? 'weekend' : 'weekday'];
+      let rows = '', nowShown = !isT;
+      sorted.forEach((b, i) => {
+        const st = sts[i], a = toMin(b.from);
+        if (!nowShown && a > nm) { rows += `<div class="plan-now"><span>${fromMin(nm)}</span></div>`; nowShown = true; }
+        const li = loggedIn(d, b), need = blockMins(b), title = b.col || b.title;
+        const running = state.running && state.running.col === b.col && b.col;
+        let acts = '';
+        if (st === 'upcoming' || st === 'now') {
+          acts += b.col ? `<button class="pa go" onclick="planStart('${b.id}')" title="Start ${esc(b.col)}">${running ? '●' : '▶'}</button>` : `<button class="pa go" onclick="planDone('${b.id}')" title="Mark done">✓</button>`;
+          acts += `<button class="pa" onclick="shiftBlock('${b.id}',30,true)" title="Push this and the rest 30 min">+30</button>`;
+        } else if (st === 'missed' || st === 'partial') {
+          acts += `<button class="pa" onclick="moveLater('${b.id}')" title="Move to the next free time">↻</button><button class="pa" onclick="planSkip('${b.id}')" title="Skip today">✕</button>`;
+        }
+        const left = isT && st === 'upcoming' && a - nm <= 180 ? `in ${fmtM(a - nm)}` : STATUS_TEXT[st];
+        rows += `<div class="pb st-${st}" style="--c:${blockColor(b)}">
+          <div class="pb-time"><b>${esc(b.from)}</b><span>${esc(b.to)}</span></div>
+          <button class="pb-main" onclick="openBlock('${b.id}')">
+            <span class="pb-title">${b.kind === 'urgent' ? '⚡ ' : b.kind === 'event' ? '📅 ' : ''}${esc(title)}</span>
+            <span class="pb-sub">${left}${b.col && (li || st !== 'upcoming') ? `, logged ${fmtM(li)} of ${fmtM(need)}` : `, ${fmtM(need)}`}</span>
+            ${b.col ? `<span class="pb-prog"><i style="width:${Math.min(100, li / need * 100)}%"></i></span>` : ''}
+          </button>
+          <div class="pb-act">${acts}</div></div>`;
+      });
+      if (!nowShown && sorted.length) rows += `<div class="plan-now"><span>${fromMin(nm)}</span></div>`;
+      el.innerHTML = `
+        <div class="plan-head">
+          <div><h2>Your day</h2><span class="hint">${sorted.length ? `${done} of ${sorted.length} done, ${fmtM(plannedM)} planned` : isT ? 'When will you do what?' : esc(niceDate(d))}</span></div>
+          <div class="plan-tools"><button class="btn small urgent" onclick="openUrgent()">⚡ Something came up</button><button class="btn small" onclick="openBlock()">+ Add</button><button class="round sm" onclick="openPlanMenu()" title="Your usual day" aria-label="Your usual day">⋯</button></div>
+        </div>
+        ${sorted.length ? `<div class="plan-list">${rows}</div>` : `<div class="plan-empty"><p>A plan you can see is a plan you'll keep. Give your day a shape in under a minute.</p>
+          <div class="chipset">${tpl?.length ? `<button class="btn small accent" onclick="applyTemplate()">Use my usual ${isWeekend(d) ? 'weekend' : 'weekday'}</button>` : ''}<button class="btn small ${tpl?.length ? '' : 'accent'}" onclick="suggestPlan()">✦ Build it from my habits</button><button class="btn small" onclick="openBlock()">+ Add a block</button></div></div>`}`;
+    }
+    setInterval(() => { if (state && $('auth-gate').style.display === 'none') renderPlan(); }, 60000);
+
+    // --- editing
+    const findBlock = (id, d = selectedDate) => planOf(d).find(b => b.id === id);
+    function savePlan(msg) { touchLog(); saveStateToCloud(); renderPlan(); renderToday(); if (msg) toast(msg); }
+    window.planStart = function (id) { const b = findBlock(id); if (!b) return; if (!(state.running && state.running.col === b.col)) startNow(R(b.col)); };
+    window.planDone = function (id, d = selectedDate) { const b = findBlock(id, d); if (!b) return; b.status = 'done'; buddyHop(); emote(['✅', '💚'], 3); sfx('done'); savePlan(); };
+    window.planSkip = function (id, d = selectedDate) { const b = findBlock(id, d); if (!b) return; b.status = 'skip'; savePlan('Skipped for today.'); };
+    window.shiftBlock = function (id, mins, cascade, d = selectedDate) {
+      const b = findBlock(id, d); if (!b) return;
+      const start = toMin(b.from);
+      const move = x => { x.from = fromMin(toMin(x.from) + mins); x.to = fromMin(toMin(x.to) + mins); };
+      if (cascade) planOf(d).filter(x => !x.status && toMin(x.from) >= start && blockStatus(d, x) !== 'done').forEach(move); else move(b);
+      savePlan(cascade ? `Pushed ${b.col || b.title}${planOf(d).filter(x => !x.status && toMin(x.from) > start).length ? ' and the rest of your plan' : ''} by ${fmtM(mins)}.` : null);
+    };
+    function freeSlotAfter(d, startMin, len, ignoreId) {
+      const busy = planOf(d).filter(x => x.id !== ignoreId && x.status !== 'skip').map(x => ({ a: toMin(x.from), b: toMin(x.from) + blockMins(x) })).sort((p, q) => p.a - q.a);
+      let t = startMin;
+      for (const x of busy) { if (x.b <= t) continue; if (x.a >= t + len) break; t = Math.max(t, x.b); }
+      return t;
+    }
+    window.moveLater = function (id, d = selectedDate) {
+      const b = findBlock(id, d); if (!b) return;
+      const len = blockMins(b), t = freeSlotAfter(d, Math.ceil(nowMin() / 15) * 15, len, id);
+      if (t + len > 24 * 60) { toast("There's no free time left today. Skip it, or shorten it?"); return; }
+      b.from = fromMin(t); b.to = fromMin(t + len); b.status = '';
+      savePlan(`Moved to ${b.from}–${b.to}.`);
+    };
+
+    // --- add / edit a block
+    let blockKind = 'plan';
+    window.openBlock = function (id) {
+      const d = selectedDate, b = id ? findBlock(id) : null;
+      blockKind = b?.kind || 'plan';
+      const nm = d === todayStr ? Math.ceil(nowMin() / 15) * 15 : 9 * 60;
+      sheetCol = null; openLayer('sheet');
+      $('sheet-head').innerHTML = `<div><h2>${b ? 'Edit block' : 'Add to your day'}</h2><p>${esc(niceDate(d))}</p></div><button class="round" onclick="closeAll()" aria-label="Close">×</button>`;
+      $('sheet-body').innerHTML = `<div class="form">
+        <label>What
+          <select id="b-col" class="field" onchange="if(this.value)$('b-title').value=this.value">
+            <option value="">Something else (type it below)</option>
+            ${allColumns().map(c => `<option value="${esc(c)}" ${b?.col === c ? 'selected' : ''}>${esc(c)}</option>`).join('')}
+          </select></label>
+        <input id="b-title" class="field" value="${esc(b?.title || b?.col || '')}" placeholder="e.g. Classes, team meeting, gym">
+        <div class="two">
+          <label>From<input id="b-from" type="time" class="field" value="${esc(b?.from || fromMin(nm))}"></label>
+          <label>To<input id="b-to" type="time" class="field" value="${esc(b?.to || fromMin(nm + 60))}"></label>
+        </div>
+        <div><span class="lbl">Kind</span><div class="chipset" id="b-kind">${[['plan', 'Plan'], ['event', '📅 Event'], ['urgent', '⚡ Urgent']].map(([k, l]) => `<button type="button" class="chip ${blockKind === k ? 'on' : ''}" onclick="blockKind='${k}';[...this.parentNode.children].forEach(x=>x.classList.toggle('on',x===this))">${l}</button>`).join('')}</div></div>
+        ${b ? `<div><span class="lbl">Shift</span><div class="chipset">${[-30, -15, 15, 30, 60].map(m => `<button type="button" class="chip" onclick="shiftBlock('${b.id}',${m},$('b-cascade').checked);openBlock('${b.id}')">${m > 0 ? '+' : '−'}${fmtM(Math.abs(m))}</button>`).join('')}</div>
+          <label class="remember" style="justify-content:flex-start;margin-top:8px"><input type="checkbox" id="b-cascade" checked><span class="sw" aria-hidden="true"></span><span>Move everything after it too</span></label></div>` : ''}
+        <div class="sheet-foot">
+          ${b ? `<span style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn small" onclick="deleteBlock('${b.id}')">Delete</button>${b.status ? `<button class="btn small" onclick="reopenBlock('${b.id}')">Undo ${b.status === 'skip' ? 'skip' : 'done'}</button>` : `<button class="btn small" onclick="planSkip('${b.id}');closeAll()">Skip today</button>${!b.col ? `<button class="btn small" onclick="planDone('${b.id}');closeAll()">Mark done</button>` : ''}`}</span>` : '<span></span>'}
+          <button class="btn accent" onclick="saveBlock(${b ? `'${b.id}'` : 'null'})">${b ? 'Save' : 'Add'}</button>
+        </div></div>`;
+    };
+    window.saveBlock = function (id) {
+      const d = selectedDate, col = $('b-col').value, title = ($('b-title').value || '').trim() || col;
+      const from = $('b-from').value, to = $('b-to').value;
+      if (!title) { toast('What is it?'); $('b-title').focus(); return; }
+      if (!from || !to) { toast('Pick a start and end time.'); return; }
+      if (!state.plans) state.plans = {};
+      if (!state.plans[d]) state.plans[d] = [];
+      const b = id ? findBlock(id) : null, data = { title: col ? col : title, col, from, to, kind: blockKind };
+      if (b) Object.assign(b, data); else state.plans[d].push({ id: uid(), status: '', ...data });
+      closeAll(); savePlan(b ? 'Updated.' : `Added ${title}, ${from}–${to}.`);
+    };
+    window.deleteBlock = function (id) { const d = selectedDate; state.plans[d] = planOf(d).filter(b => b.id !== id); closeAll(); savePlan('Removed.'); };
+    window.reopenBlock = function (id) { const b = findBlock(id); if (b) b.status = ''; closeAll(); savePlan(); };
+
+    // --- something came up: add it now and make room
+    let urgentLen = 60;
+    window.openUrgent = function () {
+      urgentLen = 60; sheetCol = null; openLayer('sheet');
+      $('sheet-head').innerHTML = `<div><h2>⚡ Something came up</h2><p>Add it, and I'll push your plan to make room.</p></div><button class="round" onclick="closeAll()" aria-label="Close">×</button>`;
+      $('sheet-body').innerHTML = `<div class="form">
+        <input id="u-title" class="field" placeholder="Doctor visit, a meeting, helping at home…">
+        <div class="two"><label>Starts<input id="u-from" type="time" class="field" value="${fromMin(Math.round(nowMin() / 5) * 5)}"></label>
+          <div><span class="lbl">How long</span><div class="chipset" id="u-len">${[15, 30, 60, 90, 120].map(m => `<button type="button" class="chip ${m === 60 ? 'on' : ''}" onclick="urgentLen=${m};[...this.parentNode.children].forEach(x=>x.classList.toggle('on',x===this))">${fmtM(m)}</button>`).join('')}</div></div></div>
+        <label class="remember" style="justify-content:flex-start"><input type="checkbox" id="u-room" checked><span class="sw" aria-hidden="true"></span><span>Push the rest of my plan to make room</span></label>
+        <div class="sheet-foot"><span></span><button class="btn accent" onclick="saveUrgent()">Add it</button></div></div>`;
+      setTimeout(() => $('u-title')?.focus(), 250);
+    };
+    window.saveUrgent = function () {
+      const title = ($('u-title').value || '').trim(); if (!title) { $('u-title').focus(); return; }
+      const d = todayStr, a = toMin($('u-from').value || fromMin(nowMin())), e = a + urgentLen;
+      if (!state.plans) state.plans = {};
+      const list = ensurePlan(d).slice(); state.plans[d] = list;
+      let pushed = 0;
+      if ($('u-room').checked) {
+        const later = list.filter(x => !x.status && toMin(x.from) + blockMins(x) > a && blockStatus(d, x) !== 'done').sort((x, y) => toMin(x.from) - toMin(y.from));
+        const first = later.find(x => toMin(x.from) < e);
+        if (first) {
+          const push = e - Math.max(toMin(first.from), a);
+          later.filter(x => toMin(x.from) >= toMin(first.from)).forEach(x => { x.from = fromMin(toMin(x.from) + push); x.to = fromMin(toMin(x.to) + push); pushed++; });
+          // a block that had already started gets split: what's left of it moves after the urgent task
+        }
+      }
+      list.push({ id: uid(), title, col: '', from: fromMin(a), to: fromMin(e), kind: 'urgent', status: '' });
+      closeAll(); savePlan(pushed ? `Added. ${pushed} block${pushed > 1 ? 's' : ''} moved later to make room.` : 'Added to your day.');
+      emote(['⚡'], 1);
+    };
+
+    // --- your usual day
+    window.openPlanMenu = function () {
+      const d = selectedDate, wk = isWeekend(d) ? 'weekend' : 'weekday';
+      const show = k => (state.planTemplates?.[k] || []).map(b => `${b.from}–${b.to} ${esc(b.col || b.title)}`).join(', ') || 'not set yet';
+      sheetCol = null; openLayer('sheet');
+      $('sheet-head').innerHTML = `<div><h2>Your usual day</h2><p>Save a plan once, and new days start with it.</p></div><button class="round" onclick="closeAll()" aria-label="Close">×</button>`;
+      $('sheet-body').innerHTML = `<div class="form">
+        <p class="hint"><b>Weekdays:</b> ${show('weekday')}</p><p class="hint"><b>Weekends:</b> ${show('weekend')}</p>
+        <div class="chipset">
+          <button class="btn small accent" onclick="saveTemplate('${wk}')" ${planOf(d).length ? '' : 'disabled'}>Save this plan as my usual ${wk}</button>
+          ${state.planTemplates?.[wk]?.length ? `<button class="btn small" onclick="applyTemplate(true)">Reset this day to my usual ${wk}</button>` : ''}
+          <button class="btn small" onclick="suggestPlan(true)">✦ Rebuild from my habits</button>
+          ${planOf(d).length ? `<button class="btn small" onclick="clearPlan()">Clear this day</button>` : ''}
+        </div></div>`;
+    };
+    window.saveTemplate = function (k) {
+      if (!state.planTemplates) state.planTemplates = {};
+      state.planTemplates[k] = planOf(selectedDate).filter(b => b.kind !== 'urgent').map(({ title, col, from, to, kind }) => ({ title, col, from, to, kind }));
+      saveStateToCloud(); closeAll(); toast(`Saved. Every ${k} now starts with this plan.`);
+    };
+    window.applyTemplate = function (replace) {
+      const d = selectedDate, tpl = state.planTemplates?.[isWeekend(d) ? 'weekend' : 'weekday'] || [];
+      if (!state.plans) state.plans = {};
+      if (replace || !planOf(d).length) state.plans[d] = tpl.map(b => ({ ...b, id: uid(), status: '' }));
+      closeAll(); savePlan('Your usual day is in. Adjust anything that is different today.');
+    };
+    window.clearPlan = function () { if (!confirm('Clear the plan for this day?')) return; state.plans[selectedDate] = []; closeAll(); savePlan(); };
+    // build a first plan from when you usually do each daily habit
+    window.suggestPlan = function (replace) {
+      const d = selectedDate, i = anchorIdx(), days = state.allDates.slice(Math.max(0, i - 14), i), sc = sleepCol();
+      const med = arr => { const s = [...arr].sort((a, b) => a - b); return s[Math.floor(s.length / 2)]; };
+      const blocks = [];
+      coreCols().filter(c => c !== sc && ruleOf(c) !== 'less' && !metaOf(c).parts.length).forEach(c => {
+        const starts = [], lens = [];
+        days.forEach(x => { const sl = (cellOf(x, c).timeSlots || []).filter(s => s.from && s.to); if (sl.length) { starts.push(toMin(sl[0].from)); lens.push(sl.reduce((m, s) => m + slotMins(s), 0)); } });
+        const tn = metaOf(c).targetKind === 'time' ? numOf(activeTargetOf(d, c)) : null;
+        const len = Math.max(15, Math.round((tn ? tn * 60 : lens.length ? med(lens) : 60) / 15) * 15);
+        blocks.push({ c, a: starts.length ? Math.round(med(starts) / 15) * 15 : null, len });
+      });
+      let cursor = 9 * 60;
+      blocks.sort((x, y) => (x.a ?? 9999) - (y.a ?? 9999)).forEach(x => { if (x.a === null) x.a = cursor; cursor = Math.max(cursor, x.a + x.len); });
+      // no overlaps
+      let t = 0; blocks.forEach(x => { x.a = Math.max(x.a, t); t = x.a + x.len; });
+      if (!blocks.length) { toast('Add a few daily habits first, then I can build a plan from them.'); return; }
+      if (!state.plans) state.plans = {};
+      const keep = replace ? planOf(d).filter(b => b.kind !== 'plan') : planOf(d);
+      state.plans[d] = [...keep, ...blocks.filter(x => x.a + x.len <= 1440).map(x => ({ id: uid(), title: x.c, col: x.c, from: fromMin(x.a), to: fromMin(x.a + x.len), kind: 'plan', status: '' }))];
+      closeAll(); savePlan('Here is a first plan, based on when you usually do things. Tap a block to change its time.');
+    };
 
     function renderStreak() {
       const { cur, best } = dayStreak();
@@ -3558,7 +3851,7 @@ Under 280 words. Kind but honest. If a day was marked as a rest day, respect it.
     // ============ refresh orchestration ============
     let refreshT;
     function scheduleRefresh() { clearTimeout(refreshT); refreshT = setTimeout(refreshViews, 120); }
-    function refreshViews() { [() => renderDay(false), renderTiles, renderHeatmap, renderStreak, () => renderTable(false), renderGoals, renderToday, renderRecords, checkMedal].forEach(f => { try { f(); } catch (e) { console.warn('render', e); } }); }
+    function refreshViews() { [() => renderDay(false), renderTiles, renderHeatmap, renderStreak, () => renderTable(false), renderGoals, renderPlan, renderToday, renderRecords, checkMedal].forEach(f => { try { f(); } catch (e) { console.warn('render', e); } }); }
     function refreshAll() { renderDay(true); refreshViews(); }
 
     // ============ habit model: every habit is timed; some also count something ============
@@ -4263,6 +4556,8 @@ Otherwise propose the habits I should track daily, grouped, each with a one-line
         if (cd.reason) bits.push(`note: "${cd.reason}"`);
         lines.push(`  - ${col}: ${bits.join(', ')}`);
       });
+      const plan = (state.plans?.[date] || []).map(b => `${b.from}-${b.to} ${b.col || b.title}${b.kind !== 'plan' ? ` (${b.kind})` : ''}: ${blockStatus(date, b)}`).join('; ');
+      if (plan) lines.push(`  - Plan: ${plan}`);
       return `${niceDate(date)} (${date})${isRest(date) ? ' [rest day]' : ''}${parts.length ? ' | ' + parts.join(', ') : ''}\n${lines.length ? lines.join('\n') : '  (nothing logged)'}`;
     }
     function goalText(g) {
